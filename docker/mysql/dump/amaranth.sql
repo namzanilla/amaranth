@@ -29,7 +29,7 @@ CREATE TABLE `category` (
   `order` int NOT NULL DEFAULT '0',
   `status` int NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -38,7 +38,7 @@ CREATE TABLE `category` (
 
 LOCK TABLES `category` WRITE;
 /*!40000 ALTER TABLE `category` DISABLE KEYS */;
-INSERT INTO `category` VALUES (1,'Аксесуари для гаджетів',NULL,10,0),(2,'Спортивне харчування',NULL,0,1),(3,'Моноподи для селфі',1,1,0),(4,'Тримачі для телефонів',1,0,0),(6,'Протеин',2,0,1);
+INSERT INTO `category` VALUES (1,'Аксесуари для гаджетів',NULL,10,0),(2,'Пищевые добавки',NULL,0,1),(3,'Моноподи для селфі',1,1,0),(4,'Тримачі для телефонів',1,0,0),(6,'Протеин',2,0,1),(7,'Аминокислоты',2,0,1),(8,'Витамины',2,0,1);
 /*!40000 ALTER TABLE `category` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -67,7 +67,7 @@ CREATE TABLE `category_trans` (
 
 LOCK TABLES `category_trans` WRITE;
 /*!40000 ALTER TABLE `category_trans` DISABLE KEYS */;
-INSERT INTO `category_trans` VALUES (1,1,'Аксесуари для гаджетів'),(1,2,'Аксессуары для гаджетов'),(2,1,'Спортивне харчування'),(2,2,'Спортивное питание'),(3,1,'Моноподи для селфі'),(3,2,'Моноподы для селфи'),(4,1,'Тримачі для телефонів'),(4,2,'Держатели для телефонов'),(6,1,'Протеїн'),(6,2,'Протеин');
+INSERT INTO `category_trans` VALUES (1,1,'Аксесуари для гаджетів'),(1,2,'Аксессуары для гаджетов'),(2,1,'Харчові добавки'),(2,2,'Пищевые добавки'),(3,1,'Моноподи для селфі'),(3,2,'Моноподы для селфи'),(4,1,'Тримачі для телефонів'),(4,2,'Держатели для телефонов'),(6,1,'Протеїн'),(6,2,'Протеин'),(7,1,'Амінокислоти'),(7,2,'Аминокислоты'),(8,1,'Витаміни'),(8,2,'Витамины');
 /*!40000 ALTER TABLE `category_trans` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -95,6 +95,30 @@ LOCK TABLES `language` WRITE;
 INSERT INTO `language` VALUES (1,'Українська',1),(2,'Русский',NULL);
 /*!40000 ALTER TABLE `language` ENABLE KEYS */;
 UNLOCK TABLES;
+
+--
+-- Table structure for table `product`
+--
+
+DROP TABLE IF EXISTS `product`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `product` (
+  `id` bigint unsigned NOT NULL AUTO_INCREMENT,
+  `name` varchar(255) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `product`
+--
+
+LOCK TABLES `product` WRITE;
+/*!40000 ALTER TABLE `product` DISABLE KEYS */;
+INSERT INTO `product` VALUES (1,'100% Whey Gold Standard Optimum Nutrition');
+/*!40000 ALTER TABLE `product` ENABLE KEYS */;
+UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -105,4 +129,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2020-09-19 15:09:38
+-- Dump completed on 2020-09-19 19:18:34
