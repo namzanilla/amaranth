@@ -11,30 +11,6 @@ const serviceHelper = {
         }
       }
     },
-    getLanguageId: (query, DEFAULT_LANGUAGE_ID) => {
-      let {
-        language_id: languageId,
-      } = query;
-
-      languageId = parseInt(languageId);
-
-      return isNaN(languageId) ? DEFAULT_LANGUAGE_ID : languageId;
-    },
-    getView: (query) => {
-      let {
-        view = '1',
-      } = query;
-
-      view = parseInt(view);
-
-      if (isNaN(view)) {
-        return 1;
-      } else if (2 === view) {
-        return 2;
-      }
-
-      return 1;
-    },
     prepareResultsByView: (results, view) => {
       if (2 === view) {
         const id2index = {};
@@ -74,23 +50,50 @@ const serviceHelper = {
 
       return results;
     },
-    getRedisCacheKey: (languageId, view) => {
+    getRedisCacheKey: (qs) => {
+      const {
+        languageId,
+        view,
+      } = qs;
+
       return `api/v1/category?language_id=${languageId}&view=${view}`;
     },
-    getCache: (query) => {
-      let {
-        cache = '1',
-      } = query;
+    qs: {
+      getLanguageId: (query, DEFAULT_LANGUAGE_ID) => {
+        let {
+          language_id: languageId,
+        } = query;
 
-      cache = parseInt(cache);
+        languageId = parseInt(languageId);
 
-      if (isNaN(cache)) {
-        return 1;
-      } else if (0 === cache) {
+        return isNaN(languageId) ? DEFAULT_LANGUAGE_ID : languageId;
+      },
+      getCache: (query) => {
+        let {
+          cache = '1',
+        } = query;
+
+        cache = parseInt(cache);
+
+        if (isNaN(cache) || 1 === cache) {
+          return 1;
+        }
+
         return 0;
-      }
+      },
+      getView: (query) => {
+        let {
+          view = '1',
+        } = query;
 
-      return 1;
+        view = parseInt(view);
+
+        if (isNaN(view) || view === 1) {
+          return 1;
+        }
+
+        return 2;
+      },
     },
   },
 };
@@ -103,13 +106,15 @@ module.exports = (app) => {
     const {
       id: categoryId,
     } = params;
+    const qs = {};
 
-    const languageId = serviceHelper.getCategories.getLanguageId(query, DEFAULT_LANGUAGE_ID);
-    const view = serviceHelper.getCategories.getView(query);
-    const cache = serviceHelper.getCategories.getCache(query);
-    const redisCacheKey = serviceHelper.getCategories.getRedisCacheKey(languageId, view);
+    qs.languageId = serviceHelper.getCategories.qs.getLanguageId(query, DEFAULT_LANGUAGE_ID);
+    qs.view = serviceHelper.getCategories.qs.getView(query);
+    qs.cache = serviceHelper.getCategories.qs.getCache(query);
 
-    if (1 === cache) {
+    const redisCacheKey = serviceHelper.getCategories.getRedisCacheKey(qs);
+
+    if (1 === qs.cache) {
       const categories = await getAsync(redisCacheKey);
 
       if (categories !== null) {
@@ -117,7 +122,7 @@ module.exports = (app) => {
       }
     }
 
-    const qs = `
+    const sql = `
         SELECT
           c.id,
           c.parent,
@@ -131,7 +136,7 @@ module.exports = (app) => {
     `;
 
     return new Promise((resolve, reject) => {
-      app.mysql.connection.query(qs, [languageId], async (error, results) => {
+      app.mysql.connection.query(sql, [qs.languageId], async (error, results) => {
         if (error) {
           reject(error);
         }
@@ -139,8 +144,8 @@ module.exports = (app) => {
         if (results.length > 0) {
           serviceHelper.getCategories.prepareResults(results);
 
-          if (2 === view) {
-            results = serviceHelper.getCategories.prepareResultsByView(results, view);
+          if (2 === qs.view) {
+            results = serviceHelper.getCategories.prepareResultsByView(results, qs.view);
           }
 
           app.redis.client.set(redisCacheKey, JSON.stringify(results), 'EX', 60 * 60);
