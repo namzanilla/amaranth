@@ -13,7 +13,7 @@ const {
 const cmd = `sh -c \\
   "docker exec ${MYSQL_CONTAINER_NAME} mysqldump \\
   -u${MYSQL_DB_USER} \\
-  -p${MYSQL_DB_PASSWORD} ${MYSQL_DB_NAME} | gzip -c > ./docker/mysql/dump/${MYSQL_DB_NAME}.sql.gz" \\
+  -p${MYSQL_DB_PASSWORD} ${MYSQL_DB_NAME} > ./docker/mysql/dump/${MYSQL_DB_NAME}.sql" \\
   &> /dev/null`;
 
 exec(cmd);
