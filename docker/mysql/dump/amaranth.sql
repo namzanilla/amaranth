@@ -116,7 +116,7 @@ CREATE TABLE `product` (
 
 LOCK TABLES `product` WRITE;
 /*!40000 ALTER TABLE `product` DISABLE KEYS */;
-INSERT INTO `product` VALUES (1,'100% Whey Gold Standard Optimum Nutrition');
+INSERT INTO `product` VALUES (1,'Optimum Nutrition, Gold Standard 100% Whey, сыворотка с насыщенным шоколадным вкусом, 907 г (2 фунта)');
 /*!40000 ALTER TABLE `product` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -129,4 +129,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2020-09-19 19:22:34
+-- Dump completed on 2020-09-20  9:19:30
