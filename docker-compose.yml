@@ -10,7 +10,7 @@ services:
       - ./.env
     restart: always
     environment:
-      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_DB_PASSWORD}
   redis:
     container_name: ${REDIS_CONTAINER_NAME}
     image: redis:6.0.7-alpine
