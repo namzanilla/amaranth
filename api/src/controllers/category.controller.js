@@ -2,28 +2,48 @@ const router = require('koa-router')();
 router.prefix('/api/v1');
 
 module.exports = (app) => {
-  const languageService = require('./../services/category.service')(app);
+  const categoryService = require('./../services/category.service')(app);
 
-  router.get('/category/:id(\\d+)?', (ctx) => {
+  router.get('/category', getList);
+  router.get('/category/:id(\\d+)', getById);
+
+  function getList(ctx) {
     const {
-      params,
       request: {
         query,
       } = {},
     } = ctx;
 
-    return languageService.getCategories(params, query)
-      .then((res) => {
-        ctx.body = res;
-      })
-      .catch((message) => {
-        ctx.status = 500;
+    return categoryService.getList(query)
+      .then(h(app).onFulfilled(ctx), h(app).onRejected(ctx))
+  }
 
-        if (app.isDevelopment === true) {
-          ctx.body = message;
-        }
-      });
-  });
+  function getById(ctx) {
+    const {
+      params: {
+        id: categoryId,
+      } = {},
+    } = ctx;
+
+    return categoryService.getById(categoryId)
+      .then(h(app).onFulfilled(ctx), h(app).onRejected(ctx))
+  }
 
   return router;
 };
+
+// default controller helper
+function h(app) {
+  return {
+    onFulfilled: (ctx) => (res) => {
+      ctx.body = res;
+    },
+    onRejected: (ctx) => (message) => {
+      ctx.status = 500;
+
+      if (app.isDevelopment === true) {
+        ctx.body = message;
+      }
+    },
+  };
+}

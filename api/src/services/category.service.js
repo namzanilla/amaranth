@@ -102,10 +102,31 @@ module.exports = (app) => {
   const {DEFAULT_LANGUAGE_ID} = require('./language.service')(app);
   const getAsync = promisify(app.redis.client.get).bind(app.redis.client);
 
-  const getCategories = async (params, query) => {
-    const {
-      id: categoryId,
-    } = params;
+  const getById = (categoryId) => {
+    const sql = `
+        SELECT
+          c.id,
+          c.name
+        FROM category c
+        WHERE c.id=?
+    `;
+
+    return new Promise((resolve, reject) => {
+      app.mysql.connection.query(sql, [categoryId], async (error, results) => {
+        if (error) {
+          reject(error);
+        }
+
+        const {
+          [0]: result = {},
+        } = results;
+
+        resolve(result);
+      });
+    });
+  }
+
+  const getList = async (query) => {
     const qs = {};
 
     qs.languageId = serviceHelper.getCategories.qs.getLanguageId(query, DEFAULT_LANGUAGE_ID);
@@ -157,7 +178,8 @@ module.exports = (app) => {
   }
 
   return {
-    getCategories,
+    getList,
+    getById,
   };
 };
 

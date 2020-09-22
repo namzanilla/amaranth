@@ -4,7 +4,8 @@ const DEFAULT_LANGUAGE_ID = 1;
 module.exports = (app) => {
   const getAsync = promisify(app.redis.client.get).bind(app.redis.client);
   const setAsync = promisify(app.redis.client.set).bind(app.redis.client);
-  const getLanguages = async () => {
+
+  const getList = async () => {
     const redisCacheKey = 'api/v1/language';
     const languages = await getAsync(redisCacheKey);
 
@@ -28,7 +29,7 @@ module.exports = (app) => {
   }
 
   return {
-    getLanguages,
+    getList,
     DEFAULT_LANGUAGE_ID,
   };
 };

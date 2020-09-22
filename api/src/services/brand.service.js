@@ -1,5 +1,5 @@
 module.exports = (app) => {
-  const getById = async (brandId) => {
+  const getById = (brandId) => {
     const sql = `
         SELECT
           b.id,
@@ -9,7 +9,7 @@ module.exports = (app) => {
     `;
 
     return new Promise((resolve, reject) => {
-      app.mysql.connection.query(sql, [brandId], async (error, results) => {
+      app.mysql.connection.query(sql, [brandId], (error, results) => {
         if (error) {
           reject(error);
         }
@@ -23,7 +23,7 @@ module.exports = (app) => {
     });
   };
 
-  const getList = async () => {
+  const getList = () => {
     const sql = `
         SELECT
           b.id,
@@ -33,7 +33,7 @@ module.exports = (app) => {
     `;
 
     return new Promise((resolve, reject) => {
-      app.mysql.connection.query(sql, async (error, results) => {
+      app.mysql.connection.query(sql, (error, results) => {
         if (error) {
           reject(error);
         }
