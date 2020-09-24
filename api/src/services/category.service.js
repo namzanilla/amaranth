@@ -185,7 +185,7 @@ function serviceHelper() {
         qs = `?${qs}`;
       }
 
-      return `api/v1/category${qs}`;
+      return `v1/category${qs}`;
     },
     qs: {
       getLanguageId: (query, DEFAULT_LANGUAGE_ID) => {
