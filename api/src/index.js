@@ -3,25 +3,27 @@ require('./dotenv');
 const Koa = require('koa');
 const koaBody = require('koa-body');
 const router = require('koa-router')();
-const app = new Koa();
+const koaInstance = new Koa();
 const {
   NODE_ENV,
   NODE_API_PORT,
 } = process.env;
+
+const app = {};
 
 app.isDevelopment = NODE_ENV === 'development';
 
 require('./mysql')(app);
 require('./redis')(app);
 require('./mongo')(app);
-require('./koaLogger')(app, NODE_ENV);
+require('./koaLogger')(koaInstance, NODE_ENV);
 
-app.use(koaBody());
+koaInstance.use(koaBody());
 
-require('./controllers')(app);
+require('./controllers')(koaInstance, app);
 
-app.use(router.allowedMethods());
+koaInstance.use(router.allowedMethods());
 
-app.listen(NODE_API_PORT, () => {
+koaInstance.listen(NODE_API_PORT, () => {
   console.log(`Server running at http://localhost:${NODE_API_PORT}`);
 });

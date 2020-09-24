@@ -1,16 +1,144 @@
 const {promisify} = require('util');
+const querystring = require('querystring');
 
-const serviceHelper = {
-  getCategories: {
-    prepareResults: (results) => {
-      for (const result of results) {
-        const {parent} = result;
+module.exports = (app) => {
+  const {DEFAULT_LANGUAGE_ID} = require('./language.service')(app);
+  const getAsync = promisify(app.redis.client.get).bind(app.redis.client);
+  const sh = serviceHelper();
 
-        if (null === parent) {
-          delete result.parent;
+  const getById = (categoryId) => {
+    const sql = `
+        SELECT
+          c.id,
+          c.name
+        FROM category c
+        WHERE c.id=?
+    `;
+
+    return new Promise((resolve, reject) => {
+      app.mysql.connection.query(sql, [categoryId], async (error, results) => {
+        if (error) {
+          reject(error);
         }
+
+        const {
+          [0]: result = {},
+        } = results;
+
+        resolve(result);
+      });
+    });
+  }
+
+  const getList = async (query) => {
+    const qs = {};
+
+    qs.languageId = sh.qs.getLanguageId(query, DEFAULT_LANGUAGE_ID);
+    qs.group = sh.qs.getGroup(query);
+    qs.view = sh.qs.getView(query);
+    qs.cache = sh.qs.getCache(query);
+
+    const redisCacheKey = sh.getRedisCacheKey(qs);
+
+    if (1 === qs.cache) {
+      const categories = await getAsync(redisCacheKey);
+
+      if (categories !== null) {
+        return JSON.parse(categories);
       }
-    },
+    }
+
+    let sql = `
+        SELECT
+          c.id,
+          c.parent,
+          c.name
+        FROM category c
+        WHERE c.status=1
+    `;
+
+    const sqlValues = [];
+
+    if (null !== qs.group) {
+      sql += ' AND c.`group`=?';
+      sqlValues.push(qs.group);
+    }
+
+    let list = await new Promise((resolve, reject) => {
+      app.mysql.connection.query(sql, sqlValues, async (error, results) => {
+        if (error) {
+          reject(error);
+        }
+
+        resolve(results);
+      });
+    });
+
+    if (!list.length) return list;
+
+    const id2ix = {};
+
+    list.forEach(({id}, index) => {
+      id2ix[id] = index;
+    });
+
+    sql = `SELECT
+        ct.category_id,
+        ct.name
+      FROM category_trans ct
+      WHERE ct.language_id=?
+      AND ct.category_id IN (${Object.keys(id2ix).join(',')})`;
+
+    const trans = await new Promise((resolve, reject) => {
+      app.mysql.connection.query(sql, qs.languageId, async (error, results) => {
+        if (error) {
+          reject(error);
+        }
+
+        resolve(results);
+      });
+    });
+
+    if (!trans.length) return list;
+
+    list.forEach((listEl) => {
+      const {id, parent} = listEl;
+      const {
+        [id]: index,
+      } = id2ix;
+
+      if (0 === parent) {
+        delete listEl.parent;
+      }
+
+      if (undefined !== index) {
+        const {
+          [index]: {
+            name,
+          } = {},
+        } = trans;
+
+        if (name) listEl.name = name;
+      }
+    })
+
+    if (2 === qs.view) {
+      list = sh.prepareResultsByView(list, qs.view);
+    }
+
+    app.redis.client.set(redisCacheKey, JSON.stringify(list), 'EX', 60 * 60);
+
+    return list;
+  }
+
+  return {
+    getList,
+    getById,
+  };
+};
+
+function serviceHelper() {
+  return {
     prepareResultsByView: (results, view) => {
       if (2 === view) {
         const id2index = {};
@@ -51,12 +179,13 @@ const serviceHelper = {
       return results;
     },
     getRedisCacheKey: (qs) => {
-      const {
-        languageId,
-        view,
-      } = qs;
+      qs = querystring.stringify(qs);
 
-      return `api/v1/category?language_id=${languageId}&view=${view}`;
+      if (qs) {
+        qs = `?${qs}`;
+      }
+
+      return `api/v1/category${qs}`;
     },
     qs: {
       getLanguageId: (query, DEFAULT_LANGUAGE_ID) => {
@@ -94,92 +223,12 @@ const serviceHelper = {
 
         return 2;
       },
+      getGroup: (query) => {
+        let {group} = query;
+        group = parseInt(group);
+
+        return isNaN(group) ? null : group;
+      },
     },
-  },
-};
-
-module.exports = (app) => {
-  const {DEFAULT_LANGUAGE_ID} = require('./language.service')(app);
-  const getAsync = promisify(app.redis.client.get).bind(app.redis.client);
-
-  const getById = (categoryId) => {
-    const sql = `
-        SELECT
-          c.id,
-          c.name
-        FROM category c
-        WHERE c.id=?
-    `;
-
-    return new Promise((resolve, reject) => {
-      app.mysql.connection.query(sql, [categoryId], async (error, results) => {
-        if (error) {
-          reject(error);
-        }
-
-        const {
-          [0]: result = {},
-        } = results;
-
-        resolve(result);
-      });
-    });
-  }
-
-  const getList = async (query) => {
-    const qs = {};
-
-    qs.languageId = serviceHelper.getCategories.qs.getLanguageId(query, DEFAULT_LANGUAGE_ID);
-    qs.view = serviceHelper.getCategories.qs.getView(query);
-    qs.cache = serviceHelper.getCategories.qs.getCache(query);
-
-    const redisCacheKey = serviceHelper.getCategories.getRedisCacheKey(qs);
-
-    if (1 === qs.cache) {
-      const categories = await getAsync(redisCacheKey);
-
-      if (categories !== null) {
-        return JSON.parse(categories);
-      }
-    }
-
-    const sql = `
-        SELECT
-          c.id,
-          c.parent,
-          ct.name
-        FROM category c
-        INNER JOIN category_trans ct
-        ON c.id = ct.category_id
-        WHERE ct.language_id=?
-        AND c.status=1
-        ORDER BY c.order
-    `;
-
-    return new Promise((resolve, reject) => {
-      app.mysql.connection.query(sql, [qs.languageId], async (error, results) => {
-        if (error) {
-          reject(error);
-        }
-
-        if (results.length > 0) {
-          serviceHelper.getCategories.prepareResults(results);
-
-          if (2 === qs.view) {
-            results = serviceHelper.getCategories.prepareResultsByView(results, qs.view);
-          }
-
-          app.redis.client.set(redisCacheKey, JSON.stringify(results), 'EX', 60 * 60);
-        }
-
-        resolve(results);
-      });
-    });
-  }
-
-  return {
-    getList,
-    getById,
   };
-};
-
+}

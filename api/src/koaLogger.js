@@ -1,5 +1,5 @@
-module.exports = (app, NODE_ENV) => {
+module.exports = (koaInstance, NODE_ENV) => {
   if (NODE_ENV === 'development') {
-    app.use(require('koa-logger')());
+    koaInstance.use(require('koa-logger')());
   }
 }
