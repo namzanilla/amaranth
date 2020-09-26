@@ -1,15 +1,18 @@
 module.exports = (app) => {
   const getBrandByProductId = async (productId) => {
     const sql = `
-        SELECT
-          b.id,
-          b.name
-        FROM brand b
-        INNER JOIN product2brand p2b
-        ON b.id = p2b.brand_id
-        INNER JOIN product p
-        on p2b.product_id = p.id
-        WHERE p.id=?
+      SELECT
+        mv.id,
+        mv.name
+      FROM meta_value mv
+      INNER JOIN meta_key mk
+      ON mv.meta_key_id = mk.id
+      INNER JOIN product2meta_value p2mv
+      ON mv.id = p2mv.meta_value_id
+      INNER JOIN product p
+      ON p2mv.product_id = p.id
+      WHERE mk.name='product_brand'
+      AND p.id=?
     `;
 
     return new Promise((resolve, reject) => {

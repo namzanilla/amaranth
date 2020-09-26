@@ -1,15 +1,53 @@
+const brandMetaKey = 'product_brand';
+
 module.exports = (app) => {
-  const getById = (brandId) => {
+  const getMetaKeyId = async (metaKey) => {
     const sql = `
-        SELECT
-          b.id,
-          b.name
-        FROM brand b
-        WHERE b.id=?
+      SELECT
+        mk.id
+      FROM meta_key mk
+      WHERE mk.name=?
     `;
 
     return new Promise((resolve, reject) => {
-      app.mysql.connection.query(sql, [brandId], (error, results) => {
+      app.mysql.connection.query(sql, metaKey, (error, results) => {
+        if (error) {
+          reject(error);
+        }
+
+        const {
+          [0]: {
+            id,
+          } = {},
+        } = results;
+
+        resolve(id);
+      });
+    });
+  };
+
+  const getById = async (brandId) => {
+    let metaKeyId
+    try {
+      metaKeyId = await getMetaKeyId(brandMetaKey);
+    } catch (e) {
+      console.log(e);
+      return {};
+    }
+
+    if (!metaKeyId) return {};
+
+    const sql = `
+      SELECT
+        mv.id,
+        mv.name
+      FROM meta_value mv
+      WHERE mv.id=?
+      AND mv.meta_key_id=?
+    `;
+
+    return new Promise((resolve, reject) => {
+      app.mysql.connection.query(sql, [brandId, metaKeyId], (error, results) => {
         if (error) {
           reject(error);
         }
@@ -23,17 +61,28 @@ module.exports = (app) => {
     });
   };
 
-  const getList = () => {
+  const getList = async () => {
+    let metaKeyId
+    try {
+      metaKeyId = await getMetaKeyId(brandMetaKey);
+    } catch (e) {
+      console.log(e);
+      return [];
+    }
+
+    if (!metaKeyId) return [];
+
     const sql = `
-        SELECT
-          b.id,
-          b.name
-        FROM brand b
-        ORDER BY b.name
+      SELECT
+        mv.id,
+        mv.name
+      FROM meta_value mv
+      WHERE mv.meta_key_id=?
+      ORDER BY mv.name
     `;
 
     return new Promise((resolve, reject) => {
-      app.mysql.connection.query(sql, (error, results) => {
+      app.mysql.connection.query(sql, metaKeyId, (error, results) => {
         if (error) {
           reject(error);
         }
