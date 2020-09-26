@@ -23,9 +23,17 @@ module.exports = (app) => {
       params: {
         id: categoryId,
       } = {},
+      query: {
+        language_id: languageId,
+      } = {},
     } = ctx;
 
-    return categoryService.getById(categoryId)
+    const params = {
+      categoryId,
+      languageId,
+    };
+
+    return categoryService.getById(params)
       .then(h(app).onFulfilled(ctx), h(app).onRejected(ctx))
   }
 

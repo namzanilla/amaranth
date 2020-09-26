@@ -6,17 +6,23 @@ module.exports = (app) => {
   const getAsync = promisify(app.redis.client.get).bind(app.redis.client);
   const sh = serviceHelper();
 
-  const getById = (categoryId) => {
-    const sql = `
+  const getById = async (params) => {
+    let {
+      categoryId,
+      languageId,
+    } = params;
+
+    categoryId = parseInt(categoryId);
+
+    const category = await new Promise((resolve, reject) => {
+      const qs = `
         SELECT
           c.id,
           c.name
         FROM category c
         WHERE c.id=?
-    `;
-
-    return new Promise((resolve, reject) => {
-      app.mysql.connection.query(sql, [categoryId], async (error, results) => {
+      `;
+      const cb = async (error, results) => {
         if (error) {
           reject(error);
         }
@@ -26,17 +32,58 @@ module.exports = (app) => {
         } = results;
 
         resolve(result);
-      });
+      }
+
+      app.mysql.connection.query(qs, categoryId, cb);
     });
+
+    if (!Object.keys(category).length) {
+      return category;
+    }
+
+    languageId = parseInt(languageId);
+    if (languageId) {
+      const name = await new Promise((resolve, reject) => {
+        const qs = `
+          SELECT ct.name
+          FROM category_trans ct
+          WHERE ct.category_id = ?
+            AND ct.language_id = ?
+        `;
+        const params = [categoryId, languageId];
+        const cb = async (error, results) => {
+          if (error) {
+            reject(error);
+          }
+
+          const {
+            [0]: {
+              name,
+            } = {},
+          } = results;
+
+          resolve(name);
+        };
+
+        app.mysql.connection.query(qs, params, cb);
+      });
+
+      if (name) {
+        category.name = name;
+      }
+    }
+    
+    return category;
   }
 
   const getList = async (query) => {
     const qs = {};
 
-    qs.languageId = sh.qs.getLanguageId(query, DEFAULT_LANGUAGE_ID);
+    qs.languageId = sh.qs.getLanguageId(query);
     qs.group = sh.qs.getGroup(query);
     qs.view = sh.qs.getView(query);
     qs.cache = sh.qs.getCache(query);
+    qs.status = sh.qs.getStatus(query);
 
     const redisCacheKey = sh.getRedisCacheKey(qs);
 
@@ -54,18 +101,22 @@ module.exports = (app) => {
           c.parent,
           c.name
         FROM category c
-        WHERE c.status=1
     `;
 
-    const sqlValues = [];
+    const params = [];
+
+    if (undefined !== qs.status) {
+      sql += ' WHERE c.status=?';
+      params.push(qs.status);
+    }
 
     if (null !== qs.group) {
       sql += ' AND c.`group`=?';
-      sqlValues.push(qs.group);
+      params.push(qs.group);
     }
 
     let list = await new Promise((resolve, reject) => {
-      app.mysql.connection.query(sql, sqlValues, (error, results) => {
+      app.mysql.connection.query(sql, params, (error, results) => {
         if (error) {
           reject(error);
         }
@@ -76,57 +127,70 @@ module.exports = (app) => {
 
     if (!list.length) return list;
 
-    const id2ix = {};
+    if (undefined !== qs.languageId) {
+      const id2ix = {};
 
-    list.forEach(({id}, index) => {
-      id2ix[id] = index;
-    });
+      list.forEach(({id}, index) => {
+        id2ix[id] = index;
+      });
 
-    sql = `SELECT
+      sql = `SELECT
         ct.category_id,
         ct.name
       FROM category_trans ct
       WHERE ct.language_id=?
       AND ct.category_id IN (${Object.keys(id2ix).join(',')})`;
 
-    const trans = await new Promise((resolve, reject) => {
-      app.mysql.connection.query(sql, qs.languageId, async (error, results) => {
-        if (error) {
-          reject(error);
-        }
+      const trans = await new Promise((resolve, reject) => {
+        app.mysql.connection.query(sql, qs.languageId, async (error, results) => {
+          if (error) {
+            reject(error);
+          }
 
-        resolve(results);
+          resolve(results);
+        });
       });
-    });
 
-    if (!trans.length) return list;
+      if (!trans.length) return list;
 
-    list.forEach((listEl) => {
-      const {id, parent} = listEl;
-      const {
-        [id]: index,
-      } = id2ix;
-
-      if (0 === parent) {
-        delete listEl.parent;
-      }
-
-      if (undefined !== index) {
+      list.forEach((listEl) => {
+        const {id} = listEl;
         const {
-          [index]: {
-            name,
-          } = {},
-        } = trans;
+          [id]: index,
+        } = id2ix;
 
-        if (name) listEl.name = name;
-      }
-    })
+        if (undefined !== index) {
+          const {
+            [index]: {
+              name,
+            } = {},
+          } = trans;
 
-    if (2 === qs.view) {
-      list = sh.prepareResultsByView(list, qs.view);
+          if (name) listEl.name = name;
+        }
+      })
     }
 
-    app.redis.client.set(redisCacheKey, JSON.stringify(list), 'EX', 60 * 60);
+    const deleteParentProp = (list) => {
+      list.forEach((el) => {
+        delete el.parent;
+        const {child} = el;
+
+        if (undefined !== child) {
+          deleteParentProp(child);
+        }
+      })
+    };
+
+    if (2 === qs.view) {
+      sh.prepareResultsByView(list, qs.view);
+      list = list.filter((el) => el.parent === 0);
+      deleteParentProp(list);
+    }
+
+    if (qs.cache === 1) {
+      app.redis.client.set(redisCacheKey, JSON.stringify(list), 'EX', 60 * 60);
+    }
 
     return list;
   }
@@ -154,11 +218,11 @@ function serviceHelper() {
 
         for (let index = 0; index < results.length; index++) {
           const {
-            [index]: result,
+            [index]: result = {},
           } = results;
           const {parent} = result;
 
-          if (parent !== undefined) {
+          if (parent !== 0) {
             const {
               [parent]: parentIndex,
             } = id2index;
@@ -172,11 +236,7 @@ function serviceHelper() {
             }
           }
         }
-
-        results = results.filter((el) => el.parent === undefined);
       }
-
-      return results;
     },
     getRedisCacheKey: (qs) => {
       qs = querystring.stringify(qs);
@@ -188,14 +248,31 @@ function serviceHelper() {
       return `v1/category${qs}`;
     },
     qs: {
-      getLanguageId: (query, DEFAULT_LANGUAGE_ID) => {
+      getLanguageId: (query) => {
         let {
           language_id: languageId,
         } = query;
 
+        if (!languageId) {
+          return undefined;
+        }
+
         languageId = parseInt(languageId);
 
-        return isNaN(languageId) ? DEFAULT_LANGUAGE_ID : languageId;
+        return isNaN(languageId) ? undefined : languageId;
+      },
+      getStatus: (query) => {
+        let {
+          status,
+        } = query;
+
+        if (undefined !== status) {
+          status = parseInt(status);
+
+          return isNaN(status) ? undefined : status;
+        }
+
+        return status;
       },
       getCache: (query) => {
         let {
