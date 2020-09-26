@@ -65,7 +65,7 @@ module.exports = (app) => {
     }
 
     let list = await new Promise((resolve, reject) => {
-      app.mysql.connection.query(sql, sqlValues, async (error, results) => {
+      app.mysql.connection.query(sql, sqlValues, (error, results) => {
         if (error) {
           reject(error);
         }
