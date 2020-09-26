@@ -144,7 +144,7 @@ CREATE TABLE `meta_key` (
 
 LOCK TABLES `meta_key` WRITE;
 /*!40000 ALTER TABLE `meta_key` DISABLE KEYS */;
-INSERT INTO `meta_key` VALUES (1,'product_brand','Object ID - бренд'),(2,'product_net_weight_gramm','uInt - вес нетто (в граммах) '),(3,'product_flavor','Object ID - вкус или аромат'),(4,'product_brand_model','Object ID - линека бренда');
+INSERT INTO `meta_key` VALUES (1,'product_brand','Бренд товара'),(2,'product_net_weight_gramm','Вес нетто товара (в граммах) '),(3,'product_flavor','Вкус товара'),(4,'product_brand_model','Линека бренда товара');
 /*!40000 ALTER TABLE `meta_key` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -266,4 +266,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2020-09-26 10:31:36
+-- Dump completed on 2020-09-26 10:40:13
