@@ -3,4 +3,7 @@
 /.env
 /node_modules/
 /tmp/
-!/tmp/.gitkeep
+!/tmp/package.json
+!/tmp/package-lock.json
+!/tmp/dotenv.js
+!/tmp/mysql.js
