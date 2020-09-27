@@ -2,7 +2,6 @@ const {promisify} = require('util');
 const querystring = require('querystring');
 
 module.exports = (app) => {
-  const {DEFAULT_LANGUAGE_ID} = require('./language.service')(app);
   const getAsync = promisify(app.redis.client.get).bind(app.redis.client);
   const sh = serviceHelper();
 
