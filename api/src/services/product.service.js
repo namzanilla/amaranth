@@ -1,4 +1,45 @@
 module.exports = (app) => {
+  const getMetaByProductId = async (productId) => {
+    const qs = `
+      SELECT
+        mk.id key_id,
+        p2mv.meta_value_id value_id,
+        dt.name dataTypeName,
+        mk.name \`key\`,
+        mv.name value
+      FROM product2meta_value p2mv
+      INNER JOIN meta_value mv
+      ON mv.id=p2mv.meta_value_id
+      INNER JOIN data_type dt
+      ON dt.id=mv.data_type_id
+      INNER JOIN meta_key mk
+      ON mk.id=mv.meta_key_id
+      WHERE p2mv.product_id=?
+    `;
+
+    return new Promise((resolve, reject) => {
+      app.mysql.connection.query(qs, productId, (error, results) => {
+        if (error) {
+          reject(error);
+        }
+
+        results.map((el) => {
+          const {
+            dataTypeName,
+          } = el;
+
+          if ('uint' === dataTypeName || 'int' === dataTypeName) {
+            el.value = parseInt(el.value);
+          }
+
+          delete el.dataTypeName;
+        });
+
+        resolve(results);
+      });
+    });
+  };
+
   const getBrandByProductId = async (productId) => {
     const sql = `
       SELECT
@@ -16,7 +57,7 @@ module.exports = (app) => {
     `;
 
     return new Promise((resolve, reject) => {
-      app.mysql.connection.query(sql, [productId], (error, results) => {
+      app.mysql.connection.query(sql, productId, (error, results) => {
         if (error) {
           reject(error);
         }
@@ -31,6 +72,7 @@ module.exports = (app) => {
   }
 
   return {
+    getMetaByProductId,
     getBrandByProductId,
   };
 };
