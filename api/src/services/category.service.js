@@ -158,7 +158,7 @@ module.exports = (app) => {
 
       if (!trans.length) return list;
 
-      list.forEach((listEl) => {
+      trans.forEach((listEl) => {
         const {id} = listEl;
         const {
           [id]: index,
