@@ -1,0 +1,13 @@
+import styled from 'styled-components';
+
+export const Wrap = styled.div`
+  display: inline-block;
+  background: bisque;
+  a {
+    color: blue;
+    &.active {
+      color: black;
+      cursor: default;
+    }
+  }
+`;

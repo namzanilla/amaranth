@@ -1,5 +1,9 @@
 /.idea/
 /api/node_modules/
+/app/node_modules/
+/app/webpack-assets.json
+/static/js/build/
+!/static/js/build/.clear.sh
 /.env
 /node_modules/
 /tmp/
