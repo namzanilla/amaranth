@@ -135,7 +135,7 @@ CREATE TABLE `meta_key` (
   `description` text,
   PRIMARY KEY (`id`),
   UNIQUE KEY `uq` (`name`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -144,7 +144,7 @@ CREATE TABLE `meta_key` (
 
 LOCK TABLES `meta_key` WRITE;
 /*!40000 ALTER TABLE `meta_key` DISABLE KEYS */;
-INSERT INTO `meta_key` VALUES (1,'product_brand','Бренд товара'),(2,'product_net_weight_gramm','Вес нетто товара (в граммах) '),(3,'product_flavor','Вкус товара'),(4,'product_brand_model','Линека бренда товара');
+INSERT INTO `meta_key` VALUES (1,'product_brand','Бренд товара'),(2,'product_net_weight_gramm','Вес нетто товара (в граммах) '),(3,'product_flavor','Вкус товара'),(4,'product_brand_model','Линека бренда товара'),(5,'product_net_weight_kg','Вес нетто товара (в килограммах)'),(6,'product_net_weight_lb','Вес нетто товара (в фунтах)');
 /*!40000 ALTER TABLE `meta_key` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -266,4 +266,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2020-09-26 13:36:46
+-- Dump completed on 2020-10-08 12:51:26
