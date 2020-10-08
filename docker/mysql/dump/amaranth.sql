@@ -165,7 +165,7 @@ CREATE TABLE `meta_value` (
   KEY `fk_meta_value_data_type_id_idx` (`data_type_id`),
   CONSTRAINT `fk_meta_value_data_type_id` FOREIGN KEY (`data_type_id`) REFERENCES `data_type` (`id`),
   CONSTRAINT `fk_meta_value_meta_key_id` FOREIGN KEY (`meta_key_id`) REFERENCES `meta_key` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT
-) ENGINE=InnoDB AUTO_INCREMENT=44 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=95 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -174,7 +174,7 @@ CREATE TABLE `meta_value` (
 
 LOCK TABLES `meta_value` WRITE;
 /*!40000 ALTER TABLE `meta_value` DISABLE KEYS */;
-INSERT INTO `meta_value` VALUES (1,4,4,'Gold Standard 100% Whey'),(2,1,4,'Optimum Nutrition'),(3,1,4,'Now Foods'),(4,2,1,'454'),(5,2,1,'819'),(6,2,1,'837'),(7,2,1,'896'),(8,2,1,'899'),(9,2,1,'907'),(10,2,1,'2100'),(11,2,1,'2240'),(12,2,1,'2260'),(13,2,1,'2270'),(14,2,1,'3470'),(15,2,1,'3530'),(16,3,4,'Banana Cream'),(17,3,4,'Birthday Cake'),(18,3,4,'Blueberry Cheese Cake'),(19,3,4,'Cake Batter'),(20,3,4,'Cake Donut'),(21,3,4,'Chocolate Coconut'),(22,3,4,'Chocolate Hazelnut'),(23,3,4,'Chocolate Malt'),(24,3,4,'Chocolate Mint'),(25,3,4,'Chocolate Peanut Butter'),(26,3,4,'Coffee'),(27,3,4,'Cookies & Cream'),(28,3,4,'Double Rich Chocolate'),(29,3,4,'Dulce De Leche'),(30,3,4,'Extreme Milk Chocolate'),(31,3,4,'French Vanilla Creme'),(32,3,4,'Gingerbread'),(33,3,4,'Key Lime Pie'),(34,3,4,'Mocha Cappuccino'),(35,3,4,'Peppermint Mocha'),(36,3,4,'Rocky Road'),(37,3,4,'Salted Caramel'),(38,3,4,'Strawberries & Cream'),(39,3,4,'Strawberry'),(40,3,4,'Strawberry Banana'),(41,3,4,'Unflavored'),(42,3,4,'Vanilla Ice Cream'),(43,3,4,'White Chocolate');
+INSERT INTO `meta_value` VALUES (1,4,4,'Gold Standard 100% Whey'),(2,1,4,'Optimum Nutrition'),(3,1,4,'Now Foods'),(4,2,1,'454'),(5,2,1,'819'),(6,2,1,'837'),(7,2,1,'896'),(8,2,1,'899'),(9,2,1,'907'),(10,2,1,'2100'),(11,2,1,'2240'),(12,2,1,'2260'),(13,2,1,'2270'),(14,2,1,'3470'),(15,2,1,'3530'),(16,3,4,'Banana Cream'),(17,3,4,'Birthday Cake'),(18,3,4,'Blueberry Cheese Cake'),(19,3,4,'Cake Batter'),(20,3,4,'Cake Donut'),(21,3,4,'Chocolate Coconut'),(22,3,4,'Chocolate Hazelnut'),(23,3,4,'Chocolate Malt'),(24,3,4,'Chocolate Mint'),(25,3,4,'Chocolate Peanut Butter'),(26,3,4,'Coffee'),(27,3,4,'Cookies & Cream'),(28,3,4,'Double Rich Chocolate'),(29,3,4,'Dulce De Leche'),(30,3,4,'Extreme Milk Chocolate'),(31,3,4,'French Vanilla Creme'),(32,3,4,'Gingerbread'),(33,3,4,'Key Lime Pie'),(34,3,4,'Mocha Cappuccino'),(35,3,4,'Peppermint Mocha'),(36,3,4,'Rocky Road'),(37,3,4,'Salted Caramel'),(38,3,4,'Strawberries & Cream'),(39,3,4,'Strawberry'),(40,3,4,'Strawberry Banana'),(41,3,4,'Unflavored'),(42,3,4,'Vanilla Ice Cream'),(43,3,4,'White Chocolate'),(44,1,4,'21st Century'),(45,1,4,'Acure'),(46,1,4,'Andalou Naturals'),(47,1,4,'Aura Cacia'),(48,1,4,'Aveeno'),(49,1,4,'Azelique'),(50,1,4,'Bluebonnet Nutrition'),(51,1,4,'California Gold Nutrition'),(52,1,4,'Carlson Labs'),(53,1,4,'ChildLife'),(54,1,4,'Country Life'),(55,1,4,'Derma E'),(56,1,4,'Desert Essence'),(57,1,4,'Doctor\'s Best'),(58,1,4,'Enzymedica'),(59,1,4,'Frontier Natural Products'),(60,1,4,'Garden of Life'),(61,1,4,'Heritage Store'),(62,1,4,'Instanatural'),(63,1,4,'Jarrow Formulas'),(64,1,4,'K-Beauty'),(65,1,4,'Lake Avenue Nutrition'),(66,1,4,'Life-flo'),(67,1,4,'Life Extension'),(68,1,4,'Mad Hippie'),(69,1,4,'Manuka Doctor'),(70,1,4,'MegaFood'),(71,1,4,'Mild By Nature'),(72,1,4,'MRM'),(73,1,4,'Muscletech'),(74,1,4,'Natrol'),(75,1,4,'Natural Factors'),(76,1,4,'Nature\'s Answer'),(77,1,4,'Nature\'s Bounty'),(78,1,4,'Nature\'s Plus'),(79,1,4,'Nature\'s Way'),(80,1,4,'Neocell'),(81,1,4,'Nordic Naturals'),(82,1,4,'Nubian Heritage'),(83,1,4,'Oslomega'),(84,1,4,'Paradise Herbs'),(85,1,4,'Pet Naturals of Vermont'),(86,1,4,'Sambucol'),(87,1,4,'Solaray'),(88,1,4,'Solgar'),(89,1,4,'Source Naturals'),(90,1,4,'Sports Research'),(91,1,4,'Thorne Research'),(92,1,4,'Ultamins'),(93,1,4,'Vitables'),(94,1,4,'Weleda');
 /*!40000 ALTER TABLE `meta_value` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -266,4 +266,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2020-10-08 12:51:26
+-- Dump completed on 2020-10-08 12:55:01
