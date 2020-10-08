@@ -83,6 +83,7 @@ module.exports = (app) => {
     qs.view = sh.qs.getView(query);
     qs.cache = sh.qs.getCache(query);
     qs.status = sh.qs.getStatus(query);
+    qs.sort = sh.qs.getSort(query);
 
     const redisCacheKey = sh.getRedisCacheKey(qs);
 
@@ -113,6 +114,10 @@ module.exports = (app) => {
     if (null !== qs.group) {
       sql += ' AND c.`group`=?';
       params.push(qs.group);
+    }
+
+    if (1 === qs.sort) {
+      sql += ' ORDER BY c.`name`';
     }
 
     let list = await new Promise((resolve, reject) => {
@@ -305,6 +310,12 @@ function serviceHelper() {
         group = parseInt(group);
 
         return isNaN(group) ? null : group;
+      },
+      getSort: (query) => {
+        let {sort} = query;
+        sort = parseInt(sort);
+
+        return isNaN(sort) ? null : sort;
       },
     },
   };
