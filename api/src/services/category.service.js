@@ -100,12 +100,13 @@ module.exports = (app) => {
           c.parent,
           c.name
         FROM category c
+        WHERE 1=1
     `;
 
     const params = [];
 
     if (undefined !== qs.status) {
-      sql += ' WHERE c.status=?';
+      sql += ' AND c.status=?';
       params.push(qs.status);
     }
 
