@@ -84,6 +84,7 @@ module.exports = (app) => {
     qs.cache = sh.qs.getCache(query);
     qs.status = sh.qs.getStatus(query);
     qs.sort = sh.qs.getSort(query);
+    qs.limit = sh.qs.getLimit(query);
 
     const redisCacheKey = sh.getRedisCacheKey(qs);
 
@@ -118,6 +119,11 @@ module.exports = (app) => {
 
     if (1 === qs.sort) {
       sql += ' ORDER BY c.`name`';
+    }
+
+    if (qs.limit) {
+      sql += ' LIMIT ?';
+      params.push(qs.limit);
     }
 
     let list = await new Promise((resolve, reject) => {
