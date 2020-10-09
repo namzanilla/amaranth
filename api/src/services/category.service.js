@@ -159,19 +159,14 @@ module.exports = (app) => {
       if (!trans.length) return list;
 
       trans.forEach((listEl) => {
-        const {id} = listEl;
+        const {category_id: id, name} = listEl;
         const {
           [id]: index,
         } = id2ix;
 
         if (undefined !== index) {
-          const {
-            [index]: {
-              name,
-            } = {},
-          } = trans;
-
-          if (name) listEl.name = name;
+          if (name)
+            list[index].name = name;
         }
       })
     }
@@ -316,6 +311,18 @@ function serviceHelper() {
         sort = parseInt(sort);
 
         return isNaN(sort) ? null : sort;
+      },
+      getLimit: (query) => {
+        let {limit} = query;
+        limit = parseInt(limit);
+
+        return isNaN(limit) ? null : limit;
+      },
+      getOffset: (query) => {
+        let {offset} = query;
+        offset = parseInt(offset);
+
+        return isNaN(offset) ? 0 : offset;
       },
     },
   };
