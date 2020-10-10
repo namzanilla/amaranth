@@ -1,6 +1,6 @@
 import React from 'react';
 import {
-  Wrap,
+  SwitchLanguageWrap,
 } from './style';
 
 export default (props) => {
@@ -9,6 +9,7 @@ export default (props) => {
     languageId,
     alternateUk,
     alternateRu,
+    background,
   } = props;
 
   const propsRu = {
@@ -40,18 +41,20 @@ export default (props) => {
   }
 
   return (
-    <Wrap>
-      <a
-        {...propsRu}
-      >
-        ru
-      </a>
-      &nbsp;|&nbsp;
+    <SwitchLanguageWrap
+      background={background}
+    >
       <a
         {...propsUk}
       >
-        uk
+        укр
       </a>
-    </Wrap>
+      <span>|</span>
+      <a
+        {...propsRu}
+      >
+        рус
+      </a>
+    </SwitchLanguageWrap>
   );
 }
