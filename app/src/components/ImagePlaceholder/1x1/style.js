@@ -7,6 +7,7 @@ export const ImagePlaceholderWrap = styled.div`
   position: relative;
   margin-left: 300px;
   overflow: hidden;
+  border-radius: ${props => props.borderRadius || 'unset'};
   &:before, &:after {
     content: '';
     position: absolute;

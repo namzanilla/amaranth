@@ -7,6 +7,7 @@ export default (props) => {
   const {
     size,
     background,
+    borderRadius,
     lineBackground,
   } = props;
 
@@ -14,6 +15,7 @@ export default (props) => {
     <ImagePlaceholderWrap
       width={size}
       height={size}
+      borderRadius={borderRadius}
       background={background}
       lineBackground={lineBackground}
     />
