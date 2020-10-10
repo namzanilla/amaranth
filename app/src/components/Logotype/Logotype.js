@@ -1,12 +1,22 @@
 import React from 'react';
 import {
-  Wrap,
+  LogotypeWrap,
 } from './style';
 
-export default () => {
+export default (props) => {
+  const {background} = props;
+
   return (
-    <Wrap>
-      Logotype
-    </Wrap>
+    <LogotypeWrap
+      background={background}
+    >
+      <span>f</span>
+      <span>r</span>
+      <span>u</span>
+      <span>c</span>
+      <span>t</span>
+      <span>u</span>
+      <span>s</span>
+    </LogotypeWrap>
   );
 }
