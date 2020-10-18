@@ -22,14 +22,10 @@ const components = {
 };
 
 export default (props) => {
-  const {
-    hoc,
-    history,
-  } = props;
-  const Component = components[hoc];
+  const Component = components[props.hoc];
 
   useEffect(() => {
-    history.listen(({location}) => {
+    props.history.listen(({location}) => {
       const {pathname, search} = location;
       const languageId = getLangIdByUrlPath(pathname);
       props.setLanguageId(languageId);

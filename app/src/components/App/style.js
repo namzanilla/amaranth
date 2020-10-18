@@ -18,5 +18,9 @@ export default createGlobalStyle`
     background-color: #fff;
     color: #000;
     font: normal normal normal 1em/1.5 arial, sans-serif;
+    overflow-x: hidden;
+  }
+  .overflow-y-hidden {
+    overflow-y: hidden;
   }
 `;

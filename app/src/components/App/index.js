@@ -5,19 +5,15 @@ import * as appActionCreators from 'store/actions/app';
 const mapStateToProps = (state) => {
   const {
     app: {
-      loading,
       hoc,
-      languageId,
       alternateUk,
       alternateRu,
     } = {},
   } = state;
 
   return {
-    loading,
     hoc,
     alternateUk,
-    languageId,
     alternateRu,
   };
 };
