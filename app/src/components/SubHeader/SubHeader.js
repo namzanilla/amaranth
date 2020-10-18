@@ -1,6 +1,8 @@
 import React from 'react';
 import Hamburger from 'components/Hamburger';
+import PhoneIcon from 'components/Icons/Phone';
 import {
+  PhoneWrap,
   HamburgerWrap,
   SubHeaderWrap,
 } from './style';
@@ -11,12 +13,18 @@ export default (props) => {
   return (
     <SubHeaderWrap>
       <div>
-        <HamburgerWrap
-          href={href}
-          onClick={hamburgerOnClick(props, href)}
-        >
-          <Hamburger />
-        </HamburgerWrap>
+        <div>
+          <HamburgerWrap
+            href={href}
+            onClick={hamburgerOnClick(props, href)}
+          >
+            <Hamburger />
+          </HamburgerWrap>
+          <PhoneWrap href="tel:+380662927527">
+            <PhoneIcon />
+            <span>+38 (066) 292 75 27</span>
+          </PhoneWrap>
+        </div>
       </div>
     </SubHeaderWrap>
   );
