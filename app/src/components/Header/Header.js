@@ -15,7 +15,7 @@ export default (props) => {
         />
         <SwitchLanguage
           history={props.history}
-          background="#f3f3f3"
+          background="#FFCBA5"
         />
       </div>
     </HeaderWrap>
