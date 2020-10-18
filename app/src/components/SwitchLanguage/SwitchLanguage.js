@@ -49,7 +49,6 @@ export default (props) => {
       >
         укр
       </a>
-      <span>|</span>
       <a
         {...propsRu}
       >
