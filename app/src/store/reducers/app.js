@@ -2,7 +2,6 @@ import * as at from 'store/actionTypes';
 
 const initialState = {
   loading: 0,
-  brandNavIsVisible: false,
 };
 
 export default (state = initialState, action) => {
@@ -52,13 +51,6 @@ export default (state = initialState, action) => {
         ...state,
         alternateUk,
         alternateRu,
-      };
-    } case at.APP_TOGGLE_BRAND_NAV_VISIBILITY: {
-      let {payload} = action;
-
-      return {
-        ...state,
-        brandNavIsVisible: payload,
       };
     } default: {
       return state;

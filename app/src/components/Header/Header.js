@@ -1,40 +1,23 @@
 import React from 'react';
 import SwitchLanguage from 'components/SwitchLanguage';
-import Logotype from 'components/Logotype';
-import BrandNav from './BrandNav';
+import HomeLink from 'components/HomeLink';
 import {
-  Wrap,
+  HeaderWrap,
 } from './style';
 
 export default (props) => {
-  const {
-    languageId,
-    history,
-  } = props;
-
-  const homeLinkHref = languageId === 1 ? '/' : '/ru';
-
   return (
-    <Wrap>
+    <HeaderWrap>
       <div>
-        <a
-          href={homeLinkHref}
-          onClick={(e) => {
-            e.preventDefault();
-
-            history.push({
-              pathname: homeLinkHref,
-              search: '',
-            })
-          }}
-        >
-          <Logotype />
-        </a>
-        <BrandNav />
+        <HomeLink
+          history={props.history}
+          background="#ffa5ac"
+        />
+        <SwitchLanguage
+          history={props.history}
+          background="#f3f3f3"
+        />
       </div>
-      <SwitchLanguage
-        history={history}
-      />
-    </Wrap>
+    </HeaderWrap>
   );
 };

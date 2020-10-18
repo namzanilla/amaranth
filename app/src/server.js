@@ -1,5 +1,6 @@
 import Koa from 'koa';
 import Router from 'koa-router';
+
 const router = new Router();
 const koa = new Koa();
 const {
@@ -13,10 +14,19 @@ app.isDevelopment = NODE_ENV === 'development';
 require('./koaLogger')(koa, NODE_ENV);
 
 import indexController from 'controllers/index.controller';
+router.get('/', indexController(1));
+router.get('/ru', indexController(2));
 
-router.get('/(ru)?', indexController);
+import categoriesController from 'controllers/categories.controller';
+router.get('/c', categoriesController(1));
+router.get('/ru/c', categoriesController(2));
+
+import categoryController from 'controllers/category.controller';
+router.get('/c/:id(\\d+)', categoryController(1));
+router.get('/ru/c/:id(\\d+)', categoryController(2));
 
 import notFoundController from 'controllers/notFound.controller';
+
 koa.use(async(ctx, next) => {
   try {
     await next();

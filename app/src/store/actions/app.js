@@ -34,16 +34,3 @@ export const setAlternate = (alternate) => (dispatch, getState) => {
     });
   }
 };
-
-export const toggleBrandNavVisibility = () => (dispatch, getState) => {
-  const {
-    app: {
-      brandNavIsVisible,
-    } = {},
-  } = getState();
-
-  dispatch({
-    type: at.APP_TOGGLE_BRAND_NAV_VISIBILITY,
-    payload: !(brandNavIsVisible),
-  });
-};

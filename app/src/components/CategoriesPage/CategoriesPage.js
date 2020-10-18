@@ -5,9 +5,9 @@ export default () => {
   return (
     <>
       <Helmet>
-        <title>category title</title>
+        <title>categories title</title>
       </Helmet>
-      category
+      categories
     </>
   );
 };

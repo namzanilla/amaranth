@@ -1,20 +1,19 @@
 export async function getHoc(pathname)  {
-  if (pathname === '/' || pathname === '/ru') {
-    return 'HomePage';
-  }
-
   pathname = pathname.split('/');
+  pathname.shift();
 
-  let segment;
-
-  if (pathname[1] === 'ru') {
-    segment = pathname[2];
-  } else {
-    segment = pathname[1];
+  if ('ru' === pathname[0] || '' === pathname[0]) {
+    pathname.shift();
   }
 
-  if (/^c[0-9]+$/.test(segment)) {
-    return 'CategoryPage';
+  if (!pathname.length) return 'HomePage';
+
+  if ('c' === pathname[0]) {
+    if (pathname[1] && /^[1-9][0-9]*$/.test(pathname[1])) {
+      return 'CategoryPage';
+    }
+
+    return 'CategoriesPage';
   }
 
   return 'NotFoundPage';

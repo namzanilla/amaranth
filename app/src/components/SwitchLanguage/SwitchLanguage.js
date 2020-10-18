@@ -13,23 +13,23 @@ export default (props) => {
   } = props;
 
   const propsRu = {
-    href: alternateUk,
+    href: alternateRu,
     onClick: (e) => {
       e.preventDefault();
 
       if (languageId === 1) {
-        history.push('/ru');
+        history.push(alternateRu);
       }
     },
   };
 
   const propsUk = {
-    href: alternateRu,
+    href: alternateUk,
     onClick: (e) => {
       e.preventDefault();
 
       if (languageId === 2) {
-        history.push('/');
+        history.push(alternateUk);
       }
     },
   };

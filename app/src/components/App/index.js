@@ -3,18 +3,10 @@ import App from './App';
 import * as appActionCreators from 'store/actions/app';
 
 const mapStateToProps = (state) => {
-  const {
-    app: {
-      hoc,
-      alternateUk,
-      alternateRu,
-    } = {},
-  } = state;
-
   return {
-    hoc,
-    alternateUk,
-    alternateRu,
+    hoc: state.app.hoc,
+    alternateUk: state.app.alternateUk,
+    alternateRu: state.app.alternateRu,
   };
 };
 

@@ -20,7 +20,7 @@ export default (languageId) => async (ctx) => {
   const sheet = new ServerStyleSheet();
 
   dispatch(appActionCreators.setLanguageId(languageId));
-  dispatch(appActionCreators.setHoc('HomePage'));
+  dispatch(appActionCreators.setHoc('CategoryPage'));
 
   const alternate = getAlternate(ctx.path, ctx.querystring);
   dispatch(appActionCreators.setAlternate(alternate));
