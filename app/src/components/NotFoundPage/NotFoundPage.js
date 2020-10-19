@@ -1,19 +1,13 @@
 import React from 'react';
 import {Helmet} from 'react-helmet';
-import Header from 'components/Header';
 
-export default (props) => {
-  const {history} = props;
-
+export default () => {
   return (
     <>
       <Helmet>
-        <title>NotFoundPage</title>
+        <title>Page not found</title>
       </Helmet>
-      <Header
-        history={history}
-      />
-
+      Page not found
     </>
   );
 };
