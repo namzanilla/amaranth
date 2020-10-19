@@ -31,9 +31,7 @@ export default (props) => {
       const {pathname, search} = location;
       const languageId = getLangIdByUrlPath(pathname);
       props.setLanguageId(languageId);
-
-      const alternate = getAlternate(pathname, search);
-      props.setAlternate(alternate);
+      props.setAlternate(pathname, search);
 
       getHoc(pathname).then((hoc) => {
         props.setHoc(hoc);

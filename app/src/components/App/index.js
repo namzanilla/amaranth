@@ -13,7 +13,7 @@ const mapStateToProps = (state) => {
 const mapDispatchToProps = (dispatch) => {
   return {
     setLanguageId: (languageId) => dispatch(appActionCreators.setLanguageId(languageId)),
-    setAlternate: (alternate) => dispatch(appActionCreators.setAlternate(alternate)),
+    setAlternate: (path, querystring) => dispatch(appActionCreators.setAlternate(path, querystring)),
     setHoc: (hoc) => dispatch(appActionCreators.setHoc(hoc)),
   };
 };

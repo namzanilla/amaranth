@@ -21,9 +21,7 @@ export default (languageId) => async (ctx) => {
 
   dispatch(appActionCreators.setLanguageId(languageId));
   dispatch(appActionCreators.setHoc('CartPage'));
-
-  const alternate = getAlternate(ctx.path, ctx.querystring);
-  dispatch(appActionCreators.setAlternate(alternate));
+  dispatch(appActionCreators.setAlternate(ctx.path, ctx.querystring));
 
   try {
     const {data: payload} = await getCategoryBrandTree(languageId);

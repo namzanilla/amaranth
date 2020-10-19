@@ -1,4 +1,5 @@
 import * as at from 'store/actionTypes';
+import {getAlternate} from 'helpers/language';
 
 export const setLanguageId = (languageId) => (dispatch, getState) => {
   const {app = {}} = getState();
@@ -22,10 +23,9 @@ export const setHoc = (hoc) => (dispatch, getState) => {
   }
 };
 
-export const setAlternate = (alternate) => (dispatch, getState) => {
-  const {
-    app = {},
-  } = getState();
+export const setAlternate = (path, querystring) => (dispatch, getState) => {
+  const alternate = getAlternate(path, querystring);
+  const {app} = getState();
 
   if (app.alternateUk !== alternate.uk) {
     dispatch({

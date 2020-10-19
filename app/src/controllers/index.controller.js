@@ -5,9 +5,6 @@ import {Provider} from 'react-redux';
 import createStore from 'store/createStore';
 import App from 'components/App';
 import Html from 'components/Html';
-
-import {getAlternate} from 'helpers/language';
-
 import * as appActionCreators from 'store/actions/app';
 import * as categoryActionCreators from 'store/actions/category';
 
@@ -21,9 +18,7 @@ export default (languageId) => async (ctx) => {
 
   dispatch(appActionCreators.setLanguageId(languageId));
   dispatch(appActionCreators.setHoc('HomePage'));
-
-  const alternate = getAlternate(ctx.path, ctx.querystring);
-  dispatch(appActionCreators.setAlternate(alternate));
+  dispatch(appActionCreators.setAlternate(ctx.path, ctx.querystring));
 
   try {
     const {data: payload} = await getCategoryBrandTree(languageId);

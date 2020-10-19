@@ -24,10 +24,6 @@ export default async (ctx) => {
   dispatch(appActionCreators.setLanguageId(languageId));
   dispatch(appActionCreators.setHoc('NotFoundPage'));
 
-  const alternate = getAlternate(ctx.path, ctx.querystring);
-
-  dispatch(appActionCreators.setAlternate(alternate));
-
   props.__html = renderToString(
     <Provider store={store}>
       <StyleSheetManager sheet={sheet.instance}>
