@@ -9,6 +9,7 @@ import {getHoc} from 'helpers/hoc';
 import HomePage from 'components/HomePage';
 import CategoriesPage from 'components/CategoriesPage';
 import CategoryPage from 'components/CategoryPage';
+import CartPage from 'components/CartPage';
 import NotFoundPage from 'components/NotFoundPage';
 
 import Header from 'components/Header';
@@ -18,6 +19,7 @@ const components = {
   HomePage,
   CategoriesPage,
   CategoryPage,
+  CartPage,
   NotFoundPage,
 };
 

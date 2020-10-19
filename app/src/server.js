@@ -25,6 +25,10 @@ import categoryController from 'controllers/category.controller';
 router.get('/c/:id(\\d+)', categoryController(1));
 router.get('/ru/c/:id(\\d+)', categoryController(2));
 
+import cartController from 'controllers/cart.controller';
+router.get('/cart', cartController(1));
+router.get('/ru/cart', cartController(2));
+
 import notFoundController from 'controllers/notFound.controller';
 
 koa.use(async(ctx, next) => {

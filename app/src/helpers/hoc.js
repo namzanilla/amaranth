@@ -8,6 +8,10 @@ export async function getHoc(pathname)  {
 
   if (!pathname.length) return 'HomePage';
 
+  if ('cart' === pathname[0]) {
+    return 'CartPage';
+  }
+
   if ('c' === pathname[0]) {
     if (pathname[1] && /^[1-9][0-9]*$/.test(pathname[1])) {
       return 'CategoryPage';
