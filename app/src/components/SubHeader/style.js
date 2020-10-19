@@ -23,6 +23,15 @@ export const HamburgerWrap = styled.a`
   margin-right: 20px;
 `;
 
+export const CartLinkWrap = styled.a`
+  display: inline-flex;
+  width: 40px;
+  height: 40px;
+  background: #FFCBA5;
+  justify-content: center;
+  align-items: center;
+`;
+
 export const SubHeaderWrap = styled.div`
   background-color: #FFA5AC;
   position: sticky;

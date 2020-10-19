@@ -1,22 +1,22 @@
 import React from 'react';
 import Hamburger from 'components/Hamburger';
 import PhoneIcon from 'components/Icons/Phone';
+import CartIcon from 'components/Icons/Cart';
 import {
+  CartLinkWrap,
   PhoneWrap,
   HamburgerWrap,
   SubHeaderWrap,
 } from './style';
 
 export default (props) => {
-  const href = props.languageId === 1 ? '/c' : '/ru/c';
-
   return (
     <SubHeaderWrap>
       <div>
         <div>
           <HamburgerWrap
-            href={href}
-            onClick={hamburgerOnClick(props, href)}
+            href={hamburgerHref(props.languageId)}
+            onClick={linkOnClick(props, hamburgerHref(props.languageId))}
           >
             <Hamburger />
           </HamburgerWrap>
@@ -25,12 +25,26 @@ export default (props) => {
             <span>+38 (066) 292 75 27</span>
           </PhoneWrap>
         </div>
+        <CartLinkWrap
+          href={cartHref(props.languageId)}
+          onClick={linkOnClick(props, cartHref(props.languageId))}
+        >
+          <CartIcon />
+        </CartLinkWrap>
       </div>
     </SubHeaderWrap>
   );
 };
 
-const hamburgerOnClick = (props, href) => {
+const cartHref = (languageId) => {
+  return languageId === 1 ? '/cart' : '/ru/cart';
+}
+
+const hamburgerHref = (languageId) => {
+  return languageId === 1 ? '/c' : '/ru/c';
+}
+
+const linkOnClick = (props, href) => {
   return (e) => {
     e.preventDefault();
     props.history.push(href);
