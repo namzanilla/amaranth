@@ -8,7 +8,8 @@ const {
 } = process.env;
 
 module.exports = (app) => {
-  const connection = mysql.createConnection({
+  const pool = mysql.createPool({
+    connectionLimit : 20,
     host: MYSQL_DB_HOST,
     port: MYSQL_DB_PORT,
     user: MYSQL_DB_USER,
@@ -16,8 +17,10 @@ module.exports = (app) => {
     database: MYSQL_DB_NAME,
   });
 
-  connection.connect();
+  pool.getConnection(function(err, connection) {
+    if (err) throw err;
 
-  app.mysql = {};
-  app.mysql.connection = connection;
+    app.mysql = {};
+    app.mysql.connection = connection;
+  });
 }
