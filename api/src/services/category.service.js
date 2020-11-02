@@ -76,7 +76,6 @@ module.exports = (app) => {
     let info = await getById(params);
 
     return {
-      id: info.id,
       h1: info.name,
     };
   };
