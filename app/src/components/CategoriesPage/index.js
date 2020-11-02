@@ -1,3 +1,10 @@
 import CategoriesPage from './CategoriesPage';
+import {connect} from 'react-redux';
 
-export default CategoriesPage;
+const mapStateToProps = (state) => {
+  return {
+    languageId: state.app.languageId,
+  };
+};
+
+export default connect(mapStateToProps)(CategoriesPage);
