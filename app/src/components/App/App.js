@@ -1,10 +1,7 @@
 import React, {useEffect} from 'react';
 import Style from './style';
 import {Helmet} from 'react-helmet';
-import {
-  getLangIdByUrlPath,
-  getAlternate,
-} from 'helpers/language';
+import {getLangIdByUrlPath} from 'helpers/language';
 import {getHoc} from 'helpers/hoc';
 import HomePage from 'components/HomePage';
 import CategoriesPage from 'components/CategoriesPage';
