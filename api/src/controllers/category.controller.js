@@ -6,6 +6,7 @@ module.exports = (app) => {
 
   router.get('/category', getList);
   router.get('/category/:id(\\d+)', getById);
+  router.get('/category/:id(\\d+)/info', getInfoById);
 
   function getList(ctx) {
     const {
@@ -34,6 +35,25 @@ module.exports = (app) => {
     };
 
     return categoryService.getById(params)
+      .then(h(app).onFulfilled(ctx), h(app).onRejected(ctx))
+  }
+
+  function getInfoById(ctx) {
+    const {
+      params: {
+        id: categoryId,
+      } = {},
+      query: {
+        language_id: languageId,
+      } = {},
+    } = ctx;
+
+    const params = {
+      categoryId,
+      languageId,
+    };
+
+    return categoryService.getInfoById(params)
       .then(h(app).onFulfilled(ctx), h(app).onRejected(ctx))
   }
 

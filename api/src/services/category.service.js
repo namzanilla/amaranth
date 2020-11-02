@@ -15,10 +15,7 @@ module.exports = (app) => {
 
     const category = await new Promise((resolve, reject) => {
       const qs = `
-        SELECT
-          c.id,
-          c.name
-        FROM category c
+        SELECT * FROM category c
         WHERE c.id=?
       `;
       const cb = async (error, results) => {
@@ -74,6 +71,15 @@ module.exports = (app) => {
     
     return category;
   }
+
+  const getInfoById = async (params) => {
+    let info = await getById(params);
+
+    return {
+      id: info.id,
+      h1: info.name,
+    };
+  };
 
   const getList = async (query) => {
     const qs = {};
@@ -204,6 +210,7 @@ module.exports = (app) => {
   return {
     getList,
     getById,
+    getInfoById,
   };
 };
 
