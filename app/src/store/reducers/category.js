@@ -24,6 +24,16 @@ export default (state = initialState, action) => {
         ...state,
         [`list_${languageId}`]: list,
       };
+    } case at.CATEGORY_SET_INFO: {
+      const {
+        languageId,
+        info,
+      } = action;
+
+      return {
+        ...state,
+        [`info_${languageId}`]: info,
+      };
     } default: {
       return state;
     }

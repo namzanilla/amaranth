@@ -15,6 +15,7 @@ const mapDispatchToProps = (dispatch) => {
     setLanguageId: (languageId) => dispatch(appActionCreators.setLanguageId(languageId)),
     setAlternate: (path, querystring) => dispatch(appActionCreators.setAlternate(path, querystring)),
     setHoc: (hoc) => dispatch(appActionCreators.setHoc(hoc)),
+    dispatch,
   };
 };
 

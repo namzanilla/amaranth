@@ -1,8 +1,9 @@
 import apiConnector from 'helpers/apiConnector';
 const querystring = require('querystring');
-const path = '/category';
 
 export const getCategoryList = (params) => {
+  const path = '/category';
+
   const {
     group = 1,
     status = 1,
@@ -16,6 +17,18 @@ export const getCategoryList = (params) => {
     view,
     language_id,
   });
+
+  return apiConnector({path, query});
+};
+
+export const getInfoById = (params) => {
+  const {
+    id,
+    languageId,
+  } = params;
+  const path = `/category/${id}/info`;
+
+  const query = `language_id=${languageId}`
 
   return apiConnector({path, query});
 };

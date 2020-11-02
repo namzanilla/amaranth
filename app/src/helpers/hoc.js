@@ -1,4 +1,15 @@
-export async function getHoc(pathname)  {
+import * as categoryApi from 'api/category';
+import * as categoryActionCreators from 'store/actions/category';
+
+export async function getHoc(props)  {
+  let {
+    pathname,
+  } = props;
+  const {
+    dispatch,
+    languageId,
+  } = props;
+
   pathname = pathname.split('/');
   pathname.shift();
 
@@ -14,6 +25,19 @@ export async function getHoc(pathname)  {
 
   if ('c' === pathname[0]) {
     if (pathname[1] && /^[1-9][0-9]*$/.test(pathname[1])) {
+      const categoryId = parseInt(pathname[1]);
+      const params = {
+        id: categoryId,
+        languageId,
+      };
+      try {
+        const {data: info} = await categoryApi.getInfoById(params);
+
+        dispatch(categoryActionCreators.setCategoryInfo(languageId, info));
+      } catch (e) {
+        console.log(e);
+      }
+
       return 'CategoryPage';
     }
 

@@ -7,12 +7,27 @@ import App from 'components/App';
 import Html from 'components/Html';
 
 import * as appActionCreators from 'store/actions/app';
+import * as categoryApi from 'api/category';
+import * as categoryActionCreators from 'store/actions/category';
 
 export default (languageId) => async (ctx) => {
   const props = {};
   const store = createStore();
   const {dispatch} = store;
   const sheet = new ServerStyleSheet();
+  const categoryId = parseInt(ctx.params.id);
+  const params = {
+    id: categoryId,
+    languageId,
+  };
+
+  try {
+    const {data: info} = await categoryApi.getInfoById(params);
+
+    dispatch(categoryActionCreators.setCategoryInfo(languageId, info));
+  } catch (e) {
+    console.log(e);
+  }
 
   dispatch(appActionCreators.setLanguageId(languageId));
   dispatch(appActionCreators.setHoc('CategoryPage'));

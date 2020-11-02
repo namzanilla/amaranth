@@ -30,7 +30,11 @@ export default (props) => {
       props.setLanguageId(languageId);
       props.setAlternate(pathname, search);
 
-      getHoc(pathname).then((hoc) => {
+      getHoc({
+        pathname,
+        dispatch: props.dispatch,
+        languageId,
+      }).then((hoc) => {
         props.setHoc(hoc);
       });
     });

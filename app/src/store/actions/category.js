@@ -35,3 +35,11 @@ export const setCategoryList = (languageId, list) => (dispatch) => {
     list,
   });
 };
+
+export const setCategoryInfo = (languageId, info) => (dispatch) => {
+  dispatch({
+    type: at.CATEGORY_SET_INFO,
+    languageId,
+    info,
+  });
+};
