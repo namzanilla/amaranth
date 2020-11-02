@@ -1,3 +1,10 @@
 import NotFoundPage from './NotFoundPage';
+import {connect} from 'react-redux';
 
-export default NotFoundPage;
+const mapStateToProps = (state) => {
+  return {
+    languageId: state.app.languageId,
+  };
+};
+
+export default connect(mapStateToProps)(NotFoundPage);
