@@ -6,12 +6,7 @@ import createStore from 'store/createStore';
 import App from 'components/App';
 import Html from 'components/Html';
 
-import {getAlternate} from 'helpers/language';
-
 import * as appActionCreators from 'store/actions/app';
-import * as categoryActionCreators from 'store/actions/category';
-
-import {getCategoryBrandTree} from 'api/category';
 
 export default (languageId) => async (ctx) => {
   const props = {};
@@ -22,14 +17,6 @@ export default (languageId) => async (ctx) => {
   dispatch(appActionCreators.setLanguageId(languageId));
   dispatch(appActionCreators.setHoc('CategoryPage'));
   dispatch(appActionCreators.setAlternate(ctx.path, ctx.querystring));
-
-  try {
-    const {data: payload} = await getCategoryBrandTree(languageId);
-
-    dispatch(categoryActionCreators.setCategoryBrandTree(payload));
-  } catch (e) {
-    console.log(e);
-  }
 
   props.__html = renderToString(
     <Provider store={store}>
