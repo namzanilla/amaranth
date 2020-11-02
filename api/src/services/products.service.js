@@ -62,8 +62,6 @@ module.exports = (app) => {
       return {total};
     }
 
-    console.log('total', total);
-    
     qs += ` LIMIT ?, ?`;
 
     qsParams.push(offset);
