@@ -11,49 +11,42 @@ export default (props) => {
     alternateRu,
     background,
   } = props;
-
-  const propsRu = {
-    href: alternateRu,
-    onClick: (e) => {
-      e.preventDefault();
-
-      if (languageId === 1) {
-        history.push(alternateRu);
-      }
-    },
-  };
-
-  const propsUk = {
-    href: alternateUk,
-    onClick: (e) => {
-      e.preventDefault();
-
-      if (languageId === 2) {
-        history.push(alternateUk);
-      }
-    },
-  };
-
-  if (languageId === 1) {
-    propsUk.className = 'active';
-  } else {
-    propsRu.className = 'active';
-  }
-
+console.log(getHref(languageId, alternateUk, alternateRu));
   return (
     <SwitchLanguageWrap
       background={background}
+      href={getHref(languageId, alternateUk, alternateRu)}
+      onClick={onClickHandler(languageId, alternateUk, alternateRu, history)}
     >
-      <a
-        {...propsUk}
-      >
-        укр
-      </a>
-      <a
-        {...propsRu}
-      >
-        рус
-      </a>
+      {getText(languageId)}
     </SwitchLanguageWrap>
   );
 }
+
+const getText = (languageId) => {
+  if (languageId === 1) {
+    return 'рус';
+  } else if (languageId === 2) {
+    return 'укр';
+  }
+};
+
+const getHref = (languageId, alternateUk, alternateRu) => {
+  console.log(languageId);
+  console.log(alternateRu);
+  if (languageId === 1) {
+    return alternateRu;
+  } else if (languageId === 2) {
+    return alternateUk;
+  }
+};
+
+const onClickHandler = (languageId, alternateUk, alternateRu, history) => (e) => {
+  e.preventDefault();
+
+  if (languageId === 1) {
+    history.push(alternateRu);
+  } else if (languageId === 2) {
+    history.push(alternateUk);
+  }
+};
