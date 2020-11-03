@@ -44,9 +44,13 @@ const hamburgerHref = (languageId) => {
   return languageId === 1 ? '/c' : '/ru/c';
 }
 
-const linkOnClick = (props, href) => {
+const linkOnClick = (props, pathname) => {
   return (e) => {
     e.preventDefault();
-    props.history.push(href);
+    
+    props.history.push({
+      pathname,
+      search: '',
+    });
   };
 }
