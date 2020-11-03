@@ -75,6 +75,8 @@ module.exports = (app) => {
   const getInfoById = async (params) => {
     let info = await getById(params);
 
+    if (!info.name) return {};
+
     return {
       h1: info.name,
     };
