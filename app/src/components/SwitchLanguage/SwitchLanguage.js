@@ -11,7 +11,7 @@ export default (props) => {
     alternateRu,
     background,
   } = props;
-console.log(getHref(languageId, alternateUk, alternateRu));
+
   return (
     <SwitchLanguageWrap
       background={background}
@@ -32,8 +32,6 @@ const getText = (languageId) => {
 };
 
 const getHref = (languageId, alternateUk, alternateRu) => {
-  console.log(languageId);
-  console.log(alternateRu);
   if (languageId === 1) {
     return alternateRu;
   } else if (languageId === 2) {
