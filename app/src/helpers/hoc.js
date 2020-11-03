@@ -38,6 +38,7 @@ export async function getHoc(props)  {
           throw `Category ${categoryId} not found`;
         }
 
+        dispatch(categoryActionCreators.setCategoryId(categoryId));
         dispatch(categoryActionCreators.setCategoryInfo(languageId, info));
         return 'CategoryPage';
       } catch (e) {
