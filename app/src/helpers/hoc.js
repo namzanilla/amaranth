@@ -1,5 +1,6 @@
 import * as categoryApi from 'api/category';
 import * as categoryActionCreators from 'store/actions/category';
+import {isEmpty} from './_Object';
 
 export async function getHoc(props)  {
   let {
@@ -31,14 +32,18 @@ export async function getHoc(props)  {
         languageId,
       };
       try {
-        const {data: info} = await categoryApi.getInfoById(params);
+        const {data: info = {}} = await categoryApi.getInfoById(params);
+
+        if (isEmpty(info)) {
+          throw `Category ${categoryId} not found`;
+        }
 
         dispatch(categoryActionCreators.setCategoryInfo(languageId, info));
+        return 'CategoryPage';
       } catch (e) {
         console.log(e);
+        return 'NotFoundPage';
       }
-
-      return 'CategoryPage';
     }
 
     return 'CategoriesPage';
