@@ -23,6 +23,7 @@ export default async (ctx) => {
 
   dispatch(appActionCreators.setLanguageId(languageId));
   dispatch(appActionCreators.setHoc('NotFoundPage'));
+  dispatch(appActionCreators.setAlternate(ctx.path, ctx.querystring));
 
   props.__html = renderToString(
     <Provider store={store}>
