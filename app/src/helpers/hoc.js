@@ -27,28 +27,11 @@ export async function getHoc(props)  {
   if ('c' === pathname[0]) {
     if (pathname[1] && /^\d+$/.test(pathname[1])) {
       return 'CategoryPage';
-      /*const categoryId = parseInt(pathname[1]);
-      const params = {
-        id: categoryId,
-        languageId,
-      };
-      try {
-        const {data: info = {}} = await categoryApi.getInfoById(params);
-
-        if (isEmpty(info)) {
-          throw `Category ${categoryId} not found`;
-        }
-
-        dispatch(categoryActionCreators.setCategoryId(categoryId));
-        dispatch(categoryActionCreators.setCategoryInfo(languageId, info));
-        return 'CategoryPage';
-      } catch (e) {
-        console.log(e);
-        return 'NotFoundPage';
-      }*/
     }
 
     return 'CategoriesPage';
+  } else if (/^p\d+$/.test(pathname[0])) {
+    return 'ProductPage';
   }
 
   return 'NotFoundPage';

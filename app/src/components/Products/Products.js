@@ -26,6 +26,7 @@ export default (props) => {
         languageId={props.languageId}
         name={name}
         price={price}
+        history={props.history}
       />
     );
   });

@@ -52,6 +52,7 @@ export default (props) => {
       <H1 child={props.h1} />
       <Products
         margin="0 auto 20px auto"
+        history={props.history}
       />
       <Pagination
         url={getPaginationUrl(props.languageId, props.categoryId)}

@@ -7,6 +7,7 @@ import HomePage from 'components/HomePage';
 import CategoriesPage from 'components/CategoriesPage';
 import CategoryPage from 'components/CategoryPage';
 import CartPage from 'components/CartPage';
+import ProductPage from 'components/ProductPage';
 import NotFoundPage from 'components/NotFoundPage';
 const querystring = require('querystring');
 import Header from 'components/Header';
@@ -17,6 +18,7 @@ const components = {
   CategoriesPage,
   CategoryPage,
   CartPage,
+  ProductPage,
   NotFoundPage,
 };
 

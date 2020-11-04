@@ -29,6 +29,10 @@ import cartController from 'controllers/cart.controller';
 router.get('/cart', cartController(1));
 router.get('/ru/cart', cartController(2));
 
+import productController from 'controllers/product.controller';
+router.get('/p:id(\\d+)', productController(1));
+router.get('/ru/p:id(\\d+)', productController(2));
+
 import notFoundController from 'controllers/notFound.controller';
 
 koa.use(async(ctx, next) => {
