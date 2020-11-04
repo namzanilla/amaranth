@@ -32,21 +32,16 @@ export default (props) => {
       props.setLanguageId(languageId);
       props.setAlternate(pathname, search);
 
-      getHoc({
-        pathname,
-        dispatch: props.dispatch,
-        languageId,
-      }).then((hoc) => {
-        if (hoc === 'CategoryPage') {
-          const params = querystring.parse(`${search.substring(1)}`);
-          let {page} = params;
-          page = parseInt(page);
-          page = isNaN(page) ? 1 : page;
-          props.productsSetPage(page);
-        }
+      const hoc = getHoc(pathname)
+      props.setHoc(hoc);
 
-        props.setHoc(hoc);
-      });
+      if (hoc === 'CategoryPage') {
+        const params = querystring.parse(`${search.substring(1)}`);
+        let {page} = params;
+        page = parseInt(page);
+        page = isNaN(page) ? 1 : page;
+        props.productsSetPage(page);
+      }
     });
   }, []);
 

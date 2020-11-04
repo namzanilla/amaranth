@@ -1,16 +1,4 @@
-import * as categoryApi from 'api/category';
-import * as categoryActionCreators from 'store/actions/category';
-import {isEmpty} from './_Object';
-
-export async function getHoc(props)  {
-  let {
-    pathname,
-  } = props;
-  const {
-    dispatch,
-    languageId,
-  } = props;
-
+export function getHoc(pathname)  {
   pathname = pathname.split('/');
   pathname.shift();
 
