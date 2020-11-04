@@ -25,8 +25,9 @@ export async function getHoc(props)  {
   }
 
   if ('c' === pathname[0]) {
-    if (pathname[1] && /^[1-9][0-9]*$/.test(pathname[1])) {
-      const categoryId = parseInt(pathname[1]);
+    if (pathname[1] && /^\d+$/.test(pathname[1])) {
+      return 'CategoryPage';
+      /*const categoryId = parseInt(pathname[1]);
       const params = {
         id: categoryId,
         languageId,
@@ -44,7 +45,7 @@ export async function getHoc(props)  {
       } catch (e) {
         console.log(e);
         return 'NotFoundPage';
-      }
+      }*/
     }
 
     return 'CategoriesPage';

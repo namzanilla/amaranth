@@ -8,7 +8,7 @@ import CategoriesPage from 'components/CategoriesPage';
 import CategoryPage from 'components/CategoryPage';
 import CartPage from 'components/CartPage';
 import NotFoundPage from 'components/NotFoundPage';
-
+const querystring = require('querystring');
 import Header from 'components/Header';
 import SubHeader from 'components/SubHeader';
 
@@ -35,6 +35,14 @@ export default (props) => {
         dispatch: props.dispatch,
         languageId,
       }).then((hoc) => {
+        if (hoc === 'CategoryPage') {
+          const params = querystring.parse(`${search.substring(1)}`);
+          let {page} = params;
+          page = parseInt(page);
+          page = isNaN(page) ? 1 : page;
+          props.productsSetPage(page);
+        }
+
         props.setHoc(hoc);
       });
     });

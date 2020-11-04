@@ -17,6 +17,13 @@ export default (state = initialState, action) => {
         ...state,
         loading,
       };
+    } case at.APP_SET_SSR: {
+      let {bool} = action;
+
+      return {
+        ...state,
+        ssr: bool,
+      };
     } case at.APP_LOADING_INC: {
       let {loading = 0} = state;
       loading++;

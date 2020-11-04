@@ -12,6 +12,13 @@ export const setLanguageId = (languageId) => (dispatch, getState) => {
   }
 };
 
+export const setSSR = (bool) => (dispatch, getState) => {
+  dispatch({
+    type: at.APP_SET_SSR,
+    bool,
+  });
+};
+
 export const setHoc = (hoc) => (dispatch, getState) => {
   const {app = {}} = getState();
 
