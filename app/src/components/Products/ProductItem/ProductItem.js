@@ -3,6 +3,7 @@ import {ProductItemWrap} from './style';
 
 export default (props) => {
   const {
+    imageSrc,
     productId,
     languageId,
     name,
@@ -12,6 +13,9 @@ export default (props) => {
 
   return (
     <ProductItemWrap>
+      <div>
+
+      </div>
       <a
         href={getHref(productId, languageId)}
         onClick={onClick(productId, languageId, history)}
