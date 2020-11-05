@@ -41,6 +41,8 @@ export default (props) => {
         page = parseInt(page);
         page = isNaN(page) ? 1 : page;
         props.productsSetPage(page);
+      } else if (hoc === 'ProductPage') {
+        props.setProductIdByPathname(pathname);
       }
     });
   }, []);

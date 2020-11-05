@@ -6,6 +6,7 @@ import createStore from 'store/createStore';
 import App from 'components/App';
 import Html from 'components/Html';
 import * as appActionCreators from 'store/actions/app';
+import * as productActionCreators from 'store/actions/product';
 
 export default (languageId) => async (ctx) => {
   const props = {};
@@ -13,9 +14,21 @@ export default (languageId) => async (ctx) => {
   const {dispatch} = store;
   const sheet = new ServerStyleSheet();
 
+  let {
+    params: {
+      id: productId,
+    } = {},
+  } = ctx;
+
+  productId = parseInt(productId)
+
   dispatch(appActionCreators.setLanguageId(languageId));
   dispatch(appActionCreators.setHoc('ProductPage'));
   dispatch(appActionCreators.setAlternate(ctx.path, ctx.querystring));
+  dispatch(appActionCreators.setSSR(true));
+
+  dispatch(productActionCreators.setProductId(productId));
+  await dispatch(productActionCreators.fetchProductById(productId));
 
   props.__html = renderToString(
     <Provider store={store}>
