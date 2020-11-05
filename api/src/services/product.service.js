@@ -1,11 +1,26 @@
 module.exports = (app) => {
   const getProductId = async (productId, languageId) => {
-    const meta = await getMetaByProductId(productId);
+    const metaList = await getMetaByProductId(productId, languageId);
 
+    const meta = {};
+
+    for (let el of metaList) {
+      const {
+        key_id,
+        value_id,
+        value,
+      } = el;
+
+      meta[key_id] = {
+        id: value_id,
+        value,
+      };
+    }
+    
     return {meta};
   }
 
-  const getMetaByProductId = async (productId) => {
+  const getMetaByProductId = async (productId, languageId) => {
     const qs = `
       SELECT
         mk.id key_id,
