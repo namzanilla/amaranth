@@ -1,4 +1,10 @@
 module.exports = (app) => {
+  const getProductId = async (productId, languageId) => {
+    const meta = await getMetaByProductId(productId);
+
+    return {meta};
+  }
+
   const getMetaByProductId = async (productId) => {
     const qs = `
       SELECT
@@ -72,6 +78,7 @@ module.exports = (app) => {
   }
 
   return {
+    getProductId,
     getMetaByProductId,
     getBrandByProductId,
   };

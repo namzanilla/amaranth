@@ -6,6 +6,7 @@ module.exports = (app) => {
 
   router.get('/product/:productId(\\d+)/brand', getBrandByProductId);
   router.get('/product/:productId(\\d+)/meta', getMetaByProductId);
+  router.get('/product/:productId', getProductId);
 
   function getBrandByProductId(ctx) {
     const {
@@ -15,6 +16,25 @@ module.exports = (app) => {
     } = ctx;
 
     return productService.getBrandByProductId(productId)
+      .then(h(app).onFulfilled(ctx), h(app).onRejected(ctx));
+  }
+
+  function getProductId(ctx) {
+    let {
+      request: {
+        query: {
+          lid: languageId = 1,
+        } = {},
+      } = {},
+      params: {
+        productId,
+      } = {},
+    } = ctx;
+
+    languageId = parseInt(languageId);
+    productId = parseInt(productId);
+
+    return productService.getProductId(productId, languageId)
       .then(h(app).onFulfilled(ctx), h(app).onRejected(ctx));
   }
 
