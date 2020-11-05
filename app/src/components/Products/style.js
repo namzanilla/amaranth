@@ -11,10 +11,10 @@ export const ProductsWrap = styled.div`
   @media (max-width: 639px) {
     grid-template-columns: repeat(2, 1fr);
   }
-  @media (min-width: 640px) and (max-width: 799px) {
+  @media (min-width: 640px) and (max-width: 959px) {
     grid-template-columns: repeat(3, 1fr);
   }
-  @media (min-width: 800px) {
+  @media (min-width: 960px) {
     grid-template-columns: repeat(4, 1fr);
   }
 `;
