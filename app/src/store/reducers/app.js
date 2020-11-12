@@ -24,6 +24,13 @@ export default (state = initialState, action) => {
         ...state,
         ssr: bool,
       };
+    } case at.APP_SET_STATIC_HOST: {
+      let {host} = action;
+
+      return {
+        ...state,
+        hostStatic: host,
+      };
     } case at.APP_LOADING_INC: {
       let {loading = 0} = state;
       loading++;

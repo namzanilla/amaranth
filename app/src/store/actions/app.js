@@ -19,6 +19,13 @@ export const setSSR = (bool) => (dispatch, getState) => {
   });
 };
 
+export const appSetStaticHost = (host) => (dispatch) => {
+  dispatch({
+    type: at.APP_SET_STATIC_HOST,
+    host,
+  });
+};
+
 export const setHoc = (hoc) => (dispatch, getState) => {
   const {app = {}} = getState();
 
