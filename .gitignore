@@ -13,3 +13,4 @@
 !/tmp/mysql.js
 /static/public
 !/static/public/.gitkeep
+/cron/node_modules/
