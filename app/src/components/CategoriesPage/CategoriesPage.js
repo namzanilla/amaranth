@@ -7,7 +7,7 @@ export default (props) => {
   return (
     <>
       <Helmet>
-        <title>categories title</title>
+        <title>{getH1(props.languageId)}</title>
       </Helmet>
       <H1
         child={getH1(props.languageId)}
