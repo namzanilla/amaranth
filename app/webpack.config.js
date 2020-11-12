@@ -67,7 +67,7 @@ const config = {
     ],
   },
   output: {
-    path: path.join(__dirname, '..', 'static', 'js', 'build'),
+    path: path.join(__dirname, '..', 'static', 'public', 'js', 'build'),
     filename: '[name].[hash].js',
   },
   plugins,
