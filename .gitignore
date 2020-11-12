@@ -11,3 +11,5 @@
 !/tmp/package-lock.json
 !/tmp/dotenv.js
 !/tmp/mysql.js
+/static/public
+!/static/public/.gitkeep
