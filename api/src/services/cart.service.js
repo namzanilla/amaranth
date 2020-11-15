@@ -1,11 +1,71 @@
 const redisHelper = require('./../helpers/redis');
 const objectHelper = require('./../helpers/_Object');
+const qsHelper = require('./../helpers/qs');
 
 module.exports = (app) => {
   const getCart = (token) => {
     const cartKey = getRedisCartKey(token);
 
     return getCartInfo(cartKey, app);
+  };
+
+  const getCartDetails = async (token, query) => {
+    const cartKey = getRedisCartKey(token);
+
+    const info = await getCartInfo(cartKey, app);
+
+    const productIds = Object.keys(info).map((productId) => +productId);
+
+    if (!productIds.length) {
+      // @TODO remove redis cart key?
+      return {};
+    }
+
+    let {language_id: languageId = 1} = query;
+    languageId = qsHelper.prepareLanguageId(languageId);
+
+    let qs = `
+      SELECT p.*
+      FROM product p
+      WHERE p.id IN (${productIds.join(',')})
+    `;
+
+    const list = await new Promise((resolve, reject) => {
+      app.mysql.connection.query(qs, (error, results) => {
+        if (error) {
+          reject(error);
+        }
+
+        resolve(results);
+      });
+    });
+
+    let total = 0;
+
+    for (const listEl of list) {
+      const {
+        id,
+        name,
+        price,
+        [`name_trans_${languageId}`]: nameTrans,
+      } = listEl;
+      const {
+        [id]: count,
+      } = info;
+
+      listEl.count = count;
+      listEl.name = nameTrans ? nameTrans : name;
+
+      delete listEl.name_trans_1;
+      delete listEl.name_trans_2;
+
+      total += count * price;
+    }
+    
+    return {
+      total,
+      list,
+    };
   };
 
   const addIntoCart = async (token, body = {}) => {
@@ -34,6 +94,7 @@ module.exports = (app) => {
 
   return {
     getCart,
+    getCartDetails,
     addIntoCart,
     deleteFromCart,
   };

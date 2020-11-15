@@ -5,11 +5,17 @@ module.exports = (app) => {
   const cartService = require('./../services/cart.service')(app);
 
   router.get('/cart/:token', getCart);
+  router.get('/cart/:token/details', getCartDetails);
   router.post('/cart/:token', addIntoCart);
   router.delete('/cart/:token', deleteFromCart);
 
   function getCart(ctx) {
     return cartService.getCart(ctx.params.token)
+      .then(h(app).onFulfilled(ctx), h(app).onRejected(ctx));
+  }
+
+  function getCartDetails(ctx) {
+    return cartService.getCartDetails(ctx.params.token, ctx.query)
       .then(h(app).onFulfilled(ctx), h(app).onRejected(ctx));
   }
 
