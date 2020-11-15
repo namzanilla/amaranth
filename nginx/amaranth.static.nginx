@@ -8,7 +8,6 @@ server {
     access_log off;
 
     location ~* \.(js|map)$ {
-        access_log off;
         gzip_static on;
     }
 }
