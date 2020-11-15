@@ -15,7 +15,6 @@ app.isDevelopment = NODE_ENV === 'development';
 
 require('./mysql')(app);
 require('./redis')(app);
-require('./mongo')(app);
 require('./koaLogger')(koaInstance, NODE_ENV);
 
 koaInstance.use(koaBody());
