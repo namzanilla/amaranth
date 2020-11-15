@@ -3,9 +3,11 @@ import App from './App';
 import * as appActionCreators from 'store/actions/app';
 import * as productsActionCreators from 'store/actions/products';
 import * as productActionCreators from 'store/actions/product';
+import * as cartActionCreators from 'store/actions/cart';
 
 const mapStateToProps = (state) => {
   return {
+    sessionValue: state.app.sessionValue,
     hoc: state.app.hoc,
     alternateUk: state.app.alternateUk,
     alternateRu: state.app.alternateRu,
@@ -19,7 +21,7 @@ const mapDispatchToProps = (dispatch) => {
     setHoc: (hoc) => dispatch(appActionCreators.setHoc(hoc)),
     productsSetPage: (page) => dispatch(productsActionCreators.productsSetPage(page)),
     setProductIdByPathname: (pathname) => dispatch(productActionCreators.setProductIdByPathname(pathname)),
-    dispatch,
+    getCartInfo: (sessionValue) => dispatch(cartActionCreators.getCartInfo(sessionValue)),
   };
 };
 

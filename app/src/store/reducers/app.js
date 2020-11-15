@@ -24,6 +24,20 @@ export default (state = initialState, action) => {
         ...state,
         ssr: bool,
       };
+    } case at.APP_SET_SESSION_KEY: {
+      let {sessionKey} = action;
+
+      return {
+        ...state,
+        sessionKey,
+      };
+    } case at.APP_SET_SESSION_VALUE: {
+      let {sessionValue} = action;
+
+      return {
+        ...state,
+        sessionValue,
+      };
     } case at.APP_SET_STATIC_HOST: {
       let {host} = action;
 

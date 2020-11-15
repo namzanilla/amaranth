@@ -13,7 +13,6 @@ const app = {};
 
 app.isDevelopment = NODE_ENV === 'development';
 
-require('./session')(koaInstance);
 require('./mysql')(app);
 require('./redis')(app);
 require('./koaLogger')(koaInstance, NODE_ENV);

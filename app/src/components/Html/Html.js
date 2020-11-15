@@ -7,6 +7,11 @@ export default (props) => {
   const htmlAttributes = helmet.htmlAttributes.toComponent();
   const bodyAttributes = helmet.bodyAttributes.toComponent();
   const dangerouslySetInnerHTML = {__html: props.__html};
+  const {
+    app: {
+      hostStatic,
+    } = {},
+  } = props.state;
 
   return (
     <html {...htmlAttributes}>
@@ -32,8 +37,8 @@ export default (props) => {
             __html: `window.__PRELOADED_STATE__=${JSON.stringify(props.state)}`
           }}
         />
-        <script src={`/build/${assets.vendor.js}`} />
-        <script src={`/build/${assets.app.js}`} />
+        <script src={`${hostStatic}/js/build/${assets.vendor.js}`} />
+        <script src={`${hostStatic}/js/build/${assets.app.js}`} />
       </body>
     </html>
   );

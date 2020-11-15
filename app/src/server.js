@@ -13,25 +13,27 @@ app.isDevelopment = NODE_ENV === 'development';
 
 require('./koaLogger')(koa, NODE_ENV);
 
+import baseController from 'controllers/base.controller';
+
 import indexController from 'controllers/index.controller';
-router.get('/', indexController(1));
-router.get('/ru', indexController(2));
+router.get('/', baseController(1, indexController));
+router.get('/ru', baseController(2, indexController));
 
 import categoriesController from 'controllers/categories.controller';
-router.get('/c', categoriesController(1));
-router.get('/ru/c', categoriesController(2));
+router.get('/c', baseController(1 ,categoriesController));
+router.get('/ru/c', baseController(2, categoriesController));
 
 import categoryController from 'controllers/category.controller';
-router.get('/c/:id(\\d+)', categoryController(1));
-router.get('/ru/c/:id(\\d+)', categoryController(2));
+router.get('/c/:id(\\d+)', baseController(1, categoryController));
+router.get('/ru/c/:id(\\d+)', baseController(2, categoryController));
 
 import cartController from 'controllers/cart.controller';
-router.get('/cart', cartController(1));
-router.get('/ru/cart', cartController(2));
+router.get('/cart', baseController(1, cartController));
+router.get('/ru/cart', baseController(2, cartController));
 
 import productController from 'controllers/product.controller';
-router.get('/p:id(\\d+)', productController(1));
-router.get('/ru/p:id(\\d+)', productController(2));
+router.get('/p:id(\\d+)', baseController(1, productController));
+router.get('/ru/p:id(\\d+)', baseController(2, productController));
 
 import notFoundController from 'controllers/notFound.controller';
 

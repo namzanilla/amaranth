@@ -1,20 +1,24 @@
 import React from 'react';
-import {renderToString, renderToStaticMarkup} from 'react-dom/server';
-import {ServerStyleSheet, StyleSheetManager} from 'styled-components';
-import {Provider} from 'react-redux';
-import createStore from 'store/createStore';
-import App from 'components/App';
+import {renderToStaticMarkup} from 'react-dom/server';
+import {ServerStyleSheet} from 'styled-components';
 import Html from 'components/Html';
-
 import * as appActionCreators from 'store/actions/app';
 import * as categoryApi from 'api/category';
 import * as categoryActionCreators from 'store/actions/category';
 import * as productsActionCreators from 'store/actions/products';
+import {getHtmlComponentProps} from 'helpers/controller';
 
-export default (languageId) => async (ctx) => {
-  const props = {};
-  const store = createStore();
-  const {dispatch} = store;
+export default async (props) => {
+  const {
+    ctx,
+    store,
+    dispatch,
+  } = props;
+  const {
+    app: {
+      languageId,
+    } = {},
+  } = store.getState();
   const sheet = new ServerStyleSheet();
   const categoryId = parseInt(ctx.params.id);
 
@@ -46,25 +50,13 @@ export default (languageId) => async (ctx) => {
 
     dispatch(productsActionCreators.productsSetDidUnmount(false));
     await dispatch(productsActionCreators.productsFetch());
-
   } catch (e) {
     console.log(e);
   }
 
-  dispatch(appActionCreators.setLanguageId(languageId));
-  dispatch(appActionCreators.setAlternate(ctx.path, ctx.querystring));
   dispatch(appActionCreators.setSSR(true));
 
-  props.__html = renderToString(
-    <Provider store={store}>
-      <StyleSheetManager sheet={sheet.instance}>
-        <App />
-      </StyleSheetManager>
-    </Provider>
-  );
+  const htmlComponentProps = getHtmlComponentProps(store, sheet);
 
-  props.styleElement = sheet.getStyleElement();
-  props.state = store.getState();
-
-  ctx.body = '<!doctype html>'+renderToStaticMarkup(<Html {...props} />);
+  ctx.body = '<!doctype html>'+renderToStaticMarkup(<Html {...htmlComponentProps} />);
 }

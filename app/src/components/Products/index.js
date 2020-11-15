@@ -6,6 +6,7 @@ const mapStateToProps = (state) => {
   const {
     app: {
       languageId,
+      hostStatic,
     } = {},
     category: {
       id,
@@ -18,6 +19,7 @@ const mapStateToProps = (state) => {
   return {
     categoryId: id,
     languageId,
+    hostStatic,
     list,
   };
 };

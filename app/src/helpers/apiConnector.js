@@ -15,6 +15,7 @@ export default (props) => {
     version = 1,
     path,
     query,
+    data,
   } = props;
 
   let uri = `${host}/api/v${version}`;
@@ -29,5 +30,7 @@ export default (props) => {
 
   if (method === 'GET') {
     return axios.get(uri);
+  } else if (method === 'POST') {
+    return axios.post(uri, data);
   }
 }

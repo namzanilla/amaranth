@@ -26,6 +26,20 @@ export const appSetStaticHost = (host) => (dispatch) => {
   });
 };
 
+export const appSetSessionKey = (sessionKey) => (dispatch) => {
+  dispatch({
+    type: at.APP_SET_SESSION_KEY,
+    sessionKey,
+  });
+};
+
+export const appSetSessionValue = (sessionValue) => (dispatch) => {
+  dispatch({
+    type: at.APP_SET_SESSION_VALUE,
+    sessionValue,
+  });
+};
+
 export const setHoc = (hoc) => (dispatch, getState) => {
   const {app = {}} = getState();
 

@@ -45,6 +45,8 @@ export default (props) => {
         props.setProductIdByPathname(pathname);
       }
     });
+
+    props.getCartInfo(props.sessionValue);
   }, []);
 
   return (

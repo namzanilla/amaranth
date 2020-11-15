@@ -17,14 +17,16 @@ export default (props) => {
       id,
       name,
       price,
+      image,
     } = el;
 
     return (
       <ProductItem
         key={id}
         productId={id}
-        languageId={props.languageId}
         name={name}
+        image={image}
+        hostStatic={props.hostStatic}
         price={price}
         history={props.history}
       />

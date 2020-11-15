@@ -1,20 +1,18 @@
 import React from 'react';
-import {renderToString, renderToStaticMarkup} from 'react-dom/server';
-import {ServerStyleSheet, StyleSheetManager} from 'styled-components';
-import {Provider} from 'react-redux';
+import {renderToStaticMarkup} from 'react-dom/server';
+import {ServerStyleSheet} from 'styled-components';
 import createStore from 'store/createStore';
-import App from 'components/App';
 import Html from 'components/Html';
-
-import {
-  getAlternate,
-  getLangIdByUrlPath,
-} from 'helpers/language';
-
+import {getLangIdByUrlPath} from 'helpers/language';
 import * as appActionCreators from 'store/actions/app';
+import {getHtmlComponentProps} from 'helpers/controller';
+
+const {
+  HOST_STATIC,
+  NODE_API_SESSION_KEY,
+} = process.env;
 
 export default async (ctx) => {
-  const props = {};
   const store = createStore();
   const {dispatch} = store;
   const sheet = new ServerStyleSheet();
@@ -24,17 +22,10 @@ export default async (ctx) => {
   dispatch(appActionCreators.setLanguageId(languageId));
   dispatch(appActionCreators.setHoc('NotFoundPage'));
   dispatch(appActionCreators.setAlternate(ctx.path, ctx.querystring));
+  dispatch(appActionCreators.appSetStaticHost(HOST_STATIC));
+  dispatch(appActionCreators.appSetSessionKey(NODE_API_SESSION_KEY));
 
-  props.__html = renderToString(
-    <Provider store={store}>
-      <StyleSheetManager sheet={sheet.instance}>
-        <App />
-      </StyleSheetManager>
-    </Provider>
-  );
+  const htmlComponentProps = getHtmlComponentProps(store, sheet);
 
-  props.styleElement = sheet.getStyleElement();
-  props.state = store.getState();
-
-  ctx.body = '<!doctype html>'+renderToStaticMarkup(<Html {...props} />);
+  ctx.body = '<!doctype html>'+renderToStaticMarkup(<Html {...htmlComponentProps} />);
 }

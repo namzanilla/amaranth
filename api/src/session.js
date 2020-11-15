@@ -1,13 +1,14 @@
 const session = require('koa-session');
 const {
-  NODE_API_SECRET,
+  NODE_API_SESSION_SECRET,
+  NODE_API_SESSION_KEY,
 } = process.env;
 
 module.exports = (app) => {
-  app.keys = [NODE_API_SECRET];
+  app.keys = [NODE_API_SESSION_SECRET];
 
   const CONFIG = {
-    key: 'amaranth.sess', /** (string) cookie key (default is koa.sess) */
+    key: NODE_API_SESSION_KEY, /** (string) cookie key (default is koa.sess) */
     /** (number || 'session') maxAge in ms (default is 1 days) */
     /** 'session' will result in a cookie that expires when session/browser is closed */
     /** Warning: If a session cookie is stolen, this cookie will never expire */

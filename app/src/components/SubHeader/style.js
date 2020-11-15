@@ -36,6 +36,7 @@ export const SubHeaderWrap = styled.div`
   background-color: #FFA5AC;
   position: sticky;
   top: 0;
+  z-index: 101;
   >div {
     max-width: 1280px;
     padding: 0 20px;

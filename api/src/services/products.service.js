@@ -1,4 +1,60 @@
 module.exports = (app) => {
+  const getMainImagesByProductIds = (productIds) => {
+    if (!Array.isArray(productIds)) return {};
+    if (!productIds.length) return {};
+
+    return new Promise((resolve, reject) => {
+      const qs = `
+      select
+         i.*,
+         p2i.product_id,
+         fe.name fe_name
+      from image i
+      inner join product2image
+      p2i on i.id = p2i.image_id
+      inner join filename_extension fe
+      on i.filename_extension_id = fe.id
+      where p2i.product_id in (${productIds.join(',')})
+      and p2i.is_main=1
+      `;
+
+      app.mysql.connection.query(qs, (error, results) => {
+        if (error) {
+          reject(error);
+        }
+
+        const result = {};
+
+        for (let el of results) {
+          const {
+            product_id,
+            url_path,
+            name,
+            fe_name,
+          } = el;
+
+          result[product_id] = `${url_path}${name}_305_305.${fe_name}`;
+        }
+
+        resolve(result);
+      });
+    });
+  }
+
+  const setProductsListImages = async (list) => {
+    const productIds = list.map(({id}) => id);
+    let images = await getMainImagesByProductIds(productIds);
+    list.forEach((el) => {
+      const {id} = el;
+      const {
+        [id]: image,
+      } = images;
+
+      if (image)
+        el.image = image;
+    });
+  }
+
   const getProducts = async (query) => {
     const limit = 12;
     let {
@@ -77,6 +133,8 @@ module.exports = (app) => {
       });
     });
 
+    await setProductsListImages(list);
+    
     return {
       total,
       list,
@@ -85,6 +143,7 @@ module.exports = (app) => {
 
   return {
     getProducts,
+    getMainImagesByProductIds,
   };
 };
 
