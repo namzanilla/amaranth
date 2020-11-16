@@ -3,10 +3,11 @@ const objectHelper = require('./../helpers/_Object');
 const qsHelper = require('./../helpers/qs');
 
 module.exports = (app) => {
-  const getCart = (token) => {
+  const getCart = async (token) => {
     const cartKey = getRedisCartKey(token);
+    const info = await getCartInfo(cartKey, app);
 
-    return getCartInfo(cartKey, app);
+    return info === null ? {} : info;
   };
 
   const getCartDetails = async (token, query) => {
@@ -14,10 +15,12 @@ module.exports = (app) => {
 
     const info = await getCartInfo(cartKey, app);
 
+    if (info === null) return {};
+
     const productIds = Object.keys(info).map((productId) => +productId);
 
     if (!productIds.length) {
-      // @TODO remove redis cart key?
+      await delCartInfo(app, cartKey);
       return {};
     }
 
@@ -71,7 +74,9 @@ module.exports = (app) => {
   const addIntoCart = async (token, body = {}) => {
     const cartKey = getRedisCartKey(token);
     const products = validateCartRequestBody(body);
-    const info = await getCartInfo(cartKey, app);
+    let info = await getCartInfo(cartKey, app);
+
+    info = info === null ? {} : info;
 
     Object.keys(products).forEach((productId) => {
       let {
@@ -88,8 +93,50 @@ module.exports = (app) => {
     return info;
   };
 
-  const deleteFromCart = async (token) => {
-    return {token};
+  const deleteFromCart = async (token, body) => {
+    const cartKey = getRedisCartKey(token);
+    const info = await getCartInfo(cartKey, app);
+    body = validateCartRequestBody(body);
+
+    if (info === null) {
+      return {};
+    } else if (objectHelper.isEmptyObject(info)) {
+      await delCartInfo(app, cartKey);
+      return {};
+    } else if (objectHelper.isEmptyObject(body)) {
+      // @TODO bad request 400
+      return {};
+    }
+
+    let isModified = false;
+    Object.keys(body).forEach((productId) => {
+      let count = body[productId];
+      count = parseInt(count);
+      if (isNaN(count)) return false;
+      if (info[productId] !== undefined) {
+        isModified = true;
+        info[productId] -= count;
+
+        if (info[productId] < 1) {
+          delete info[productId];
+        }
+      }
+    });
+
+    if (isModified) {
+      if (objectHelper.isEmptyObject(info)) {
+        await delCartInfo(app, cartKey);
+        return {};
+      } else {
+        try {
+          await setCartInfo(app, info, cartKey);
+        } catch (e) {
+          console.log(e);
+        }
+      }
+    }
+
+    return info;
   }
 
   return {
@@ -100,24 +147,24 @@ module.exports = (app) => {
   };
 };
 
-const getRedisCartKey = (cookieId) => {
+function getRedisCartKey (cookieId) {
   return `cart_${cookieId}`;
 }
 
-const getCartInfo = async (key, app) => {
+async function getCartInfo (key, app) {
   try {
     const getAsync = redisHelper.getAsync(app.redis.client);
     let info = await getAsync(key);
-    info = info ? JSON.parse(info) : {};
+    info = info === null ? info : JSON.parse(info);
 
     return info;
   } catch (e) {
     console.log(e);
     return {};
   }
-};
+}
 
-const validateCartRequestBody = (requestBody) => {
+function validateCartRequestBody (requestBody) {
   if (!objectHelper.isPlainObject(requestBody)) {
     return {};
   }
@@ -136,14 +183,24 @@ const validateCartRequestBody = (requestBody) => {
   });
 
   return result;
-};
+}
 
-const setCartInfo = (app, info, key) => {
+async function setCartInfo (app, info, key) {
   try {
     const setAsync = redisHelper.setAsync(app.redis.client);
 
-    setAsync(key, JSON.stringify(info), 'EX', 60 * 60 * 24 * 30);
+    await setAsync(key, JSON.stringify(info), 'EX', 60 * 60 * 24 * 30);
   } catch (e) {
     console.log(e);
   }
-};
+}
+
+async function delCartInfo (app, key) {
+  try {
+    const delAsync = redisHelper.delAsync(app.redis.client);
+
+    await delAsync(key);
+  } catch (e) {
+    console.log(e);
+  }
+}
