@@ -8,12 +8,12 @@ export default (props) => {
   return (
     <ContactInfoWrap>
       <ContactInfoHeader>
-        {getHeaderText(props.languageId)}
+        {getTranslate(props.languageId, 0)}
       </ContactInfoHeader>
       <div className="form">
         <div>
           <div>
-            Имя
+            {getTranslate(props.languageId, 1)}
           </div>
           <div>
             <input type="text" />
@@ -29,7 +29,7 @@ export default (props) => {
         </div>
         <div>
           <div>
-            Город
+            {getTranslate(props.languageId, 2)}
           </div>
           <div>
             <input type="text" />
@@ -40,9 +40,18 @@ export default (props) => {
   );
 }
 
-function getHeaderText(languageId) {
-  return languageId === 1
-  ? 'Контактна інформація'
-  : 'Контактная информация';
+function getTranslate(languageId, type) {
+  if (type === 0) {
+    return languageId === 1
+      ? 'Контактна інформація'
+      : 'Контактная информация';
+  } else if (type === 1) {
+    return languageId === 1
+      ? 'Ім\'я'
+      : 'Имя';
+  } else if (type === 2) {
+    return languageId === 1
+      ? 'Місто'
+      : 'Город';
+  }
 }
-
