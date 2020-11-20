@@ -9,7 +9,9 @@ export const ContactInfoWrap = styled.div`
     display: block;
     box-sizing: border-box;
     margin: 0;
-    padding: 16px 8px;
+    padding: 0 8px;
+    height: 40px;
+    line-height: 40px;
     outline: none;
     border-radius: 4px;
     border: 1px solid #FFA5AC; 

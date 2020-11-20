@@ -10,7 +10,9 @@ export const CartDetailsGrid = styled.div`
   display: grid;
   grid-column-gap: 20px;
   grid-row-gap: 20px;
-  
+  & :nth-child(3) {
+      align-self: center;
+  }
   @media (min-width: 959px) and (max-width: 959px) {
     grid-template-columns: repeat(1, 1fr);
   }

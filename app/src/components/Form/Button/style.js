@@ -2,13 +2,18 @@ import styled from 'styled-components';
 
 export const ButtonWrap = styled.button`
   margin: 0;
-  padding: 8px 16px;
+  padding: 0 20px;
+  height: 40px;
   display: flex;
-  border: 1px solid #FFA5AC;
+  border: none;
+  outline: none;
   border-radius: 4px;
-  background: #fff;
+  background: #FF747E;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  outline: none;
+  color: #fff;
+  text-transform: uppercase;
+  font-size: 12px;
+  font-weight: bold;
 `;
