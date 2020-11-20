@@ -1,0 +1,13 @@
+server {
+    charset utf-8;
+    listen 80;
+    server_name static.amaranth.localhost;
+    root /var/www/projects/amaranth/static/public;
+    rewrite ^/(.+)/$ /$1 permanent;
+
+    access_log off;
+
+    location ~* \.(js|map)$ {
+        gzip_static on;
+    }
+}
