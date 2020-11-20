@@ -7,16 +7,23 @@ import {
 } from './style';
 
 export default (props) => {
+  const wrapAttrs = {};
+  const {className} = props;
+
+  if (className) {
+    wrapAttrs.className = className;
+  }
+
   return (
-    <PlusMinusQuantityWrap>
+    <PlusMinusQuantityWrap {...wrapAttrs}>
       <Minus
-        onClick={onClickHandler(props.value)}
+        onClick={onClickHandler(props, 0)}
       >
         -
       </Minus>
       <Value>{props.value}</Value>
       <Plus
-        onClick={onClickHandler(props.value)}
+        onClick={onClickHandler(props)}
       >
         +
       </Plus>
@@ -24,14 +31,12 @@ export default (props) => {
   );
 }
 
-function onClickHandler(value, props, type) {
+function onClickHandler(props, type) {
   return function (e) {
-    e.preventDefault();
-
     if (type === 0) {
-      props.onPlusClick(value);
+      props.onMinusClick(e, props.value);
     } else {
-      props.onMinusClick(value);
+      props.onPlusClick(e, props.value);
     }
   }
 }

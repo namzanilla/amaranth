@@ -93,7 +93,7 @@ module.exports = (app) => {
     return info;
   };
 
-  const deleteFromCart = async (token, body) => {
+  const removeFromCart = async (token, body) => {
     const cartKey = getRedisCartKey(token);
     const info = await getCartInfo(cartKey, app);
     body = validateCartRequestBody(body);
@@ -143,7 +143,7 @@ module.exports = (app) => {
     getCart,
     getCartDetails,
     addIntoCart,
-    deleteFromCart,
+    removeFromCart,
   };
 };
 
@@ -181,6 +181,21 @@ function validateCartRequestBody (requestBody) {
 
     result[productId] = count;
   });
+
+  /*
+  Object.keys(requestBody)
+    .filter((productId) => {
+      if (isNaN(parseInt(productId))) return false;
+      let count = requestBody[productId];
+      count = parseInt(count);
+      if (isNaN(count) || count < 1) return false;
+
+      return true;
+    })
+    .forEach((productId) => {
+      result[productId] = count;
+    });
+  * */
 
   return result;
 }

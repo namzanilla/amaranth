@@ -1,5 +1,12 @@
 import CartPage from './CartPage';
 import {connect} from 'react-redux';
+import * as cartActionCreators from 'store/actions/cart';
+
+const mapDispatchToProps = (dispatch) => {
+  return {
+    fetchCartDetails: () => dispatch(cartActionCreators.fetchCartDetails()),
+  };
+};
 
 const mapStateToProps = (state) => {
   return {
@@ -7,4 +14,4 @@ const mapStateToProps = (state) => {
   };
 };
 
-export default connect(mapStateToProps)(CartPage);
+export default connect(mapStateToProps, mapDispatchToProps)(CartPage);

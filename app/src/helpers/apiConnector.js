@@ -32,5 +32,7 @@ export default (props) => {
     return axios.get(uri);
   } else if (method === 'POST') {
     return axios.post(uri, data);
+  } else if (method === 'PUT') {
+    return axios.put(uri, data);
   }
 }

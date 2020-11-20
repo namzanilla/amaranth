@@ -6,8 +6,8 @@ module.exports = (app) => {
 
   router.get('/cart/:token', getCart);
   router.get('/cart/:token/details', getCartDetails);
-  router.post('/cart/:token', addIntoCart);
-  router.put('/cart/:token/delete', deleteFromCart);
+  router.post('/cart/:token/add', addIntoCart);
+  router.post('/cart/:token/remove', removeFromCart);
 
   async function getCart(ctx) {
     return cartService.getCart(ctx.params.token)
@@ -24,8 +24,8 @@ module.exports = (app) => {
       .then(h(app).onFulfilled(ctx), h(app).onRejected(ctx));
   }
 
-  function deleteFromCart(ctx) {
-    return cartService.deleteFromCart(ctx.params.token, ctx.request.body)
+  function removeFromCart(ctx) {
+    return cartService.removeFromCart(ctx.params.token, ctx.request.body)
       .then(h(app).onFulfilled(ctx), h(app).onRejected(ctx));
   }
 
