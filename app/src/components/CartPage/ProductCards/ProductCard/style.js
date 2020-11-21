@@ -27,8 +27,8 @@ export const ProductCardWrap = styled.div`
     bottom: 0;
   }
   .name {
-    margin-right: 40px;
-    font-size: 13px;
+    font-size: 12px;
+    margin-top: 20px;
   }
   .close {
     

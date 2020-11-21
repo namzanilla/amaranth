@@ -25,11 +25,36 @@ export default (props) => {
           {getTotalPriceText(props.languageId)}: {props.totalPrice} грн.
         </div>
         <div>
-          <Button>{getOrderButtonText(props.languageId)}</Button>
+          <Button
+            onClick={createOrderButtonOnClick(props)}
+          >
+            {getOrderButtonText(props.languageId)}
+          </Button>
         </div>
       </CartDetailsGrid>
     </CartDetailsWrap>
   );
+}
+
+function createOrderButtonOnClick(props) {
+  return (e) => {
+    e.preventDefault();
+
+    props.createOrder().then((result = {}) => {
+      const {orderId} = result;
+
+      if (orderId) {
+        props.setCartInitialState();
+
+        props.history.push({
+          pathname: props.languageId === 1
+            ? `/order${orderId}`
+            : `/ru/order${orderId}`,
+          search: '',
+        });
+      }
+    });
+  }
 }
 
 function getEmptyCartText(languageId) {

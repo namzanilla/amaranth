@@ -3,7 +3,11 @@ import {ButtonWrap} from './style';
 
 export default (props) => {
   return (
-    <ButtonWrap>
+    <ButtonWrap
+      onClick={(e) => {
+        props.onClick ? props.onClick(e) : e.preventDefault();
+      }}
+    >
       {props.children}
     </ButtonWrap>
   );

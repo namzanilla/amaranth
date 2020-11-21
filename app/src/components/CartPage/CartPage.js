@@ -14,7 +14,9 @@ export default (props) => {
         <title>{getH1(props.languageId)}</title>
       </Helmet>
       <H1 child={getH1(props.languageId)} />
-      <CartDetails />
+      <CartDetails
+        history={props.history}
+      />
     </>
   );
 }

@@ -1,5 +1,7 @@
 import CartDetails from './CartDetails';
 import {connect} from 'react-redux';
+import * as orderActionCreators from 'store/actions/order';
+import * as cartActionCreators from 'store/actions/cart';
 
 const mapStateToProps = (state) => {
   const {
@@ -19,4 +21,11 @@ const mapStateToProps = (state) => {
   };
 };
 
-export default connect(mapStateToProps)(CartDetails);
+const mapDispatchToProps = (dispatch) => {
+  return {
+    createOrder: () => dispatch(orderActionCreators.createOrder()),
+    setCartInitialState: () => dispatch(cartActionCreators.setCartInitialState()),
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(CartDetails);

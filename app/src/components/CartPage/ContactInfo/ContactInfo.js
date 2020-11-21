@@ -13,26 +13,46 @@ export default (props) => {
       <div className="form">
         <div>
           <div>
-            {getTranslate(props.languageId, 1)}
+            {getTranslate(props.languageId, 1)} *
           </div>
           <div>
-            <input type="text" />
-          </div>
-        </div>
-        <div>
-          <div>
-            Телефон
-          </div>
-          <div>
-            <input type="text" />
+            <input
+              onChange={contactInfoOnChange('contactName', props)}
+              type="text"
+            />
           </div>
         </div>
         <div>
           <div>
-            {getTranslate(props.languageId, 2)}
+            Телефон *
           </div>
           <div>
-            <input type="text" />
+            <input
+              onChange={contactInfoOnChange('contactPhone', props)}
+              type="text"
+            />
+          </div>
+        </div>
+        <div>
+          <div>
+            {getTranslate(props.languageId, 2)} *
+          </div>
+          <div>
+            <input
+              onChange={contactInfoOnChange('contactCity', props)}
+              type="text"
+            />
+          </div>
+        </div>
+        <div>
+          <div>
+            E-mail
+          </div>
+          <div>
+            <input
+              onChange={contactInfoOnChange('contactEmail', props)}
+              type="text"
+            />
           </div>
         </div>
       </div>
@@ -53,5 +73,11 @@ function getTranslate(languageId, type) {
     return languageId === 1
       ? 'Місто'
       : 'Город';
+  }
+}
+
+function contactInfoOnChange(field, props) {
+  return function (e) {
+    props.setContactInfo(field, e.target.value);
   }
 }

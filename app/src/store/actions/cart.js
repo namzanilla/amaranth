@@ -73,3 +73,7 @@ export const getCartInfo = (token) => async (dispatch) => {
     console.log(e);
   }
 };
+
+export const setCartInitialState = () => async (dispatch) => {
+  dispatch({type: at.CART_SET_INITIAL_STATE});
+};

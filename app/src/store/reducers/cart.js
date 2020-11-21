@@ -12,6 +12,8 @@ export default (state = initialState, action) => {
         ...state,
         products,
       };
+    } case at.CART_SET_INITIAL_STATE: {
+      return initialState;
     } case at.CART_REMOVE_SUCCESS: {
       const {products = {}} = action;
 
