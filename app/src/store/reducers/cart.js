@@ -32,6 +32,8 @@ export default (state = initialState, action) => {
       const {details = {}} = action;
       const {total} = details;
 
+      if (!total) return state;
+
       details.totalStr = numberWithSpaces(total);
 
       return {
