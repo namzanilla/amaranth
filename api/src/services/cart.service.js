@@ -4,16 +4,16 @@ const qsHelper = require('./../helpers/qs');
 
 module.exports = (app) => {
   const getCart = async (token) => {
-    const cartKey = getRedisCartKey(token);
-    const info = await getCartInfo(cartKey, app);
+    const cartKey = redisHelper.getRedisCartKey(token);
+    const info = await redisHelper.getCartInfo(cartKey, app);
 
     return info === null ? {} : info;
   };
 
   const getCartDetails = async (token, query) => {
-    const cartKey = getRedisCartKey(token);
+    const cartKey = redisHelper.getRedisCartKey(token);
 
-    const info = await getCartInfo(cartKey, app);
+    const info = await redisHelper.getCartInfo(cartKey, app);
 
     if (info === null) return {};
 
@@ -71,10 +71,39 @@ module.exports = (app) => {
     };
   };
 
+  const getAmountByInfo = async (info) => {
+    const productIds = Object.keys(info);
+
+    return new Promise((resolve, reject) => {
+      const qs = `
+        SELECT p.id, p.price
+        FROM amaranth.product p
+        WHERE p.id IN (${productIds.join(',')});     
+      `;
+
+      app.mysql.connection.query(qs, (error, results) => {
+        if (error) {
+          reject(error);
+        }
+        
+        let amount = 0;
+        
+        for (result of results) {
+          const {id, price} = result;
+          const count = info[id];
+
+          amount += count * price;
+        }
+        
+        resolve(amount);
+      });
+    });
+  }
+
   const addIntoCart = async (token, body = {}) => {
-    const cartKey = getRedisCartKey(token);
+    const cartKey = redisHelper.getRedisCartKey(token);
     const products = validateCartRequestBody(body);
-    let info = await getCartInfo(cartKey, app);
+    let info = await redisHelper.getCartInfo(cartKey, app);
 
     info = info === null ? {} : info;
 
@@ -94,8 +123,8 @@ module.exports = (app) => {
   };
 
   const removeFromCart = async (token, body) => {
-    const cartKey = getRedisCartKey(token);
-    const info = await getCartInfo(cartKey, app);
+    const cartKey = redisHelper.getRedisCartKey(token);
+    const info = await redisHelper.getCartInfo(cartKey, app);
     body = validateCartRequestBody(body);
 
     if (info === null) {
@@ -144,25 +173,9 @@ module.exports = (app) => {
     getCartDetails,
     addIntoCart,
     removeFromCart,
+    getAmountByInfo,
   };
 };
-
-function getRedisCartKey (cookieId) {
-  return `cart_${cookieId}`;
-}
-
-async function getCartInfo (key, app) {
-  try {
-    const getAsync = redisHelper.getAsync(app.redis.client);
-    let info = await getAsync(key);
-    info = info === null ? info : JSON.parse(info);
-
-    return info;
-  } catch (e) {
-    console.log(e);
-    return {};
-  }
-}
 
 function validateCartRequestBody (requestBody) {
   if (!objectHelper.isPlainObject(requestBody)) {
@@ -205,16 +218,6 @@ async function setCartInfo (app, info, key) {
     const setAsync = redisHelper.setAsync(app.redis.client);
 
     await setAsync(key, JSON.stringify(info), 'EX', 60 * 60 * 24 * 30);
-  } catch (e) {
-    console.log(e);
-  }
-}
-
-async function delCartInfo (app, key) {
-  try {
-    const delAsync = redisHelper.delAsync(app.redis.client);
-
-    await delAsync(key);
   } catch (e) {
     console.log(e);
   }
