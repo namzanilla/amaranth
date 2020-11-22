@@ -7,7 +7,7 @@ module.exports = {
         length: 16,
         numericDigits: true,
         lowercaseLetters: true,
-        uppercaseLetters: false,
+        uppercaseLetters: true,
       });
     },
   },
