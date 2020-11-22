@@ -5,8 +5,14 @@ const {NODE_API_SESSION_KEY} = process.env;
 module.exports = (app) => {
   const orderService = require('./../services/order.service')(app);
 
+  router.get('/order/:orderId/:orderHash', getOrder);
   router.post('/order/create', createOrder);
   router.post('/order/:token/create', createOrder);
+
+  async function getOrder(ctx) {
+    return orderService.getOrder(ctx.params.orderId, ctx.params.orderHash)
+      .then(h(app).onFulfilled(ctx), h(app).onRejected(ctx));
+  }
 
   async function createOrder(ctx) {
     let token;

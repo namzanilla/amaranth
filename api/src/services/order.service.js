@@ -48,10 +48,10 @@ module.exports = (app) => {
             INSERT INTO \`order\` (
               status_id,
               hash,
-              contactName,
-              contactPhone,
-              contactCity,
-              contactEmail,
+              contact_name,
+              contact_phone,
+              contact_city,
+              contact_email,
               amount
             ) VALUES (?, ?, ?, ?, ?, ?, ?)
           `;
@@ -119,7 +119,39 @@ module.exports = (app) => {
     }
   };
 
+  const getOrder = async (orderId, orderHash) => {
+    return new Promise((resolve, reject) => {
+      const qs = `
+        SELECT *
+        FROM \`order\` o
+        WHERE o.id=?
+        AND BINARY o.hash=?
+      `;
+      const qsParams = [orderId, orderHash];
+
+      app.mysql.connection.query(qs, qsParams, (error, results) => {
+        if (error) {
+          reject(error);
+        }
+
+        const {
+          0: result,
+        } = results;
+
+        if (result === undefined) {
+          resolve({});
+        } else {
+          delete result.hash;
+          delete result.id;
+
+          resolve(result);
+        }
+      });
+    });
+  }
+
   return {
     createOrder,
+    getOrder,
   };
 }
