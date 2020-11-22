@@ -49,7 +49,7 @@ function createOrderButtonOnClick(props) {
         props.history.push({
           pathname: props.languageId === 1
             ? `/order/${orderId}/${orderHash}`
-            : `/ru/order${orderId}/${orderHash}`,
+            : `/ru/order/${orderId}/${orderHash}`,
           search: '',
         });
       }
