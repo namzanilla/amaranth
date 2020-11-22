@@ -1,5 +1,6 @@
 const redisHelper = require('./../helpers/redis');
 const statusConst = require('./../const/status');
+const serviceHelper = require('./../helpers/service');
 
 module.exports = (app) => {
   const {getAmountByInfo} = require('./../services/cart.service')(app);
@@ -35,6 +36,7 @@ module.exports = (app) => {
         return response;
       }
 
+      const orderHash = serviceHelper.order.generateNewHash();
       const orderId = await new Promise((resolve, reject) => {
         const connection = app.mysql.connection;
         connection.beginTransaction((err) => {
@@ -45,16 +47,18 @@ module.exports = (app) => {
           const qs = `
             INSERT INTO \`order\` (
               status_id,
+              hash,
               contactName,
               contactPhone,
               contactCity,
               contactEmail,
               amount
-            ) VALUES (?, ?, ?, ?, ?, ?)
+            ) VALUES (?, ?, ?, ?, ?, ?, ?)
           `;
 
           const qsParams = [];
           qsParams.push(statusConst.CREATED);
+          qsParams.push(orderHash);
           qsParams.push(contactName);
           qsParams.push(contactPhone);
           qsParams.push(contactCity);
@@ -104,6 +108,7 @@ module.exports = (app) => {
 
       response.error = false;
       response.orderId = orderId;
+      response.orderHash = orderHash;
       response.amount = amount;
 
       return response;
