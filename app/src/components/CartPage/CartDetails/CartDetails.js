@@ -41,15 +41,15 @@ function createOrderButtonOnClick(props) {
     e.preventDefault();
 
     props.createOrder().then((result = {}) => {
-      const {orderId} = result;
+      const {orderId, orderHash} = result;
 
       if (orderId) {
         props.setCartInitialState();
 
         props.history.push({
           pathname: props.languageId === 1
-            ? `/order${orderId}`
-            : `/ru/order${orderId}`,
+            ? `/order/${orderId}/${orderHash}`
+            : `/ru/order${orderId}/${orderHash}`,
           search: '',
         });
       }
