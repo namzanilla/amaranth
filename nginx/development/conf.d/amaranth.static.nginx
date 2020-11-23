@@ -1,7 +1,7 @@
 server {
     charset utf-8;
     listen 80;
-    server_name static.amaranth.localhost;
+    server_name 192.168.0.105 static.amaranth.localhost;
     root /var/www/projects/amaranth/static/public;
     rewrite ^/(.+)/$ /$1 permanent;
 

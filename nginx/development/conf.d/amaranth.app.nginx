@@ -1,7 +1,7 @@
 server {
     charset utf-8;
     listen 80;
-    server_name amaranth.localhost;
+    server_name 192.168.0.105 amaranth.localhost;
 
     rewrite ^/(.+)/$ /$1 permanent;
 
@@ -26,5 +26,15 @@ server {
 
     location / {
         proxy_pass http://127.0.0.1:3000;
+    }
+
+    location ~* \.(js|map)$ {
+        root /var/www/projects/amaranth/static/public;
+        gzip_static on;
+    }
+
+    location ~* \.(jpg|jpeg|png|webp)$ {
+        root /var/www/projects/amaranth/static/public;
+        gzip_static on;
     }
 }
