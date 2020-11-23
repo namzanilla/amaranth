@@ -5,46 +5,23 @@ export const CategoriesWrap = styled.div`
   padding: 0 20px;
   margin: 0 auto;
   background:#ddd;
-  overflow: hidden;
+  display: grid;
+  grid-column-gap: 20px;
+  grid-row-gap: 20px;
+  
+  @media (max-width: 639px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  @media (min-width: 640px) and (max-width: 959px) {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  @media (min-width: 960px) {
+    grid-template-columns: repeat(4, 1fr);
+  }
 `;
 
 export const CategoryItem = styled.a`
-  float: left;
   background-color: #eee;
-  display: block;
-  
-  @media (max-width: 479px) {
-    width: calc(50% - 10px);
-    margin-right: 20px;
-    :nth-child(2n) {
-      margin-right: 0;
-      clear: right;
-    }
-  }
-  @media (min-width: 480px) and (max-width: 639px) {
-    width: calc(100% / 3 - 40px / 3);
-    margin-right: 20px;
-    :nth-child(3n) {
-      margin-right: 0;
-      clear: right;
-    }
-  }
-  @media (min-width: 640px) and (max-width: 799px) {
-    width: calc(25% - 15px);
-    margin-right: 20px;
-    :nth-child(4n) {
-      margin-right: 0;
-      clear: right;
-    }
-  }
-  @media (min-width: 800px) {
-    width: calc(20% - 80px / 5);
-    margin-right: 20px;
-    :nth-child(5n) {
-      margin-right: 0;
-      clear: right;
-    }
-  }
 `;
 
 export const Image = styled.div`
