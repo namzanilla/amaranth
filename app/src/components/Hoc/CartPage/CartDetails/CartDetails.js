@@ -1,7 +1,7 @@
 import React from 'react';
 import ContactInfo from '../ContactInfo';
 import Button from 'components/Form/Button';
-import ProductCards from '../ProductCards';
+import ProductCards from './../ProductCards';
 import {
   CartDetailsWrap,
   CartDetailsGrid,

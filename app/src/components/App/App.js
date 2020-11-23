@@ -1,16 +1,19 @@
 import React, {useEffect} from 'react';
+import querystring from 'querystring';
 import Style from './style';
 import {Helmet} from 'react-helmet';
 import {getLangIdByUrlPath} from 'helpers/language';
 import {getHoc} from 'helpers/hoc';
-import HomePage from 'components/HomePage';
-import CategoriesPage from 'components/CategoriesPage';
-import CategoryPage from 'components/CategoryPage';
-import CartPage from 'components/CartPage';
+import HomePage from 'components/Hoc/HomePage';
+
+// HOCs
+import CategoriesPage from 'components/Hoc/CategoriesPage';
+import CategoryPage from 'components/Hoc/CategoryPage';
+import CartPage from 'components/Hoc/CartPage';
 import OrderPage from 'components/Hoc/OrderPage';
-import ProductPage from 'components/ProductPage';
-import NotFoundPage from 'components/NotFoundPage';
-const querystring = require('querystring');
+import ProductPage from 'components/Hoc/ProductPage';
+import NotFoundPage from 'components/Hoc/NotFoundPage';
+
 import Header from 'components/Header';
 import SubHeader from 'components/SubHeader';
 
