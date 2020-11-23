@@ -10,6 +10,8 @@ export function getHoc(pathname)  {
 
   if ('cart' === pathname[0]) {
     return 'CartPage';
+  } else if ('order' === pathname[0]) {
+    return 'OrderPage';
   }
 
   if ('c' === pathname[0]) {

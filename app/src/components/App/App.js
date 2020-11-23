@@ -7,6 +7,7 @@ import HomePage from 'components/HomePage';
 import CategoriesPage from 'components/CategoriesPage';
 import CategoryPage from 'components/CategoryPage';
 import CartPage from 'components/CartPage';
+import OrderPage from 'components/Hoc/OrderPage';
 import ProductPage from 'components/ProductPage';
 import NotFoundPage from 'components/NotFoundPage';
 const querystring = require('querystring');
@@ -18,6 +19,7 @@ const components = {
   CategoriesPage,
   CategoryPage,
   CartPage,
+  OrderPage,
   ProductPage,
   NotFoundPage,
 };

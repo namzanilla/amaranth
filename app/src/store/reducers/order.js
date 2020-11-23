@@ -23,12 +23,33 @@ export default (state = initialState, action) => {
         },
       };
     } case at.ORDER_CREATE_SUCCESS: {
-      const {orderId, amount} = action;
+      const {orderId, orderHash} = action;
 
       return {
         ...state,
         orderId,
-        amount,
+        orderHash,
+      };
+    } case at.ORDER_FETCH_SUCCESS: {
+      const {details = {}} = action;
+
+      return {
+        ...state,
+        details,
+      };
+    } case at.ORDER_SET_ID: {
+      const {orderId} = action;
+
+      return {
+        ...state,
+        orderId,
+      };
+    } case at.ORDER_SET_HASH: {
+      const {orderHash} = action;
+
+      return {
+        ...state,
+        orderHash,
       };
     } default: {
       return state;

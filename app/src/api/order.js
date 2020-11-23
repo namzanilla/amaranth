@@ -9,3 +9,9 @@ export const createOrder = (data, token) => {
     data,
   });
 };
+
+export const getOrder = (orderId, orderHash) => {
+  const path = `/order/${orderId}/${orderHash}`;
+
+  return apiConnector({path});
+};

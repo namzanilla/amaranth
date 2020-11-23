@@ -31,6 +31,10 @@ import cartController from 'controllers/cart.controller';
 router.get('/cart', baseController(1, cartController));
 router.get('/ru/cart', baseController(2, cartController));
 
+import orderController from 'controllers/order.controller';
+router.get('/order/:orderId(\\d+)/:orderHash', baseController(1, orderController));
+router.get('/ru/order/:orderId(\\d+)/:orderHash', baseController(2, orderController));
+
 import productController from 'controllers/product.controller';
 router.get('/p:id(\\d+)', baseController(1, productController));
 router.get('/ru/p:id(\\d+)', baseController(2, productController));

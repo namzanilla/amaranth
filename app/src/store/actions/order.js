@@ -12,7 +12,7 @@ export const createOrder = (token) => async (dispatch, getState) => {
     dispatch({type: at.ORDER_CREATE_REQUEST});
 
     const {data = {}} = await orderApi.createOrder(orderData, token);
-    const {orderId, amount} = data;
+    const {orderId, orderHash} = data;
 
     if (!orderId) {
       dispatch({type: at.ORDER_CREATE_FAILURE});
@@ -20,7 +20,7 @@ export const createOrder = (token) => async (dispatch, getState) => {
       dispatch({
         type: at.ORDER_CREATE_SUCCESS,
         orderId,
-        amount,
+        orderHash,
       });
 
       return data;
@@ -37,5 +37,46 @@ export const setContactInfo = (field, value) => (dispatch) => {
     type: at.ORDER_SET_CONTACT_INFO,
     field,
     value,
+  });
+}
+
+export const fetchOrder = (orderId, orderHash) => async (dispatch) => {
+  try {
+    orderId = parseInt(orderId);
+
+    if (isNaN(orderId)) {
+      dispatch({type: at.ORDER_FETCH_FAILURE});
+    } else if ('string' !== typeof orderHash) {
+      dispatch({type: at.ORDER_FETCH_FAILURE});
+    } else {
+      dispatch({type: at.ORDER_FETCH_REQUEST});
+
+      const {data = {}} = await orderApi.getOrder(orderId, orderHash);
+
+      dispatch({
+        type: at.ORDER_FETCH_SUCCESS,
+        details: data,
+      });
+
+      return data;
+    }
+  } catch (e) {
+    dispatch({type: at.ORDER_FETCH_FAILURE});
+
+    console.log(e);
+  }
+}
+
+export const setOrderId = (orderId) => (dispatch) => {
+  dispatch({
+    type: at.ORDER_SET_ID,
+    orderId,
+  });
+}
+
+export const setOrderHash = (orderHash) => (dispatch) => {
+  dispatch({
+    type: at.ORDER_SET_HASH,
+    orderHash,
   });
 }
