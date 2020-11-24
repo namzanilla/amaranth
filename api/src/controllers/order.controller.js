@@ -1,13 +1,14 @@
 const router = require('koa-router')();
-router.prefix('/api/v1');
+const baseController = require('./base.controller');
 const {NODE_API_SESSION_KEY} = process.env;
+router.prefix('/api/v1');
 
 module.exports = (app) => {
   const orderService = require('./../services/order.service')(app);
 
-  router.get('/order/:orderId/:orderHash', getOrder);
-  router.post('/order/create', createOrder);
-  router.post('/order/:token/create', createOrder);
+  router.get('/order/:orderId/:orderHash', baseController(getOrder));
+  router.post('/order/create', baseController(createOrder));
+  router.post('/order/:token/create', baseController(createOrder));
 
   async function getOrder(ctx) {
     return orderService.getOrder(ctx.params.orderId, ctx.params.orderHash)

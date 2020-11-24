@@ -1,12 +1,13 @@
 const router = require('koa-router')();
+const baseController = require('./base.controller');
 router.prefix('/api/v1');
 
 module.exports = (app) => {
   const categoryService = require('./../services/category.service')(app);
 
-  router.get('/category', getList);
-  router.get('/category/:id(\\d+)', getById);
-  router.get('/category/:id(\\d+)/info', getInfoById);
+  router.get('/category', baseController(getList));
+  router.get('/category/:id(\\d+)', baseController(getById));
+  router.get('/category/:id(\\d+)/info', baseController(getInfoById));
 
   function getList(ctx) {
     const {

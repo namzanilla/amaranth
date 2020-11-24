@@ -1,10 +1,11 @@
 const router = require('koa-router')();
+const baseController = require('./base.controller');
 router.prefix('/api/v1');
 
 module.exports = (app) => {
   const productsService = require('./../services/products.service')(app);
 
-  router.get('/products', getProducts);
+  router.get('/products', baseController(getProducts));
 
   function getProducts(ctx) {
     const {

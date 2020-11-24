@@ -1,10 +1,11 @@
 const router = require('koa-router')();
+const baseController = require('./base.controller');
 router.prefix('/api/v1');
 
 module.exports = (app) => {
   const languageService = require('./../services/language.service')(app);
 
-  router.get('/language', getList);
+  router.get('/language', baseController(getList));
 
   function getList(ctx) {
     return languageService.getList()

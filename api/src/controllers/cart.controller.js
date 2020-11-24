@@ -1,13 +1,14 @@
 const router = require('koa-router')();
+const baseController = require('./base.controller');
 router.prefix('/api/v1');
 
 module.exports = (app) => {
   const cartService = require('./../services/cart.service')(app);
 
-  router.get('/cart/:token', getCart);
-  router.get('/cart/:token/details', getCartDetails);
-  router.post('/cart/:token/add', addIntoCart);
-  router.post('/cart/:token/remove', removeFromCart);
+  router.get('/cart/:token', baseController(getCart));
+  router.get('/cart/:token/details', baseController(getCartDetails));
+  router.post('/cart/:token/add', baseController(addIntoCart));
+  router.post('/cart/:token/remove', baseController(removeFromCart));
 
   async function getCart(ctx) {
     return cartService.getCart(ctx.params.token)
