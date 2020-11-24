@@ -20,6 +20,7 @@ export default async (props) => {
   const sheet = new ServerStyleSheet();
 
   dispatch(appActionCreators.setHoc('CategoriesPage'));
+  dispatch(appActionCreators.setSSR(true));
 
   await dispatch(categoryActionCreators.fetchCategoryList(languageId));
 

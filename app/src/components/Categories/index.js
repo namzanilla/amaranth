@@ -4,19 +4,14 @@ import * as categoryActionCreators from 'store/actions/category';
 
 const mapStateToProps = (state) => {
   const {
-    app: {
-      languageId,
-    } = {},
     category: {
-      [`list_${languageId}`]: list = [],
-      [`list_${languageId}_state`]: listState = 'request',
+      list = [],
     } = {},
   } = state;
 
   return {
-    languageId,
+    languageId: state.app.languageId,
     list,
-    state: listState,
   };
 };
 

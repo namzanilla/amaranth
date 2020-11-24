@@ -4,7 +4,14 @@ const initialState = {};
 
 export default (state = initialState, action) => {
   switch (action.type) {
-    case at.CATEGORY_SET_ID: {
+    case at.CATEGORY_FETCH_LIST_SUCCESS: {
+      const {list = []} = action;
+
+      return {
+        ...state,
+        list,
+      };
+    } case at.CATEGORY_SET_ID: {
       const {id} = action;
 
       return {
@@ -15,26 +22,6 @@ export default (state = initialState, action) => {
       const {id, ...nextState} = state;
 
       return nextState;
-    } case at.CATEGORY_SET_LIST_STATE: {
-      const {
-        languageId,
-        state: listState,
-      } = action;
-
-      return {
-        ...state,
-        [`list_${languageId}_state`]: listState,
-      };
-    } case at.CATEGORY_SET_LIST: {
-      const {
-        languageId,
-        list,
-      } = action;
-
-      return {
-        ...state,
-        [`list_${languageId}`]: list,
-      };
     } case at.CATEGORY_SET_INFO: {
       const {
         languageId,

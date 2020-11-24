@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React from 'react';
 
 import {
   Image,
@@ -7,23 +7,7 @@ import {
 } from './style';
 
 export default (props) => {
-  const [languageId, setLanguageId] = useState(props.languageId);
-
-  useEffect(() => {
-    if (props.languageId !== languageId) {
-      setLanguageId(props.languageId);
-
-      if (!props.list.length) {
-        props.fetchCategoryList(props.languageId);
-      }
-    }
-  }, [props.languageId])
-
-  useEffect(() => {
-    if (!props.list.length) {
-      props.fetchCategoryList(languageId);
-    }
-  }, [])
+  if (!props.list.length) return null;
 
   const listJSX = props.list.map((el) => {
     const {
@@ -34,8 +18,8 @@ export default (props) => {
     return (
       <CategoryItem
         key={id}
-        href={getCategoryItemHref(id, languageId)}
-        onClick={categoryItemOnClick(getCategoryItemHref(id, languageId), props.history)}
+        href={getCategoryItemHref(id, props.languageId)}
+        onClick={categoryItemOnClick(getCategoryItemHref(id, props.languageId), props.history)}
       >
         <Image />
         <span>

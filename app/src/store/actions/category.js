@@ -1,39 +1,31 @@
 import * as at from 'store/actionTypes';
 import * as categoryApi from 'api/category';
 
-export const fetchCategoryList = (languageId) => async (dispatch) => {
-  dispatch(setCategoryListState(languageId, 'request'));
-
-  const params = {
-    group: 0,
-    languageId,
-  };
-
+export const fetchCategoryList = (languageId) => async (dispatch, getState) => {
   try {
-    const {data: list} = await categoryApi.getCategoryList(params);
+    const state = getState();
+    languageId = languageId ? languageId : state.app.languageId;
 
-    dispatch(setCategoryList(languageId, list));
-    dispatch(setCategoryListState(languageId, 'success'));
+    const params = {
+      group: 0,
+      languageId,
+    };
+
+    dispatch({type: at.CATEGORY_FETCH_LIST_REQUEST});
+
+    const {data: list = []} = await categoryApi.getCategoryList(params);
+
+    dispatch({
+      type: at.CATEGORY_FETCH_LIST_SUCCESS,
+      list,
+    });
+
+    return list;
   } catch (e) {
-    dispatch(setCategoryListState(languageId, 'failure'));
+    dispatch({type: at.CATEGORY_FETCH_LIST_FAILURE});
+
     console.log(e);
   }
-};
-
-export const setCategoryListState = (languageId, state) => (dispatch) => {
-  dispatch({
-    type: at.CATEGORY_SET_LIST_STATE,
-    languageId,
-    state,
-  });
-};
-
-export const setCategoryList = (languageId, list) => (dispatch) => {
-  dispatch({
-    type: at.CATEGORY_SET_LIST,
-    languageId,
-    list,
-  });
 };
 
 export const fetchCategoryInfo = (categoryId, languageId) => async (dispatch) => {
