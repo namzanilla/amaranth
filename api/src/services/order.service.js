@@ -109,7 +109,6 @@ module.exports = (app) => {
       response.error = false;
       response.orderId = orderId;
       response.orderHash = orderHash;
-      response.amount = amount;
 
       return response;
     } catch(e) {
