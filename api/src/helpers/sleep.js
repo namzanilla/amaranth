@@ -1,9 +1,15 @@
-exec = require('child_process').execSync;
+const exec = require('child_process').execSync;
 
-export const sleep = time => (
-  (time = parseInt(time)),
-    (time > 0
-        ? exec(`sleep ${time}`)
-        : null
-    )
-);
+module.exports = {
+  sleep,
+};
+
+function sleep(time) {
+  return (
+    (time = parseInt(time)),
+      (time > 0
+          ? exec(`sleep ${time}`)
+          : null
+      )
+  );
+}
