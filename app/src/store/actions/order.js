@@ -47,18 +47,22 @@ export const setContactInfo = (field, value) => (dispatch) => {
 }
 
 export const setContactInfoFromLocalStorage = () => (dispatch) => {
-  const contactName = localStorage.getItem('contactName') || '',
-    contactPhone = localStorage.getItem('contactPhone') || '',
-    contactCity = localStorage.getItem('contactCity') || '',
-    contactEmail = localStorage.getItem('contactEmail') || '';
+  try {
+    const contactName = localStorage.getItem('contactName') || '',
+      contactPhone = localStorage.getItem('contactPhone') || '',
+      contactCity = localStorage.getItem('contactCity') || '',
+      contactEmail = localStorage.getItem('contactEmail') || '';
 
-  dispatch({
-    type: at.ORDER_SET_CONTACT_INFO_FROM_LOCAL_STORAGE,
-    contactName,
-    contactPhone,
-    contactCity,
-    contactEmail,
-  });
+    dispatch({
+      type: at.ORDER_SET_CONTACT_INFO_FROM_LOCAL_STORAGE,
+      contactName,
+      contactPhone,
+      contactCity,
+      contactEmail,
+    });
+  } catch (e) {
+    console.log(e);
+  }
 }
 
 export const fetchOrder = (orderId, orderHash) => async (dispatch) => {
