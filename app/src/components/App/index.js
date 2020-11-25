@@ -8,6 +8,7 @@ import * as orderActionCreators from 'store/actions/order';
 
 const mapStateToProps = (state) => {
   return {
+    languageId: state.app.languageId,
     sessionValue: state.app.sessionValue,
     hoc: state.app.hoc,
     alternateUk: state.app.alternateUk,

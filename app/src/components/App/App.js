@@ -31,34 +31,15 @@ export default (props) => {
   const Component = components[props.hoc];
 
   useEffect(() => {
-    props.orderSetContactInfoFromLocalStorage();
-
-    props.history.listen(({location}) => {
-      const {pathname, search} = location;
-      const languageId = getLangIdByUrlPath(pathname);
-      props.setLanguageId(languageId);
-      props.setAlternate(pathname, search);
-
-      const hoc = getHoc(pathname)
-      props.setHoc(hoc);
-
-      if (hoc === 'CategoryPage') {
-        const params = querystring.parse(`${search.substring(1)}`);
-        let {page} = params;
-        page = parseInt(page);
-        page = isNaN(page) ? 1 : page;
-        props.productsSetPage(page);
-      } else if (hoc === 'ProductPage') {
-        props.setProductIdByPathname(pathname);
-      }
-    });
-
-    props.getCartInfo(props.sessionValue);
+    componentDidMount(props);
   }, []);
+
+  let htmlLangAttrValue = props.languageId === 1 ? 'ua' : 'ru';
 
   return (
     <>
       <Helmet>
+        <html lang={htmlLangAttrValue} />
         <link rel="alternate" href={props.alternateUk} hrefLang="uk-UA" />
         <link rel="alternate" href={props.alternateRu} hrefLang="ru-UA" />
       </Helmet>
@@ -71,3 +52,29 @@ export default (props) => {
     </>
   );
 };
+
+function componentDidMount(props) {
+  props.orderSetContactInfoFromLocalStorage();
+
+  props.history.listen(({location}) => {
+    const {pathname, search} = location;
+    const languageId = getLangIdByUrlPath(pathname);
+    props.setLanguageId(languageId);
+    props.setAlternate(pathname, search);
+
+    const hoc = getHoc(pathname)
+    props.setHoc(hoc);
+
+    if (hoc === 'CategoryPage') {
+      const params = querystring.parse(`${search.substring(1)}`);
+      let {page} = params;
+      page = parseInt(page);
+      page = isNaN(page) ? 1 : page;
+      props.productsSetPage(page);
+    } else if (hoc === 'ProductPage') {
+      props.setProductIdByPathname(pathname);
+    }
+  });
+
+  props.getCartInfo(props.sessionValue);
+}
