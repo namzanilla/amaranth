@@ -21,8 +21,6 @@ export default (props) => {
               type="text"
             />
           </div>
-        </div>
-        <div>
           <div>
             Телефон *
           </div>
@@ -32,8 +30,6 @@ export default (props) => {
               type="text"
             />
           </div>
-        </div>
-        <div>
           <div>
             {getTranslate(props.languageId, 2)} *
           </div>
@@ -43,8 +39,6 @@ export default (props) => {
               type="text"
             />
           </div>
-        </div>
-        <div>
           <div>
             E-mail
           </div>

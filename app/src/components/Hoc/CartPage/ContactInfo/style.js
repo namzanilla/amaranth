@@ -1,9 +1,7 @@
 import styled from 'styled-components';
 
 export const ContactInfoWrap = styled.div`
-  //padding: 20px;
   border-radius: 4px;
-  //background: #eee;
   input {
     width: 100%;
     display: block;
@@ -18,18 +16,11 @@ export const ContactInfoWrap = styled.div`
   }
   .form {
     >div {
-      display: flex;
+      display: grid;
+      grid-template-columns: auto 1fr;
+      grid-column-gap: 20px;
+      grid-row-gap: 20px;
       align-items: center;
-      margin-bottom: 20px;
-      &:last-child {
-        margin-bottom: 0;
-      }
-      >div:first-child {
-        width: 100px;
-      }
-      >div:last-child {
-        width: 100%;
-      }
     }
   }
 `;
