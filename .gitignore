@@ -12,5 +12,6 @@
 !/tmp/dotenv.js
 !/tmp/mysql.js
 /static/public
+!/static/public/favicon
 !/static/public/.gitkeep
 /cron/node_modules/

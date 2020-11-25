@@ -10,14 +10,35 @@ server {
         root /var/www/projects/amaranth/static;
     }
 
-    location /favicon.ico {
+    location ~ ^/apple-touch-icon\.png$ {
         access_log off;
-        root /var/www/projects/amaranth/static;
+        root /var/www/projects/amaranth/static/public/favicon;
+    }
+
+    location ~ ^/mstile-150x150\.png$ {
+        access_log off;
+        root /var/www/projects/amaranth/static/public/favicon;
+    }
+
+    location ~ ^/(favicon|android-chrome-)(.*)\.(png|ico)$ {
+        access_log off;
+        root /var/www/projects/amaranth/static/public/favicon;
+    }
+
+    location /site.webmanifest {
+        access_log off;
+        add_header Content-Type application/manifest+json;
+        root /var/www/projects/amaranth/static/public/favicon;
     }
 
     location /sitemap.xml {
         access_log off;
         root /var/www/projects/amaranth/static;
+    }
+
+    location /browserconfig.xml {
+        access_log off;
+        root /var/www/projects/amaranth/static/public/favicon;
     }
 
 	location ~ ^/api/v1/(.+)$ {
