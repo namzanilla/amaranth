@@ -3,8 +3,23 @@ import {connect} from 'react-redux';
 import * as orderActionCreators from 'store/actions/order';
 
 const mapStateToProps = (state) => {
+  const {
+    order: {
+      contactInfo: {
+        contactName = '',
+        contactPhone = '',
+        contactCity = '',
+        contactEmail = '',
+      } = {},
+    } = {},
+  } = state;
+
   return {
     languageId: state.app.languageId,
+    contactName,
+    contactPhone,
+    contactCity,
+    contactEmail,
   };
 };
 

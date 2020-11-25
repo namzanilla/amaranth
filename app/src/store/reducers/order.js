@@ -22,6 +22,25 @@ export default (state = initialState, action) => {
           [field]: value,
         },
       };
+    } case at.ORDER_SET_CONTACT_INFO_FROM_LOCAL_STORAGE: {
+      const {
+        contactName,
+        contactPhone,
+        contactCity,
+        contactEmail,
+      } = action;
+      const {contactInfo} = state;
+
+      return {
+        ...state,
+        contactInfo: {
+          ...contactInfo,
+          contactName,
+          contactPhone,
+          contactCity,
+          contactEmail,
+        },
+      };
     } case at.ORDER_CREATE_SUCCESS: {
       const {orderId, orderHash} = action;
 

@@ -38,6 +38,27 @@ export const setContactInfo = (field, value) => (dispatch) => {
     field,
     value,
   });
+
+  try {
+    localStorage.setItem(field, value);
+  } catch (e) {
+    console.log(e);
+  }
+}
+
+export const setContactInfoFromLocalStorage = () => (dispatch) => {
+  const contactName = localStorage.getItem('contactName') || '',
+    contactPhone = localStorage.getItem('contactPhone') || '',
+    contactCity = localStorage.getItem('contactCity') || '',
+    contactEmail = localStorage.getItem('contactEmail') || '';
+
+  dispatch({
+    type: at.ORDER_SET_CONTACT_INFO_FROM_LOCAL_STORAGE,
+    contactName,
+    contactPhone,
+    contactCity,
+    contactEmail,
+  });
 }
 
 export const fetchOrder = (orderId, orderHash) => async (dispatch) => {

@@ -31,6 +31,8 @@ export default (props) => {
   const Component = components[props.hoc];
 
   useEffect(() => {
+    props.orderSetContactInfoFromLocalStorage();
+
     props.history.listen(({location}) => {
       const {pathname, search} = location;
       const languageId = getLangIdByUrlPath(pathname);

@@ -22,6 +22,7 @@ export default (props) => {
               onChange={contactInfoOnChange('contactName', props)}
               type="text"
               placeholder={getTranslate(props.languageId, 5)}
+              value={props.contactName}
             />
           </div>
           <div>
@@ -32,6 +33,7 @@ export default (props) => {
               onChange={contactInfoOnChange('contactPhone', props)}
               type="text"
               placeholder="+380_________"
+              value={props.contactPhone}
             />
           </div>
           <div>
@@ -42,6 +44,7 @@ export default (props) => {
               onChange={contactInfoOnChange('contactCity', props)}
               type="text"
               placeholder={getTranslate(props.languageId, 4)}
+              value={props.contactCity}
             />
           </div>
           <div>
@@ -52,6 +55,7 @@ export default (props) => {
               onChange={contactInfoOnChange('contactEmail', props)}
               type="text"
               placeholder={getTranslate(props.languageId, 3)}
+              value={props.contactEmail}
             />
           </div>
         </div>
