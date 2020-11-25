@@ -3,7 +3,9 @@ import {
   ContactInfoWrap,
   ContactInfoHeader,
 } from './style';
-
+/*
+* @todo phone number validator
+* */
 export default (props) => {
   return (
     <ContactInfoWrap>
@@ -19,6 +21,7 @@ export default (props) => {
             <input
               onChange={contactInfoOnChange('contactName', props)}
               type="text"
+              placeholder={getTranslate(props.languageId, 5)}
             />
           </div>
           <div>
@@ -28,6 +31,7 @@ export default (props) => {
             <input
               onChange={contactInfoOnChange('contactPhone', props)}
               type="text"
+              placeholder="+380_________"
             />
           </div>
           <div>
@@ -37,6 +41,7 @@ export default (props) => {
             <input
               onChange={contactInfoOnChange('contactCity', props)}
               type="text"
+              placeholder={getTranslate(props.languageId, 4)}
             />
           </div>
           <div>
@@ -46,6 +51,7 @@ export default (props) => {
             <input
               onChange={contactInfoOnChange('contactEmail', props)}
               type="text"
+              placeholder={getTranslate(props.languageId, 3)}
             />
           </div>
         </div>
@@ -67,6 +73,18 @@ function getTranslate(languageId, type) {
     return languageId === 1
       ? 'Місто'
       : 'Город';
+  } else if (type === 3) {
+    return languageId === 1
+      ? 'Вкажіть Email для відстеження статусу замовлення'
+      : 'Укажите Email для отслеживания статуса заказа';
+  } else if (type === 4) {
+    return languageId === 1
+      ? 'Київ'
+      : 'Киев';
+  } else if (type === 5) {
+    return languageId === 1
+      ? 'Петренко Сергій Сергійович'
+      : 'Петренко Сергей Сергеевич';
   }
 }
 
