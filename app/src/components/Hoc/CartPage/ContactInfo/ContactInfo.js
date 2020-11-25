@@ -75,8 +75,8 @@ function getTranslate(languageId, type) {
       : 'Город';
   } else if (type === 3) {
     return languageId === 1
-      ? 'Вкажіть Email для відстеження статусу замовлення'
-      : 'Укажите Email для отслеживания статуса заказа';
+      ? 'Вкажіть E-mail для відстеження статусу замовлення'
+      : 'Укажите E-mail для отслеживания статуса заказа';
   } else if (type === 4) {
     return languageId === 1
       ? 'Київ'
