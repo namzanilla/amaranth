@@ -31,6 +31,11 @@ server {
         root /var/www/projects/amaranth/static/public/favicon;
     }
 
+    location /safari-pinned-tab.svg {
+        access_log off;
+        root /var/www/projects/amaranth/static/public/favicon;
+    }
+
     location /sitemap.xml {
         access_log off;
         root /var/www/projects/amaranth/static;
