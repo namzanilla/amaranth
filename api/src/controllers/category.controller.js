@@ -40,21 +40,7 @@ module.exports = (app) => {
   }
 
   function getInfoById(ctx) {
-    const {
-      params: {
-        id: categoryId,
-      } = {},
-      query: {
-        language_id: languageId,
-      } = {},
-    } = ctx;
-
-    const params = {
-      categoryId,
-      languageId,
-    };
-
-    return categoryService.getInfoById(params)
+    return categoryService.getInfoById(ctx)
       .then(h(app).onFulfilled(ctx), h(app).onRejected(ctx))
   }
 

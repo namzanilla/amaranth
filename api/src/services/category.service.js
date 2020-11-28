@@ -72,10 +72,26 @@ module.exports = (app) => {
     return category;
   }
 
-  const getInfoById = async (params) => {
+  const getInfoById = async (ctx) => {
+    const {
+      params: {
+        id: categoryId,
+      } = {},
+      query: {
+        language_id: languageId,
+      } = {},
+    } = ctx;
+
+    const params = {
+      categoryId,
+      languageId,
+    };
+
     let info = await getById(params);
 
-    if (!info.name) return {};
+    if (!info.name) {
+      return {};
+    }
 
     return {
       h1: info.name,
