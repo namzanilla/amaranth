@@ -8,6 +8,7 @@ import * as orderActionCreators from 'store/actions/order';
 
 const mapStateToProps = (state) => {
   return {
+    htmlLangAttrValue: state.app.htmlLangAttrValue,
     languageId: state.app.languageId,
     sessionValue: state.app.sessionValue,
     hoc: state.app.hoc,
@@ -24,6 +25,7 @@ const mapDispatchToProps = (dispatch) => {
     productsSetPage: (page) => dispatch(productsActionCreators.productsSetPage(page)),
     setProductIdByPathname: (pathname) => dispatch(productActionCreators.setProductIdByPathname(pathname)),
     getCartInfo: (sessionValue) => dispatch(cartActionCreators.getCartInfo(sessionValue)),
+    appSetHtmlLangAttrValue: (languageId) => dispatch(appActionCreators.appSetHtmlLangAttrValue(languageId)),
     orderSetContactInfoFromLocalStorage: () => dispatch(orderActionCreators.setContactInfoFromLocalStorage()),
   };
 };

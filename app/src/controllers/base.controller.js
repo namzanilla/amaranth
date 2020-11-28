@@ -17,6 +17,7 @@ export default (languageId, cb) => (ctx) => {
   const {dispatch} = store;
 
   dispatch(appActionCreators.setLanguageId(languageId));
+  dispatch(appActionCreators.appSetHtmlLangAttrValue(languageId));
   dispatch(appActionCreators.setAlternate(ctx.path, ctx.querystring));
   dispatch(appActionCreators.appSetStaticHost(HOST_STATIC));
   dispatch(appActionCreators.appSetSessionKey(NODE_API_SESSION_KEY));

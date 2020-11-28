@@ -34,12 +34,10 @@ export default (props) => {
     componentDidMount(props);
   }, []);
 
-  let htmlLangAttrValue = props.languageId === 1 ? 'ua' : 'ru';
-
   return (
     <>
       <Helmet>
-        <html lang={htmlLangAttrValue} />
+        <html lang={props.htmlLangAttrValue} />
         <link rel="alternate" href={props.alternateUk} hrefLang="uk-UA" />
         <link rel="alternate" href={props.alternateRu} hrefLang="ru-UA" />
       </Helmet>
@@ -60,6 +58,7 @@ function componentDidMount(props) {
     const {pathname, search} = location;
     const languageId = getLangIdByUrlPath(pathname);
     props.setLanguageId(languageId);
+    props.appSetHtmlLangAttrValue(languageId);
     props.setAlternate(pathname, search);
 
     const hoc = getHoc(pathname)

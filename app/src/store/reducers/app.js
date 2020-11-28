@@ -67,6 +67,13 @@ export default (state = initialState, action) => {
         ...state,
         languageId: payload,
       };
+    } case at.APP_SET_HTML_LANG_ATTR_VALUE: {
+      let {htmlLangAttrValue} = action;
+
+      return {
+        ...state,
+        htmlLangAttrValue,
+      };
     } case at.APP_SET_ALTERNATE: {
       let {
         payload: {

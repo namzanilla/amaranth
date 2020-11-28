@@ -40,6 +40,23 @@ export const appSetSessionValue = (sessionValue) => (dispatch) => {
   });
 };
 
+export const appSetHtmlLangAttrValue = (languageId) => (dispatch, getState) => {
+  try {
+    const state = getState();
+    languageId = languageId ? languageId : state.app.languageId;
+    const htmlLangAttrValue = state.app.languageId === 1 ? 'uk-UA' : 'ru-UA';
+
+    if (state.app.htmlLangAttrValue !== htmlLangAttrValue) {
+      dispatch({
+        type: at.APP_SET_HTML_LANG_ATTR_VALUE,
+        htmlLangAttrValue,
+      });
+    }
+  } catch (e) {
+    console.log(e);
+  }
+};
+
 export const setHoc = (hoc) => (dispatch, getState) => {
   const {app = {}} = getState();
 
