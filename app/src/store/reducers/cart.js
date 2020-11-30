@@ -31,24 +31,34 @@ export default (state = initialState, action) => {
     } case at.CART_FETCH_DETAILS_SUCCESS: {
       const {details = {}} = action;
       const {total} = details;
+      const {list = []} = details;
 
       if (!total) return state;
+
+      const listNext = getListPriceWithTotal(list);
 
       details.totalStr = numberWithSpaces(total);
 
       return {
         ...state,
-        details,
+        details: {
+          ...details,
+          list: listNext,
+        },
       };
     } case at.CART_REFRESH_DETAILS_TOTAL: {
       const {details = {}} = state;
       const total = calculateTotal(state);
       const totalStr = numberWithSpaces(total);
 
+      const {list = []} = details;
+      const listNext = getListPriceWithTotal(list)
+
       return {
         ...state,
         details: {
           ...details,
+          list: listNext,
           total,
           totalStr,
         },
@@ -89,12 +99,25 @@ export default (state = initialState, action) => {
   }
 }
 
+function getListPriceWithTotal(list) {
+  return list.map((el) => {
+    const {price, count} = el;
+    const priceTotal = price * count;
+    const priceTotalStr = numberWithSpaces(priceTotal);
+
+    el.priceTotal = priceTotal;
+    el.priceTotalStr = priceTotalStr;
+
+    return el;
+  });
+}
+
 function calculateTotal(state) {
   const {
     products = {},
     details: {
       list = [],
-    } = {}
+    } = {},
   } = state;
 
   let total = 0;
