@@ -73,6 +73,8 @@ module.exports = (app) => {
   }
 
   const getInfoById = async (ctx) => {
+    const productService = require('./product.service')(app);
+
     const {
       params: {
         id: categoryId,
@@ -93,139 +95,29 @@ module.exports = (app) => {
       return {};
     }
 
+    try {
+      let {
+        cid: categoryId,
+        o: offset = 0,
+      } = query;
+
+      const {total = 0, list = []} = await productService.getProductList({
+        cid: categoryId,
+        o: offset = 0,
+      });
+    } catch (e) {
+      console.log(e);
+    }
+
+
     return {
+      title: info.name,
       h1: info.name,
     };
   };
 
-  const getList = async (query) => {
-    const qs = {};
-
-    qs.languageId = sh.qs.getLanguageId(query);
-    qs.group = sh.qs.getGroup(query);
-    qs.view = sh.qs.getView(query);
-    qs.cache = sh.qs.getCache(query);
-    qs.status = sh.qs.getStatus(query);
-    qs.sort = sh.qs.getSort(query);
-    qs.limit = sh.qs.getLimit(query);
-
-    const redisCacheKey = sh.getRedisCacheKey(qs);
-
-    if (1 === qs.cache) {
-      const categories = await getAsync(redisCacheKey);
-
-      if (categories !== null) {
-        return JSON.parse(categories);
-      }
-    }
-
-    let sql = `
-        SELECT
-          c.id,
-          c.parent,
-          c.name
-        FROM category c
-        WHERE 1=1
-    `;
-
-    const params = [];
-
-    if (undefined !== qs.status) {
-      sql += ' AND c.status=?';
-      params.push(qs.status);
-    }
-
-    if (null !== qs.group) {
-      sql += ' AND c.`group`=?';
-      params.push(qs.group);
-    }
-
-    if (1 === qs.sort) {
-      sql += ' ORDER BY c.`name`';
-    }
-
-    if (qs.limit) {
-      sql += ' LIMIT ?';
-      params.push(qs.limit);
-    }
-
-    let list = await new Promise((resolve, reject) => {
-      app.mysql.connection.query(sql, params, (error, results) => {
-        if (error) {
-          reject(error);
-        }
-
-        resolve(results);
-      });
-    });
-
-    if (!list.length) return list;
-
-    if (undefined !== qs.languageId) {
-      const id2ix = {};
-
-      list.forEach(({id}, index) => {
-        id2ix[id] = index;
-      });
-
-      sql = `SELECT
-        ct.category_id,
-        ct.name
-      FROM category_trans ct
-      WHERE ct.language_id=?
-      AND ct.category_id IN (${Object.keys(id2ix).join(',')})`;
-
-      const trans = await new Promise((resolve, reject) => {
-        app.mysql.connection.query(sql, qs.languageId, async (error, results) => {
-          if (error) {
-            reject(error);
-          }
-
-          resolve(results);
-        });
-      });
-
-      if (!trans.length) return list;
-
-      trans.forEach((listEl) => {
-        const {category_id: id, name} = listEl;
-        const {
-          [id]: index,
-        } = id2ix;
-
-        if (undefined !== index) {
-          if (name)
-            list[index].name = name;
-        }
-      })
-    }
-
-    const deleteParentProp = (list) => {
-      list.forEach((el) => {
-        delete el.parent;
-        const {child} = el;
-
-        if (undefined !== child) {
-          deleteParentProp(child);
-        }
-      })
-    };
-
-    if (2 === qs.view) {
-      sh.prepareResultsByView(list, qs.view);
-      list = list.filter((el) => el.parent === 0);
-      deleteParentProp(list);
-    }
-
-    if (qs.cache === 1) {
-      app.redis.client.set(redisCacheKey, JSON.stringify(list), 'EX', 60 * 60);
-    }
-
-    return list;
-  }
-
   return {
-    getList,
+    getCategoryList: getCategoryList(app, getAsync, sh),
     getById,
     getInfoById,
   };
@@ -356,4 +248,132 @@ function serviceHelper() {
       },
     },
   };
+}
+
+function getCategoryList(app, getAsync, sh) {
+  return async function(query) {
+    const qs = {};
+
+    qs.languageId = sh.qs.getLanguageId(query);
+    qs.group = sh.qs.getGroup(query);
+    qs.view = sh.qs.getView(query);
+    qs.cache = sh.qs.getCache(query);
+    qs.status = sh.qs.getStatus(query);
+    qs.sort = sh.qs.getSort(query);
+    qs.limit = sh.qs.getLimit(query);
+
+    const redisCacheKey = sh.getRedisCacheKey(qs);
+
+    if (1 === qs.cache) {
+      const categories = await getAsync(redisCacheKey);
+
+      if (categories !== null) {
+        return JSON.parse(categories);
+      }
+    }
+
+    let sql = `
+        SELECT
+          c.id,
+          c.parent,
+          c.name
+        FROM category c
+        WHERE 1=1
+    `;
+
+    const params = [];
+
+    if (undefined !== qs.status) {
+      sql += ' AND c.status=?';
+      params.push(qs.status);
+    }
+
+    if (null !== qs.group) {
+      sql += ' AND c.`group`=?';
+      params.push(qs.group);
+    }
+
+    if (1 === qs.sort) {
+      sql += ' ORDER BY c.`name`';
+    }
+
+    if (qs.limit) {
+      sql += ' LIMIT ?';
+      params.push(qs.limit);
+    }
+
+    let list = await new Promise((resolve, reject) => {
+      app.mysql.connection.query(sql, params, (error, results) => {
+        if (error) {
+          reject(error);
+        }
+
+        resolve(results);
+      });
+    });
+
+    if (!list.length) return list;
+
+    if (undefined !== qs.languageId) {
+      const id2ix = {};
+
+      list.forEach(({id}, index) => {
+        id2ix[id] = index;
+      });
+
+      sql = `SELECT
+        ct.category_id,
+        ct.name
+      FROM category_trans ct
+      WHERE ct.language_id=?
+      AND ct.category_id IN (${Object.keys(id2ix).join(',')})`;
+
+      const trans = await new Promise((resolve, reject) => {
+        app.mysql.connection.query(sql, qs.languageId, async (error, results) => {
+          if (error) {
+            reject(error);
+          }
+
+          resolve(results);
+        });
+      });
+
+      if (!trans.length) return list;
+
+      trans.forEach((listEl) => {
+        const {category_id: id, name} = listEl;
+        const {
+          [id]: index,
+        } = id2ix;
+
+        if (undefined !== index) {
+          if (name)
+            list[index].name = name;
+        }
+      })
+    }
+
+    const deleteParentProp = (list) => {
+      list.forEach((el) => {
+        delete el.parent;
+        const {child} = el;
+
+        if (undefined !== child) {
+          deleteParentProp(child);
+        }
+      })
+    };
+
+    if (2 === qs.view) {
+      sh.prepareResultsByView(list, qs.view);
+      list = list.filter((el) => el.parent === 0);
+      deleteParentProp(list);
+    }
+
+    if (qs.cache === 1) {
+      app.redis.client.set(redisCacheKey, JSON.stringify(list), 'EX', 60 * 60);
+    }
+
+    return list;
+  }
 }

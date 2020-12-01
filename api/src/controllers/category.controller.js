@@ -5,18 +5,18 @@ router.prefix('/api/v1');
 module.exports = (app) => {
   const categoryService = require('./../services/category.service')(app);
 
-  router.get('/category', baseController(getList));
+  router.get('/category', baseController(getCategoryList));
   router.get('/category/:id(\\d+)', baseController(getById));
   router.get('/category/:id(\\d+)/info', baseController(getInfoById));
 
-  function getList(ctx) {
+  function getCategoryList(ctx) {
     const {
       request: {
         query,
       } = {},
     } = ctx;
 
-    return categoryService.getList(query)
+    return categoryService.getCategoryList(query)
       .then(h(app).onFulfilled(ctx), h(app).onRejected(ctx))
   }
 
