@@ -7,7 +7,7 @@ module.exports = (app) => {
 
   router.get('/category', baseController(getCategoryList));
   router.get('/category/:id(\\d+)', baseController(getById));
-  router.get('/category/:id(\\d+)/info', baseController(getInfoById));
+  router.get('/category/:id(\\d+)/info', baseController(getCategoryInfoById));
 
   function getCategoryList(ctx) {
     const {
@@ -39,8 +39,8 @@ module.exports = (app) => {
       .then(h(app).onFulfilled(ctx), h(app).onRejected(ctx))
   }
 
-  function getInfoById(ctx) {
-    return categoryService.getInfoById(ctx)
+  function getCategoryInfoById(ctx) {
+    return categoryService.getCategoryInfoById(ctx)
       .then(h(app).onFulfilled(ctx), h(app).onRejected(ctx))
   }
 

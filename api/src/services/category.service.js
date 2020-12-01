@@ -72,9 +72,7 @@ module.exports = (app) => {
     return category;
   }
 
-  const getInfoById = async (ctx) => {
-    const productService = require('./product.service')(app);
-
+  const getCategoryInfoById = async (ctx) => {
     const {
       params: {
         id: categoryId,
@@ -95,23 +93,6 @@ module.exports = (app) => {
       return {};
     }
 
-    try {
-      let {
-        query: {
-          cid: categoryId,
-          o: offset = 0,
-        } = {},
-      } = ctx.request;
-
-      const {total = 0, list = []} = await productService.getProductList({
-        cid: categoryId,
-        o: offset = 0,
-      });
-    } catch (e) {
-      console.log(e);
-    }
-
-
     return {
       title: info.name,
       h1: info.name,
@@ -121,7 +102,7 @@ module.exports = (app) => {
   return {
     getCategoryList: getCategoryList(app, getAsync, sh),
     getById,
-    getInfoById,
+    getCategoryInfoById,
   };
 };
 
