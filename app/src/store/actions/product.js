@@ -19,19 +19,19 @@ export const setProductInitialState = () => (dispatch) => {
 };
 
 export const fetchProductById = (productId, languageId) => async (dispatch, getState) => {
-  dispatch({type: at.PRODUCT_FETCH_BY_ID_REQUEST});
-
-  if (!languageId) {
-    const {
-      app: {
-        languageId: lid,
-      } = {},
-    } = getState();
-
-    languageId = lid;
-  }
-
   try {
+    if (!languageId) {
+      const {
+        app: {
+          languageId: lid,
+        } = {},
+      } = getState();
+
+      languageId = lid;
+    }
+
+    dispatch({type: at.PRODUCT_FETCH_BY_ID_REQUEST});
+
     const {data: product} = await productApi.getProduct({productId, languageId});
 
     dispatch({
@@ -43,6 +43,8 @@ export const fetchProductById = (productId, languageId) => async (dispatch, getS
   } catch (e) {
     dispatch({type: at.PRODUCT_FETCH_BY_ID_FAILURE});
     console.log(e);
+
+    return at.PRODUCT_FETCH_BY_ID_FAILURE;
   }
 };
 
