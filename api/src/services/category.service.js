@@ -97,9 +97,11 @@ module.exports = (app) => {
 
     try {
       let {
-        cid: categoryId,
-        o: offset = 0,
-      } = query;
+        query: {
+          cid: categoryId,
+          o: offset = 0,
+        } = {},
+      } = ctx.request;
 
       const {total = 0, list = []} = await productService.getProductList({
         cid: categoryId,
