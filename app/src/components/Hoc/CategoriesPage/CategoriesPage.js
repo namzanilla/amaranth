@@ -10,10 +10,7 @@ export default (props) => {
   useEffect(() => {
     if (props.ssr) {
       props.appSetSSR(false);
-      setLoading(false);
     } else {
-      setLoading(true);
-
       fetchCategoryList(props, setLoading);
     }
   }, []);
