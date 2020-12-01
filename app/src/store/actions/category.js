@@ -1,4 +1,5 @@
 import * as at from 'store/actionTypes';
+import * as appActionCreators from 'store/actions/app';
 import * as categoryApi from 'api/category';
 
 export const fetchCategoryList = (languageId) => async (dispatch, getState) => {
@@ -29,17 +30,24 @@ export const fetchCategoryList = (languageId) => async (dispatch, getState) => {
 };
 
 export const fetchCategoryInfo = (categoryId, languageId) => async (dispatch) => {
-  dispatch({type: at.CATEGORY_FETCH_INFO_REQUEST});
-
   const params = {
     id: categoryId,
     languageId,
   };
 
   try {
+    dispatch({type: at.CATEGORY_FETCH_INFO_REQUEST});
+
     const {data: info = {}} = await categoryApi.getInfoById(params);
-    dispatch({type: at.CATEGORY_FETCH_INFO_SUCCESS});
-    dispatch(setCategoryInfo(languageId, info));
+
+    if (info.h1 === undefined) {
+      dispatch(appActionCreators.setHoc('NotFoundPage'));
+    } else {
+      dispatch({type: at.CATEGORY_FETCH_INFO_SUCCESS});
+      dispatch(setCategoryInfo(languageId, info));
+
+      return info;
+    }
   } catch (e) {
     dispatch({type: at.CATEGORY_FETCH_INFO_FAILURE});
     console.log(e);

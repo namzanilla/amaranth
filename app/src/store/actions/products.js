@@ -1,20 +1,6 @@
 import * as at from 'store/actionTypes';
 import * as productsApi from 'api/products';
 
-export const productsSet = (products) => (dispatch) => {
-  dispatch({
-    type: at.PRODUCTS_SET,
-    products,
-  });
-};
-
-export const productsSetDidUnmount = (bool) => (dispatch) => {
-  dispatch({
-    type: at.PRODUCTS_SET_DID_UNMOUNT,
-    bool,
-  });
-};
-
 export const productsSetPage = (page) => (dispatch, getState) => {
   const {
     products = {},
@@ -35,8 +21,6 @@ export const productsSetInitialState = () => async (dispatch) => {
 }
 
 export const productsFetch = () => async (dispatch, getState) => {
-  dispatch({type: at.PRODUCTS_FETCH_REQUEST});
-
   const {
     app: {
       languageId
@@ -56,9 +40,16 @@ export const productsFetch = () => async (dispatch, getState) => {
   };
 
   try {
-    const {data: products} = await productsApi.getProducts(params);
-    dispatch({type: at.PRODUCTS_FETCH_SUCCESS});
-    dispatch(productsSet(products));
+    dispatch({type: at.PRODUCTS_FETCH_REQUEST});
+
+    const {data: products = {}} = await productsApi.getProducts(params);
+
+    dispatch({
+      type: at.PRODUCTS_FETCH_SUCCESS,
+      products,
+    });
+
+    return products;
   } catch (e) {
     dispatch({type: at.PRODUCTS_FETCH_FAILURE});
     console.log(e);

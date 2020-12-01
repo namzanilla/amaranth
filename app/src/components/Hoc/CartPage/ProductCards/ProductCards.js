@@ -12,7 +12,7 @@ export default (props) => {
           id,
           name,
           count,
-          price,
+          priceTotalStr,
         } = el;
 
         return (
@@ -21,7 +21,8 @@ export default (props) => {
             productId={id}
             name={name}
             count={count}
-            price={price}
+            history={props.history}
+            priceTotalStr={priceTotalStr}
           />
         );
       })}

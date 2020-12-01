@@ -1,7 +1,6 @@
 import * as at from 'store/actionTypes';
 
 const initialState = {
-  didUnmount: true,
   limit: 12,
 };
 
@@ -14,19 +13,9 @@ export default (state = initialState, action) => {
         ...state,
         page,
       };
-    } case at.PRODUCTS_SET_DID_UNMOUNT: {
-      const {bool} = action;
-
-      return {
-        ...state,
-        didUnmount: bool,
-      };
     } case at.PRODUCTS_SET_INITIAL_STATE: {
       return initialState;
-    } case at.PRODUCTS_SET: {
-      const {didUnmount} = state;
-      if (didUnmount) return state;
-
+    } case at.PRODUCTS_FETCH_SUCCESS: {
       const {
         products: {
           total,

@@ -5,9 +5,19 @@ import PlusMinusQuantity from 'components/PlusMinusQuantity';
 export default (props) => {
   return (
     <ProductCardWrap>
-      <div className="image" />
-      <div className="name">{props.name}</div>
-      <div className="price">{props.count * props.price}&nbsp;грн</div>
+      <a className="image"
+        href={getProductHref(props)}
+        onClick={productOnClick(props)}
+      />
+      <div className="name">
+        <a
+          href={getProductHref(props)}
+          onClick={productOnClick(props)}
+        >
+          {props.name}
+        </a>
+      </div>
+      <div className="price">{props.priceTotalStr}&nbsp;грн</div>
       <PlusMinusQuantity
         value={props.count}
         className="quantity"
@@ -17,6 +27,25 @@ export default (props) => {
       <div className="close" />
     </ProductCardWrap>
   );
+}
+
+function productOnClick(props) {
+  return function (e) {
+    e.preventDefault();
+
+    const pathname = getProductHref(props);
+
+    props.history.push({
+      pathname,
+      search: '',
+    });
+  }
+}
+
+function getProductHref(props) {
+  return props.languageId === 1
+    ? `/p${props.productId}`
+    : `/ru/p${props.productId}`;
 }
 
 const onQuantityClickEvent = (isMinus, props) => (e, value) => {

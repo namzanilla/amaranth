@@ -20,7 +20,9 @@ export default (props) => {
     <CartDetailsWrap>
       <CartDetailsGrid>
         <ContactInfo />
-        <ProductCards />
+        <ProductCards
+          history={props.history}
+        />
         <div>
           {getTotalPriceText(props.languageId)}: {props.totalPrice} грн.
         </div>

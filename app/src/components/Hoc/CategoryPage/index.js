@@ -37,6 +37,7 @@ const mapStateToProps = (state) => {
   return {
     languageId,
     categoryId,
+    title: h1,
     h1,
     ssr,
     page,
