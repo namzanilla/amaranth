@@ -9,8 +9,8 @@ const path = require('path'),
 const {NODE_ENV = 'production'} = process.env;
 
 const onBuildStart = [
-  'find /var/www/projects/amaranth/static/js/build -name "*.gz" -type f -delete',
-  'find /var/www/projects/amaranth/static/js/build -name "*.js" -type f -delete',
+  'find /var/www/projects/amaranth/static/public/js/build -name "*.gz" -type f -delete',
+  'find /var/www/projects/amaranth/static/public/js/build -name "*.js" -type f -delete',
 ];
 const plugins = [
   new WebpackShellPlugin({
