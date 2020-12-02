@@ -4,7 +4,6 @@ export const CategoriesWrap = styled.div`
   max-width: 1280px;
   padding: 0 20px;
   margin: 0 auto;
-  background:#ddd;
   display: grid;
   grid-column-gap: 20px;
   grid-row-gap: 20px;
@@ -21,11 +20,25 @@ export const CategoriesWrap = styled.div`
 `;
 
 export const CategoryItem = styled.a`
-  background-color: #eee;
+  text-align: center;
+  span {
+    display: block;
+    padding: 20px 0 0;
+  }
 `;
 
 export const Image = styled.div`
+  position: relative;
   width: 100%;
   padding-bottom: 100%;
   background-color: #d2d2d2;
+  overflow: hidden;
+  border-radius: 50%;
+  img {
+    top: 0;
+    left: ${(props) => props.left};
+    bottom: 0;
+    height: 100%;
+    position: absolute;
+  }
 `;

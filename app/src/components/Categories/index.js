@@ -10,6 +10,7 @@ const mapStateToProps = (state) => {
   } = state;
 
   return {
+    hostStatic: state.app.hostStatic,
     languageId: state.app.languageId,
     list,
   };

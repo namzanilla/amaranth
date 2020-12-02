@@ -15,13 +15,23 @@ export default (props) => {
       name,
     } = el;
 
+    const imageAttrs = {};
+
+    if (id === 8) {
+      imageAttrs.left = '-100%';
+    } else {
+      imageAttrs.left = 0;
+    }
+
     return (
       <CategoryItem
         key={id}
         href={getCategoryItemHref(id, props.languageId)}
         onClick={categoryItemOnClick(getCategoryItemHref(id, props.languageId), props.history)}
       >
-        <Image />
+        <Image {...imageAttrs}>
+          <img src={`${props.hostStatic}/c.png`} alt={name} />
+        </Image>
         <span>
           {name}
         </span>
