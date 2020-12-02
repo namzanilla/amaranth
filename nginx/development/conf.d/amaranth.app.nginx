@@ -10,6 +10,10 @@ server {
         root /var/www/projects/amaranth/static;
     }
 
+    location /c.png {
+        root /var/www/projects/amaranth/static/public/category;
+    }
+
     location ~ ^/apple-touch-icon\.png$ {
         access_log off;
         root /var/www/projects/amaranth/static/public/favicon;
