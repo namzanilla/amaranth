@@ -23,7 +23,13 @@ export const CategoryItem = styled.a`
   text-align: center;
   span {
     display: block;
-    padding: 20px 0 0;
+    padding: 16px 0;
+    background: #ffe2e4;
+    border-radius: 0 0 4px 4px;
+    color: #000;
+    font-size: 12px;
+    font-weight: bold;
+    text-transform: uppercase;
   }
 `;
 
@@ -33,7 +39,7 @@ export const Image = styled.div`
   padding-bottom: 100%;
   background-color: #d2d2d2;
   overflow: hidden;
-  border-radius: 50%;
+  border-radius: 4px 4px 0 0;
   img {
     top: 0;
     left: ${(props) => props.left};
