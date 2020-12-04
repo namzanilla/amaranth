@@ -1,6 +1,7 @@
 import React from 'react';
 import {ProductCardWrap} from './style';
 import PlusMinusQuantity from 'components/PlusMinusQuantity';
+import CloseIcon from 'components/Icons/Close';
 
 export default (props) => {
   return (
@@ -9,14 +10,13 @@ export default (props) => {
         href={getProductHref(props)}
         onClick={productOnClick(props)}
       />
-      <div className="name">
-        <a
-          href={getProductHref(props)}
-          onClick={productOnClick(props)}
-        >
-          {props.name}
-        </a>
-      </div>
+      <a
+        className="name"
+        href={getProductHref(props)}
+        onClick={productOnClick(props)}
+      >
+        {props.name}
+      </a>
       <div className="price">{props.priceTotalStr}&nbsp;грн</div>
       <PlusMinusQuantity
         value={props.count}
@@ -24,9 +24,22 @@ export default (props) => {
         onMinusClick={onQuantityClickEvent(true, props)}
         onPlusClick={onQuantityClickEvent(false, props)}
       />
-      <div className="close" />
+      <CloseIcon
+        className="close"
+        onClick={closeOnClick(props)}
+      />
     </ProductCardWrap>
   );
+}
+
+function closeOnClick(props) {
+  return function(e) {
+    e.preventDefault();
+
+    const data = {[props.productId]: -1};
+
+    props.removeFromCart(data);
+  }
 }
 
 function productOnClick(props) {

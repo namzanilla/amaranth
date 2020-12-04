@@ -5,6 +5,8 @@ export const ProductCardWrap = styled.div`
   position: relative;
   display: flex;
   margin-bottom: 20px;
+  background: #eee;
+  
   &:last-child {
     margin-bottom: 0;
   }
@@ -27,10 +29,13 @@ export const ProductCardWrap = styled.div`
     bottom: 0;
   }
   .name {
-    font-size: 12px;
-    margin-top: 20px;
+    font-size: 11px;
+    padding-right: 20px;
+    color: #000;
   }
   .close {
-    
+    position: absolute;
+    right: 5px;
+    top: 5px;
   }
 `;

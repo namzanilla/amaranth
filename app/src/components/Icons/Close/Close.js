@@ -8,6 +8,10 @@ export default (props) => {
     attrs.onClick = props.onClick;
   }
 
+  if (props.className) {
+    attrs.className = props.className;
+  }
+
   return (
     <CloseWrap {...attrs} />
   );

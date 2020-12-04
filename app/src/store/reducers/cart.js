@@ -15,12 +15,34 @@ export default (state = initialState, action) => {
     } case at.CART_SET_INITIAL_STATE: {
       return initialState;
     } case at.CART_REMOVE_SUCCESS: {
-      const {products = {}} = action;
+      try {
+        const {products = {}} = action;
 
-      return {
-        ...state,
-        products,
-      };
+        if (!Object.keys(products).length) {
+          return initialState;
+        }
+
+        const {details = {}} = state;
+        const {list = []} = details;
+        const listNext = list.filter((el) => {
+          const {id} = el;
+
+          return undefined !== products[id];
+        });
+
+        return {
+          ...state,
+          products,
+          details: {
+            ...details,
+            list: listNext,
+          },
+        };
+      } catch (e) {
+        console.log(e);
+
+        return state;
+      }
     } case at.CART_FETCH_INFO_SUCCESS: {
       const {products = {}} = action;
 
@@ -47,52 +69,68 @@ export default (state = initialState, action) => {
         },
       };
     } case at.CART_REFRESH_DETAILS_TOTAL: {
-      const {details = {}} = state;
-      const total = calculateTotal(state);
-      const totalStr = numberWithSpaces(total);
+      try {
+        const {details = {}} = state;
+        const {list = []} = details;
 
-      const {list = []} = details;
-      const listNext = getListPriceWithTotal(list)
+        if (!list.length) {
+          return state;
+        }
 
-      return {
-        ...state,
-        details: {
-          ...details,
-          list: listNext,
-          total,
-          totalStr,
-        },
-      };
-    } case at.CART_SET_COUNT_INTO_LIST: {
-      const {
-        products = {},
-        details = {},
-        details: {
-          list = [],
-        } = {},
-      } = state;
-
-      if (list.length === 0 ) return state;
-
-      const listNext = list.map((el) => {
-        const {id} = el;
-        const {
-          [id]: count,
-        } = products;
+        const total = calculateTotal(state);
+        const totalStr = numberWithSpaces(total);
+        const listNext = getListPriceWithTotal(list)
 
         return {
-          ...el,
-          count,
+          ...state,
+          details: {
+            ...details,
+            list: listNext,
+            total,
+            totalStr,
+          },
         };
-      });
+      } catch (e) {
+        console.log(e);
+      }
+    } case at.CART_SET_COUNT_INTO_LIST: {
+      try {
+        const {
+          products = {},
+          details = {},
+          details: {
+            list = [],
+          } = {},
+        } = state;
 
-      return {
-        ...state,
-        details: {
-          ...details,
-          list: listNext,
-        },
-      };
+        if (list.length === 0 || !Object.keys(products).length) {
+          return state;
+        }
+
+        const listNext = list.map((el) => {
+          const {id} = el;
+          const {
+            [id]: count,
+          } = products;
+
+          return {
+            ...el,
+            count,
+          };
+        });
+
+        return {
+          ...state,
+          details: {
+            ...details,
+            list: listNext,
+          },
+        };
+      } catch (e) {
+        console.log(e);
+
+        return state;
+      }
     } default: {
       return state;
     }
