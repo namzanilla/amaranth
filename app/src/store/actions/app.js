@@ -27,17 +27,11 @@ export const appSetStaticHost = (host) => (dispatch) => {
 };
 
 // @todo appSetCatalogVisibility
-export const appSetCatalogState = (state) => (dispatch, getState) => {
+export const appSetCatalogState = (catalog) => (dispatch, getState) => {
   try {
-    const {
-      app: {
-        catalog: {
-          isVisible,
-        } = {},
-      } = {},
-    } = getState();
+    const state = getState();
 
-    if (isVisible !== state.isVisible) {
+    if (state.app.catalog.isVisible !== catalog.isVisible) {
       dispatch({
         type: at.APP_SET_CATALOG_STATE,
         state,
