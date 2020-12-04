@@ -20,7 +20,7 @@ module.exports = (app) => {
     const productIds = Object.keys(info).map((productId) => +productId);
 
     if (!productIds.length) {
-      await delCartInfo(app, cartKey);
+      await redisHelper.delCartInfo(app, cartKey);
       return {};
     }
 
@@ -123,49 +123,59 @@ module.exports = (app) => {
   };
 
   const removeFromCart = async (token, body) => {
-    const cartKey = redisHelper.getRedisCartKey(token);
-    const info = await redisHelper.getCartInfo(cartKey, app);
-    body = validateCartRequestBody(body);
+    try {
+      const cartKey = redisHelper.getRedisCartKey(token);
+      const info = await redisHelper.getCartInfo(cartKey, app);
+      body = validateCartRequestBody(body);
 
-    if (info === null) {
-      return {};
-    } else if (objectHelper.isEmptyObject(info)) {
-      await delCartInfo(app, cartKey);
-      return {};
-    } else if (objectHelper.isEmptyObject(body)) {
-      // @TODO bad request 400
-      return {};
-    }
-
-    let isModified = false;
-    Object.keys(body).forEach((productId) => {
-      let count = body[productId];
-      count = parseInt(count);
-      if (isNaN(count)) return false;
-      if (info[productId] !== undefined) {
-        isModified = true;
-        info[productId] -= count;
-
-        if (info[productId] < 1) {
-          delete info[productId];
-        }
-      }
-    });
-
-    if (isModified) {
-      if (objectHelper.isEmptyObject(info)) {
-        await delCartInfo(app, cartKey);
+      if (info === null) {
         return {};
-      } else {
-        try {
-          await setCartInfo(app, info, cartKey);
-        } catch (e) {
-          console.log(e);
+      } else if (objectHelper.isEmptyObject(info)) {
+        await redisHelper.delCartInfo(app, cartKey);
+        return {};
+      } else if (objectHelper.isEmptyObject(body)) {
+        // @TODO bad request 400
+        return {};
+      }
+
+      let isModified = false;
+      Object.keys(body).forEach((productId) => {
+        let count = body[productId];
+        count = parseInt(count);
+        if (isNaN(count)) return false;
+        if (info[productId] !== undefined) {
+          isModified = true;
+
+          if (count === -1) {
+            delete info[productId];
+            return false;
+          }
+
+          info[productId] -= count;
+
+          if (info[productId] < 1) {
+            delete info[productId];
+          }
+        }
+      });
+
+      if (isModified) {
+        if (objectHelper.isEmptyObject(info)) {
+          await redisHelper.delCartInfo(app, cartKey);
+          return {};
+        } else {
+          try {
+            await setCartInfo(app, info, cartKey);
+          } catch (e) {
+            console.log(e);
+          }
         }
       }
-    }
 
-    return info;
+      return info;
+    } catch (e) {
+      console.log(e);
+    }
   }
 
   return {
@@ -190,7 +200,7 @@ function validateCartRequestBody (requestBody) {
 
     let count = requestBody[productId];
     count = parseInt(count);
-    if (isNaN(count) || count < 1) return false;
+    if (isNaN(count) || count === 0) return false;
 
     result[productId] = count;
   });
