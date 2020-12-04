@@ -34,7 +34,7 @@ export const appSetCatalogState = (catalog) => (dispatch, getState) => {
     if (state.app.catalog.isVisible !== catalog.isVisible) {
       dispatch({
         type: at.APP_SET_CATALOG_STATE,
-        state,
+        catalog,
       });
     }
   } catch (e) {

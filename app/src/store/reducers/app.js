@@ -29,16 +29,21 @@ export default (state = initialState, action) => {
         ssr: bool,
       };
     } case at.APP_SET_CATALOG_STATE: {
-      const {catalog} = state;
-      const {state: catalogState = {}} = action;
+      try {
+        const {catalog} = action;
 
-      return {
-        ...state,
-        catalog: {
-          ...catalog,
-          ...catalogState,
-        }
-      };
+        return {
+          ...state,
+          catalog: {
+            ...state.catalog,
+            ...catalog,
+          }
+        };
+      } catch (e) {
+        console.error(e);
+
+        return state;
+      }
     } case at.APP_SET_SESSION_KEY: {
       let {sessionKey} = action;
 
