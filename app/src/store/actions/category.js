@@ -76,22 +76,26 @@ export const setCategoryId = (id) => (dispatch, getState) => {
 };
 
 export const setCategoryIdByPathname = (pathname) => (dispatch) => {
-  pathname = pathname.split('/');
-  pathname.shift();
-
-  if ('ru' === pathname[0] || '' === pathname[0]) {
+  try {
+    pathname = pathname.split('/');
     pathname.shift();
+
+    if ('ru' === pathname[0] || '' === pathname[0]) {
+      pathname.shift();
+    }
+
+    if (!pathname.length) return false;
+    if ('c' !== pathname[0]) return false;
+    if (!pathname[1]) return false;
+    if (!/^\d+$/.test(pathname[1])) return false;
+
+    const id = parseInt(pathname[1]);
+    if (isNaN(id)) return false;
+
+    dispatch(setCategoryId(id));
+  } catch (e) {
+      console.log(e);
   }
-
-  if (!pathname.length) return false;
-  if ('c' !== pathname[0]) return false;
-  if (!pathname[1]) return false;
-  if (!/^\d+$/.test(pathname[1])) return false;
-
-  const id = parseInt(pathname[1]);
-  if (isNaN(id)) return false;
-
-  dispatch(setCategoryId(id));
 };
 
 export const unsetCategoryId = () => (dispatch) => {

@@ -17,7 +17,7 @@ export const HamburgerWrap = styled.a`
   display: inline-flex;
   width: 40px;
   height: 40px;
-  background: #FFCBA5;
+  background: ${(props) => props.background ? props.background : '#FFCBA5'};
   justify-content: center;
   align-items: center;
   margin-right: 20px;

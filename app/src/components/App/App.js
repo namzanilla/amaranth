@@ -14,6 +14,7 @@ import OrderPage from 'components/Hoc/OrderPage';
 import ProductPage from 'components/Hoc/ProductPage';
 import NotFoundPage from 'components/Hoc/NotFoundPage';
 
+import Hoc from 'components/Hoc';
 import Header from 'components/Header';
 import SubHeader from 'components/SubHeader';
 
@@ -28,7 +29,7 @@ const components = {
 };
 
 export default (props) => {
-  const Component = components[props.hoc];
+  const HocChild = components[props.hoc];
 
   useEffect(() => {
     componentDidMount(props);
@@ -44,9 +45,9 @@ export default (props) => {
       <Style />
       <Header history={props.history} />
       <SubHeader history={props.history} />
-      <Component
-        {...props}
-      />
+      <Hoc display={props.catalogIsVisible ? 'none' : 'block'}>
+        <HocChild history={props.history} />
+      </Hoc>
     </>
   );
 };
@@ -61,11 +62,14 @@ function componentDidMount(props) {
     props.appSetHtmlLangAttrValue(languageId);
     props.setAlternate(pathname, search);
 
+    props.appSetCatalogState({isVisible: false});
+
     const hoc = getHoc(pathname)
     props.setHoc(hoc);
 
     if (hoc === 'CategoryPage') {
       const params = querystring.parse(`${search.substring(1)}`);
+      props.setCategoryIdByPathname(window.location.pathname);
       let {page} = params;
       page = parseInt(page);
       page = isNaN(page) ? 1 : page;

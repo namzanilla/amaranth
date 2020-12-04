@@ -2,6 +2,10 @@ import * as at from 'store/actionTypes';
 
 const initialState = {
   loading: 0,
+  catalog: {
+    isVisible: false,
+    scrollY: 0,
+  }
 };
 
 export default (state = initialState, action) => {
@@ -23,6 +27,17 @@ export default (state = initialState, action) => {
       return {
         ...state,
         ssr: bool,
+      };
+    } case at.APP_SET_CATALOG_STATE: {
+      const {catalog} = state;
+      const {state: catalogState = {}} = action;
+
+      return {
+        ...state,
+        catalog: {
+          ...catalog,
+          ...catalogState,
+        }
       };
     } case at.APP_SET_SESSION_KEY: {
       let {sessionKey} = action;

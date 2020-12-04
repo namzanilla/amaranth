@@ -26,6 +26,13 @@ export const appSetStaticHost = (host) => (dispatch) => {
   });
 };
 
+export const appSetCatalogState = (state) => (dispatch) => {
+  dispatch({
+    type: at.APP_SET_CATALOG_STATE,
+    state,
+  });
+};
+
 export const appSetSessionKey = (sessionKey) => (dispatch) => {
   dispatch({
     type: at.APP_SET_SESSION_KEY,

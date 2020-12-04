@@ -5,9 +5,11 @@ import * as productsActionCreators from 'store/actions/products';
 import * as productActionCreators from 'store/actions/product';
 import * as cartActionCreators from 'store/actions/cart';
 import * as orderActionCreators from 'store/actions/order';
+import * as categoryActionCreators from '../../store/actions/category';
 
 const mapStateToProps = (state) => {
   return {
+    catalogIsVisible: state.app.catalog.isVisible,
     htmlLangAttrValue: state.app.htmlLangAttrValue,
     languageId: state.app.languageId,
     sessionValue: state.app.sessionValue,
@@ -26,7 +28,9 @@ const mapDispatchToProps = (dispatch) => {
     setProductIdByPathname: (pathname) => dispatch(productActionCreators.setProductIdByPathname(pathname)),
     getCartInfo: (sessionValue) => dispatch(cartActionCreators.getCartInfo(sessionValue)),
     appSetHtmlLangAttrValue: (languageId) => dispatch(appActionCreators.appSetHtmlLangAttrValue(languageId)),
+    setCategoryIdByPathname: (pathname) =>  dispatch(categoryActionCreators.setCategoryIdByPathname(pathname)),
     orderSetContactInfoFromLocalStorage: () => dispatch(orderActionCreators.setContactInfoFromLocalStorage()),
+    appSetCatalogState: (state) => (dispatch(appActionCreators.appSetCatalogState(state))),
   };
 };
 

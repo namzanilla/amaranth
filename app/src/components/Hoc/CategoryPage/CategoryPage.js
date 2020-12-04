@@ -15,6 +15,14 @@ export default (props) => {
       props.setSSR(false);
     } else {
       props.setCategoryIdByPathname(window.location.pathname);
+
+      if (props.categoryId) {
+        props.fetchCategoryInfo(props.categoryId, languageId)
+          .then(onFetchCategoryInfo(props, setLoading))
+          .catch(() => {
+            setLoading(false);
+          });
+      }
     }
 
     return () => {
