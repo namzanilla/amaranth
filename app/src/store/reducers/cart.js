@@ -24,11 +24,7 @@ export default (state = initialState, action) => {
 
         const {details = {}} = state;
         const {list = []} = details;
-        const listNext = list.filter((el) => {
-          const {id} = el;
-
-          return undefined !== products[id];
-        });
+        const listNext = list.filter((el) => undefined !== products[el.id]);
 
         return {
           ...state,

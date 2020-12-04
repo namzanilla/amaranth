@@ -26,11 +26,26 @@ export const appSetStaticHost = (host) => (dispatch) => {
   });
 };
 
-export const appSetCatalogState = (state) => (dispatch) => {
-  dispatch({
-    type: at.APP_SET_CATALOG_STATE,
-    state,
-  });
+// @todo appSetCatalogVisibility
+export const appSetCatalogState = (state) => (dispatch, getState) => {
+  try {
+    const {
+      app: {
+        catalog: {
+          isVisible,
+        } = {},
+      } = {},
+    } = getState();
+
+    if (isVisible !== state.isVisible) {
+      dispatch({
+        type: at.APP_SET_CATALOG_STATE,
+        state,
+      });
+    }
+  } catch (e) {
+    console.log(e);
+  }
 };
 
 export const appSetSessionKey = (sessionKey) => (dispatch) => {
