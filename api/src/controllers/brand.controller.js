@@ -5,22 +5,17 @@ router.prefix('/api/v1');
 module.exports = (app) => {
   const brandService = require('./../services/brand.service')(app);
 
-  router.get('/brand', baseController(getList));
-  router.get('/brand/:id(\\d+)', baseController(getById));
+  router.get('/brand', baseController(getBrandList));
+  router.get('/brand-list', baseController(getBrandList));
+  router.get('/brand/:brandId(\\d+)', baseController(getBrandById));
 
-  function getList(ctx) {
-    return brandService.getList()
+  function getBrandList(ctx) {
+    return brandService.getBrandList()
       .then(h(app).onFulfilled(ctx), h(app).onRejected(ctx));
   }
 
-  function getById(ctx) {
-    const {
-      params: {
-        id: brandId,
-      } = {},
-    } = ctx;
-
-    return brandService.getById(brandId)
+  function getBrandById(ctx) {
+    return brandService.getBrandById(ctx.params.brandId)
       .then(h(app).onFulfilled(ctx), h(app).onRejected(ctx));
   }
 

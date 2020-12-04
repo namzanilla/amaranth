@@ -26,7 +26,7 @@ module.exports = (app) => {
     });
   };
 
-  const getById = async (brandId) => {
+  const getBrandById = async (brandId) => {
     let metaKeyId
     try {
       metaKeyId = await getMetaKeyId(brandMetaKey);
@@ -61,7 +61,7 @@ module.exports = (app) => {
     });
   };
 
-  const getList = async () => {
+  const getBrandList = async () => {
     let metaKeyId
     try {
       metaKeyId = await getMetaKeyId(brandMetaKey);
@@ -93,8 +93,8 @@ module.exports = (app) => {
   }
 
   return {
-    getList,
-    getById,
+    getBrandList,
+    getBrandById,
   };
 };
 
