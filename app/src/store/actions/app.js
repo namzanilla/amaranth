@@ -38,7 +38,7 @@ export const appSetCatalogState = (catalog) => (dispatch, getState) => {
       });
     }
   } catch (e) {
-    console.log(e);
+    console.error(e);
   }
 };
 
@@ -69,7 +69,7 @@ export const appSetHtmlLangAttrValue = (languageId) => (dispatch, getState) => {
       });
     }
   } catch (e) {
-    console.log(e);
+    console.error(e);
   }
 };
 
