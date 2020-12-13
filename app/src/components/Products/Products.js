@@ -4,21 +4,19 @@ import ProductItem from './ProductItem';
 
 export default (props) => {
   const productsJSX = props.list.map((el) => {
-    const {
-      id,
-      name,
-      price,
-      image,
-    } = el;
+    const key = el.brand_model_id ? el.brand_model_id : el.id;
 
     return (
       <ProductItem
-        key={id}
-        productId={id}
-        name={name}
-        image={image}
+        key={key}
+        productId={el.id}
+        name={el.name}
+        image={el.image}
         hostStatic={props.hostStatic}
-        price={price}
+        price={el.price}
+        priceMin={el.price_min}
+        priceMax={el.price_max}
+        modelId={el.brand_model_id}
         history={props.history}
       />
     );

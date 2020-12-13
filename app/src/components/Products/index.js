@@ -10,8 +10,10 @@ const mapStateToProps = (state) => {
     category: {
       id,
     } = {},
-    products: {
-      list = [],
+    product: {
+      searchResult: {
+        list = [],
+      } = {},
     } = {},
   } = state;
 

@@ -39,6 +39,10 @@ import productController from 'controllers/product.controller';
 router.get('/p:id(\\d+)', baseController(1, productController));
 router.get('/ru/p:id(\\d+)', baseController(2, productController));
 
+import modelController from 'controllers/model.controller';
+router.get('/m:modelId(\\d+)', baseController(1, modelController));
+router.get('/ru/m:modelId(\\d+)', baseController(2, modelController));
+
 import notFoundController from 'controllers/notFound.controller';
 
 koa.use(async(ctx, next) => {

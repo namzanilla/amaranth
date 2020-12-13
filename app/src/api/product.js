@@ -15,3 +15,21 @@ export const getProduct = (params) => {
 
   return apiConnector({path, query});
 };
+
+export const getProductList = (params) => {
+  let {
+    languageId,
+    categoryId,
+    page = 1,
+  } = params;
+
+  const path = `/product-list`;
+
+  const query = querystring.stringify({
+    lid: languageId,
+    cid: categoryId,
+    p: page,
+  });
+
+  return apiConnector({path, query});
+};

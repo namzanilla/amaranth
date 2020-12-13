@@ -118,7 +118,8 @@ function onFetchCategoryInfo(props, setLoading) {
   return async function(result) {
     if (result !== undefined) {
       try {
-        await props.productsFetch();
+        // await props.productsFetch();
+        await props.fetchProductList();
 
         setLoading(false);
       } catch (e) {

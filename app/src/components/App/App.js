@@ -13,6 +13,7 @@ import CartPage from 'components/Hoc/CartPage';
 import OrderPage from 'components/Hoc/OrderPage';
 import ProductPage from 'components/Hoc/ProductPage';
 import NotFoundPage from 'components/Hoc/NotFoundPage';
+import ModelPage from 'components/Hoc/ModelPage';
 
 import Hoc from 'components/Hoc';
 import Header from 'components/Header';
@@ -26,6 +27,7 @@ const components = {
   OrderPage,
   ProductPage,
   NotFoundPage,
+  ModelPage,
 };
 
 export default (props) => {

@@ -2,6 +2,7 @@ import CategoryPage from './CategoryPage';
 import {connect} from 'react-redux';
 import * as appActionCreators from 'store/actions/app';
 import * as productsActionCreators from 'store/actions/products';
+import * as productActionCreators from 'store/actions/product';
 import * as categoryActionCreators from 'store/actions/category';
 
 const mapDispatchToProps = (dispatch) => {
@@ -11,6 +12,7 @@ const mapDispatchToProps = (dispatch) => {
     setCategoryIdByPathname: (pathname) =>  dispatch(categoryActionCreators.setCategoryIdByPathname(pathname)),
     fetchCategoryInfo: (categoryId, languageId) =>  dispatch(categoryActionCreators.fetchCategoryInfo(categoryId, languageId)),
     productsFetch: () =>  dispatch(productsActionCreators.productsFetch()),
+    fetchProductList: () =>  dispatch(productActionCreators.fetchProductList()),
     setSSR: (bool) =>  dispatch(appActionCreators.setSSR(bool)),
   }
 };
@@ -23,8 +25,12 @@ const mapStateToProps = (state) => {
     } = {},
     products: {
       page,
-      total,
       limit,
+    } = {},
+    product: {
+      searchResult: {
+        total,
+      } = {},
     } = {},
     category: {
       id: categoryId,

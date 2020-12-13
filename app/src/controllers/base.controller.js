@@ -7,29 +7,36 @@ const {
 } = process.env;
 
 export default (languageId, cb) => (ctx) => {
-  let sessionValue = ctx.cookies.get(NODE_API_SESSION_KEY);
+  try {
+    let sessionValue = ctx.cookies.get(NODE_API_SESSION_KEY);
 
-  if (!sessionValue) {
-    setCookie(ctx);
+    if (!sessionValue) {
+      setCookie(ctx);
+    }
+
+    const store = createStore();
+    const {dispatch} = store;
+
+    dispatch(appActionCreators.setLanguageId(languageId));
+    dispatch(appActionCreators.appSetHtmlLangAttrValue(languageId));
+    dispatch(appActionCreators.setAlternate(ctx.path, ctx.querystring));
+    dispatch(appActionCreators.appSetStaticHost(HOST_STATIC));
+    dispatch(appActionCreators.appSetSessionKey(NODE_API_SESSION_KEY));
+    dispatch(appActionCreators.appSetSessionValue(sessionValue));
+
+    // @todo
+    // dispatch(appActionCreators.setSSR(true));
+
+    const props = {
+      ctx,
+      store,
+      dispatch,
+    };
+
+    return cb(props);
+  } catch (e) {
+    console.error(e);
   }
-
-  const store = createStore();
-  const {dispatch} = store;
-
-  dispatch(appActionCreators.setLanguageId(languageId));
-  dispatch(appActionCreators.appSetHtmlLangAttrValue(languageId));
-  dispatch(appActionCreators.setAlternate(ctx.path, ctx.querystring));
-  dispatch(appActionCreators.appSetStaticHost(HOST_STATIC));
-  dispatch(appActionCreators.appSetSessionKey(NODE_API_SESSION_KEY));
-  dispatch(appActionCreators.appSetSessionValue(sessionValue));
-
-  const props = {
-    ctx,
-    store,
-    dispatch,
-  };
-
-  return cb(props);
 }
 
 function setCookie(ctx) {

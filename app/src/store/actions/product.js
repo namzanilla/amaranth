@@ -65,3 +65,40 @@ export const setProductIdByPathname = (pathname) => (dispatch, getState) => {
     dispatch(setProductId(productId));
   }
 };
+
+export const fetchProductList = () => async (dispatch, getState) => {
+  try {
+    const {
+      app: {
+        languageId
+      } = {},
+      category: {
+        id: categoryId,
+      } = {},
+      products: {
+        page,
+      } = {},
+    } = getState();
+
+    const params = {
+      languageId,
+      categoryId,
+      page,
+    };
+
+    dispatch({type: at.PRODUCT_FETCH_LIST_REQUEST});
+
+    const {data: products = {}} = await productApi.getProductList(params);
+
+    dispatch({
+      type: at.PRODUCT_FETCH_LIST_SUCCESS,
+      products,
+    });
+
+    return products;
+  } catch (e) {
+    dispatch({type: at.PRODUCT_FETCH_LIST_FAILURE});
+    console.log(e);
+  }
+};
+

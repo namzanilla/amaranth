@@ -18,6 +18,13 @@ export default (state = initialState, action) => {
         ...state,
         ...product,
       };
+    } case at.PRODUCT_FETCH_LIST_SUCCESS: {
+      let {products = {}} = action;
+
+      return {
+        ...state,
+        searchResult: products,
+      };
     } case at.PRODUCT_SET_INITIAL_STATE: {
       return initialState;
     } default: {

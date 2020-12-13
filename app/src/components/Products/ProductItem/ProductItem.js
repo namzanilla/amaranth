@@ -9,6 +9,9 @@ export default (props) => {
     languageId,
     name,
     price,
+    priceMin,
+    priceMax,
+    modelId,
     history,
   } = props;
 
@@ -27,27 +30,29 @@ export default (props) => {
     imageJSX = (
       <a
         href={getHref(productId, languageId)}
-        onClick={onClick(productId, languageId, history)}
+        onClick={onClick(productId, modelId, languageId, history)}
         className="image"
       />
     );
   }
 
-  const {[productId]: inCart} = props.products;
-  const buttonText = getButtonText(languageId, inCart);
-  const buttonAttrs = getButtonAttrs(languageId, inCart, productId, props);
+  let footerJSX;
 
-  return (
-    <ProductItemWrap>
-      {imageJSX}
-      <a
-        href={getHref(productId, languageId)}
-        onClick={onClick(productId, languageId, history)}
-        className="name"
-      >
-        {name}
-      </a>
-      <div>
+  if (modelId) {
+    footerJSX = (
+      <div className="modelFooter">
+        от <span className="price">{priceMin}</span>
+        &nbsp;до <span className="price">{priceMax}</span>
+        &nbsp;грн
+      </div>
+    );
+  } else {
+    const {[productId]: inCart} = props.products;
+    const buttonText = getButtonText(languageId, inCart);
+    const buttonAttrs = getButtonAttrs(languageId, inCart, productId, props);
+
+    footerJSX = (
+      <div className="productFooter">
         <span className="price">
           {price} <span>грн</span>
         </span>
@@ -57,6 +62,20 @@ export default (props) => {
           {buttonText}
         </button>
       </div>
+    );
+  }
+
+  return (
+    <ProductItemWrap>
+      {imageJSX}
+      <a
+        href={getHref(productId, modelId, languageId)}
+        onClick={onClick(productId, modelId,  languageId, history)}
+        className="name"
+      >
+        {name}
+      </a>
+      {footerJSX}
     </ProductItemWrap>
   );
 }
@@ -80,15 +99,19 @@ function getButtonText(languageId, inCart) {
   }
 }
 
-const getHref = (productId, languageId) => {
-  return languageId === 1 ? `/p${productId}` : `/ru/p${productId}`;
+const getHref = (productId, modelId, languageId) => {
+  if (productId) {
+    return languageId === 1 ? `/p${productId}` : `/ru/p${productId}`;
+  }
+
+  return languageId === 1 ? `/m${modelId}` : `/ru/m${modelId}`;
 }
 
-const onClick = (productId, languageId, history) => (e) => {
+const onClick = (productId, modelId, languageId, history) => (e) => {
   e.preventDefault();
 
   history.push({
-    pathname: getHref(productId, languageId),
+    pathname: getHref(productId, modelId, languageId),
     search: '',
   });
 }

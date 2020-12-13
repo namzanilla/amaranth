@@ -23,9 +23,14 @@ export const ProductItemWrap = styled.div`
     }
   }
   >div {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+    &.productFooter {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    &.modelFooter {
+      text-align: center;
+    }
   }
   .price {
     font-size: 24px;

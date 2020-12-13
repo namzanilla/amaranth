@@ -5,6 +5,7 @@ import Html from 'components/Html';
 import * as appActionCreators from 'store/actions/app';
 import * as categoryActionCreators from 'store/actions/category';
 import * as productsActionCreators from 'store/actions/products';
+import * as productActionCreators from 'store/actions/product';
 import {getHtmlComponentProps} from 'helpers/controller';
 
 export default async (props) => {
@@ -37,7 +38,8 @@ export default async (props) => {
     dispatch(appActionCreators.setHoc('CategoryPage'));
     dispatch(productsActionCreators.productsSetPage(page));
     dispatch(categoryActionCreators.setCategoryId(categoryId));
-    await dispatch(productsActionCreators.productsFetch());
+    // await dispatch(productsActionCreators.productsFetch());
+    await dispatch(productActionCreators.fetchProductList());
   }
 
   dispatch(appActionCreators.setSSR(true));
