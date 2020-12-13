@@ -8,6 +8,7 @@ module.exports = (app) => {
   router.get('/brand', baseController(getBrandList));
   router.get('/brand-list', baseController(getBrandList));
   router.get('/brand/:brandId(\\d+)', baseController(getBrandById));
+  router.get('/brand/:brandId(\\d+)/model-list', baseController(getModelList));
 
   function getBrandList(ctx) {
     return brandService.getBrandList()
@@ -17,6 +18,11 @@ module.exports = (app) => {
   function getBrandById(ctx) {
     return brandService.getBrandById(ctx.params.brandId)
       .then(h(app).onFulfilled(ctx), h(app).onRejected(ctx));
+  }
+
+  function getModelList(ctx) {
+      return brandService.getModelList(ctx.params.brandId)
+        .then(h(app).onFulfilled(ctx), h(app).onRejected(ctx));
   }
 
   return router;
