@@ -18,6 +18,7 @@
 
 # static
 /static/public/js/build/
+/static/public/models/
 !/static/public/js/build/.clear.sh
 
 # cron
