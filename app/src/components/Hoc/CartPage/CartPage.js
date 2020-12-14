@@ -2,6 +2,7 @@ import React, {useEffect, useState} from 'react';
 import {Helmet} from 'react-helmet';
 import H1 from 'components/H1';
 import CartDetails from './CartDetails';
+import {getLoadingText} from 'helpers/language';
 
 export default (props) => {
   const [loading, setLoading] = useState(true);
@@ -37,9 +38,7 @@ export default (props) => {
 
 const getTitle = (languageId, loading) => {
   if (loading) {
-    return languageId === 1
-      ? 'Завантаження...'
-      : 'Загрузка...';
+    return getLoadingText(languageId);
   }
 
   return languageId === 1
