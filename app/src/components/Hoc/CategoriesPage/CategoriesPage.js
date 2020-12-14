@@ -2,6 +2,7 @@ import React, {useEffect, useState} from 'react';
 import {Helmet} from 'react-helmet';
 import Categories from 'components/Categories';
 import H1 from 'components/H1';
+import {getLoadingText} from 'helpers/language';
 
 export default (props) => {
   const [loading, setLoading] = useState(!props.ssr);
@@ -55,9 +56,7 @@ function fetchCategoryList(props, setLoading) {
 
 function getTitle(languageId, loading) {
   if (loading) {
-    return languageId === 1
-      ? 'Завантаження...'
-      : 'Загрузка...';
+    return getLoadingText(languageId);
   }
 
   return languageId === 1
