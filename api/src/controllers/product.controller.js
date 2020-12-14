@@ -372,11 +372,11 @@ function getProductList(app) {
       const list = await new Promise((resolve, reject) => {
         const qs = `
           SELECT
-            b.id AS brand_id,
-            bm.id AS brand_model_id,
+            b.id AS brandId,
+            bm.id AS modelId,
             concat(b.name, ', ', bm.name) as name,
-            MIN(p.price) AS price_min,
-            MAX(p.price) AS price_max
+            MIN(p.price) AS priceMin,
+            MAX(p.price) AS priceMax
           FROM product p
           
           INNER JOIN product2brand p2b
@@ -394,7 +394,7 @@ function getProductList(app) {
           
           WHERE p2c.category_id=?
           
-          GROUP BY brand_id, brand_model_id
+          GROUP BY brandId, modelId
   
           LIMIT ${offset}, ${DEFAULT_SEARCH_LIMIT}
           ;`
@@ -410,17 +410,17 @@ function getProductList(app) {
         app.mysql.connection.query(qs, categoryId, cb(resolve, reject));
       });
 
-      const ids = list.map(({brand_model_id}) => brand_model_id)
+      const ids = list.map(({modelId}) => modelId)
 
       if (ids.length > 0) {
         const images = await getModelImages(ids, app);
 
         if (Object.keys(images).length > 0) {
           list.forEach((el) => {
-            const {brand_model_id} = el;
+            const {modelId} = el;
 
             const {
-              [brand_model_id]: result
+              [modelId]: result
             } = images;
 
             if (result) {
