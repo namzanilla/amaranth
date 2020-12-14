@@ -3,6 +3,7 @@ import {Helmet} from 'react-helmet';
 import H1 from 'components/H1';
 import Products from 'components/Products';
 import Pagination from 'components/Pagination';
+import {getLoadingText} from 'helpers/language';
 
 export default (props) => {
   const [loading, setLoading] = useState(!props.ssr);
@@ -61,6 +62,7 @@ export default (props) => {
       setPage(props.page);
       setLoading(true);
 
+      // @todo fix model type search
       props.productsFetch().then(() => {
         setLoading(false);
       }).catch(() => {
@@ -102,9 +104,7 @@ export default (props) => {
 
 function getTitle(languageId, loading, title) {
   if (loading) {
-    return languageId === 1
-      ? 'Завантаження...'
-      : 'Загрузка...';
+    return getLoadingText(languageId);
   }
 
   return title;
