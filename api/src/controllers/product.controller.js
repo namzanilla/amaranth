@@ -1,6 +1,7 @@
 const router = require('koa-router')();
 const baseController = require('./base.controller');
 router.prefix('/api/v1');
+const modelHelper = require('../helpers/model');
 
 const SEARCH_TYPE_MODEL = 0;
 const SEARCH_TYPE_PRODUCT = 1;
@@ -243,52 +244,13 @@ async function getModelInfo(modelId, languageId, app) {
 
     if (undefined === info) return {};
 
-    return prepareModelInfo(info, modelId, languageId);
+    return {
+      title: modelHelper.getTitle(modelId, languageId, info),
+      h1: modelHelper.getH1(modelId, languageId, info)
+    };
   } catch (e) {
     console.error(e);
   }
-}
-
-function prepareModelInfo(info, modelId, languageId) {
-  const {
-    brandMame,
-    modelName,
-    priceMin,
-    priceMax,
-  } = info;
-  const result = {
-    title: '',
-    h1: '',
-  };
-
-  // @todo if priceMin === priceMax
-  if (modelId === 1) {
-    result.title = languageId === 1
-      ? `Купити ${brandMame}, ${modelName} від ${priceMin} до ${priceMax} грн`
-      : `Купить ${brandMame}, ${modelName} от ${priceMin} до ${priceMax} грн`;
-
-    result.h1 = languageId === 1
-      ? `Сироватковий протеїн ${brandMame}, ${modelName} від ${priceMin} до ${priceMax} грн`
-      : `Сывороточный протеин ${brandMame}, ${modelName} от ${priceMin} до ${priceMax} грн`;
-  } else if (modelId === 2) {
-    result.title = languageId === 1
-      ? `Купити ${brandMame}, ${modelName} від ${priceMin} до ${priceMax} грн`
-      : `Купить ${brandMame}, ${modelName} от ${priceMin} до ${priceMax} грн`;
-
-    result.h1 = languageId === 1
-      ? `Вітаміни ${brandMame}, ${modelName} від ${priceMin} до ${priceMax} грн`
-      : `Витамины ${brandMame}, ${modelName} от ${priceMin} до ${priceMax} грн`;
-  } else if (modelId === 3) {
-    result.title = languageId === 1
-      ? `Купити ${brandMame}, ${modelName} від ${priceMin} до ${priceMax} грн`
-      : `Купить ${brandMame}, ${modelName} от ${priceMin} до ${priceMax} грн`;
-
-    result.h1 = languageId === 1
-      ? `Вітаміни ${brandMame}, ${modelName} від ${priceMin} до ${priceMax} грн`
-      : `Витамины ${brandMame}, ${modelName} от ${priceMin} до ${priceMax} грн`;
-  }
-
-  return result;
 }
 
 function getProductList(app) {
