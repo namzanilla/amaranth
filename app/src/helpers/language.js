@@ -49,3 +49,9 @@ export function getAlternate(pathname, querystring = '') {
 
   return alternate;
 }
+
+export function getLoadingText(languageId) {
+  return languageId === 1
+    ? 'Завантаження...'
+    : 'Загрузка...';
+}
