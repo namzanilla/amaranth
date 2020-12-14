@@ -4,6 +4,7 @@ import {ProductWrap} from './style';
 import H1 from 'components/H1';
 import * as productHelper from 'helpers/product';
 import * as at from 'store/actionTypes';
+import {getLoadingText} from 'helpers/language';
 
 export default (props) => {
   const [loading, setLoading] = useState(!props.ssr);
@@ -14,11 +15,11 @@ export default (props) => {
 
   const [h1, setH1] = useState(props.ssr
     ? productHelper.productMeta2H1(props.productMeta)
-    : getLoadingTitle(props.languageId));
+    : getLoadingText(props.languageId));
 
   const [title, setTitle] = useState(props.ssr
     ? productHelper.productMeta2Title(props.productMeta)
-    : getLoadingTitle(props.languageId));
+    : getLoadingText(props.languageId));
 
   useEffect(() => {
     if (props.ssr) {
@@ -59,8 +60,8 @@ export default (props) => {
 
   useEffect(() => {
     if (loading) {
-      setH1(getLoadingTitle(props.languageId));
-      setTitle(getLoadingTitle(props.languageId));
+      setH1(getLoadingText(props.languageId));
+      setTitle(getLoadingText(props.languageId));
     } else {
       setH1(productHelper.productMeta2H1(props.productMeta));
       setTitle(productHelper.productMeta2Title(props.productMeta));
@@ -95,10 +96,4 @@ export default (props) => {
       </ProductWrap>
     </>
   );
-}
-
-function getLoadingTitle(languageId) {
-  return languageId === 1
-    ? 'Завантаження...'
-    : 'Загрузка...';
 }
