@@ -138,13 +138,65 @@ function getProductModelById(app) {
       }
 
       response.info = await getModelInfo(modelId, languageId, app);
+      response.images = await getModelImages([modelId], app);
 
+      // @todo nginx cache
       ctx.body = response;
     } catch (e) {
       console.error(e);
 
       ctx.status = 400;
     }
+  }
+}
+
+async function getModelImages(modelIds, app) {
+  const qs = `
+  SELECT
+    i.path,
+    i.name,
+    fe.name AS ext,
+    mb2i.is_main as isMain,
+    mb2i.brand_model_id AS modelId
+  FROM image i
+  INNER JOIN brand_model2image mb2i
+  ON mb2i.image_id=i.id
+  INNER JOIN filename_extension fe
+  ON fe.id=i.filename_extension_id
+  WHERE mb2i.brand_model_id IN (${modelIds.join(',')})
+  ORDER BY mb2i.is_main DESC;
+  `;
+
+  try {
+    const images = await new Promise((resolve, reject) => {
+      const cb = (resolve, reject) => (error, results) => {
+        if (error) {
+          reject(error);
+        }
+
+        resolve(results);
+      }
+
+      app.mysql.connection.query(qs, cb(resolve, reject));
+    });
+
+    const result = {};
+
+    for (const image of images) {
+      const {modelId} = image;
+      result[modelId] = result[modelId] ? result[modelId] : [];
+      delete image.modelId;
+
+      if (0 === image.isMain) {
+        delete image.isMain;
+      }
+
+      result[modelId].push(image);
+    }
+
+    return result;
+  } catch (e) {
+    console.error(e);
   }
 }
 
@@ -226,6 +278,14 @@ function prepareModelInfo(info, modelId, languageId) {
     result.h1 = languageId === 1
       ? `Вітаміни ${brandMame}, ${modelName} від ${priceMin} до ${priceMax} грн`
       : `Витамины ${brandMame}, ${modelName} от ${priceMin} до ${priceMax} грн`;
+  } else if (modelId === 3) {
+    result.title = languageId === 1
+      ? `Купити ${brandMame}, ${modelName} від ${priceMin} до ${priceMax} грн`
+      : `Купить ${brandMame}, ${modelName} от ${priceMin} до ${priceMax} грн`;
+
+    result.h1 = languageId === 1
+      ? `Вітаміни ${brandMame}, ${modelName} від ${priceMin} до ${priceMax} грн`
+      : `Витамины ${brandMame}, ${modelName} от ${priceMin} до ${priceMax} грн`;
   }
 
   return result;
@@ -266,10 +326,8 @@ function getProductList(app) {
 
       const offset = (page - 1) * DEFAULT_SEARCH_LIMIT;
 
-      ctx.body = await new Promise(async(resolve, reject) => {
-
-        const total = await new Promise((resolve, reject) => {
-          const qs = `
+      const total = await new Promise((resolve, reject) => {
+        const qs = `
           SELECT count(*) as total FROM(  
             SELECT
               count(bm.id)
@@ -294,25 +352,25 @@ function getProductList(app) {
           ) t
           ;`
 
-          const cb = (resolve, reject) => (error, results) => {
-            if (error) {
-              reject(error);
-            }
-
-            const {
-              0: {
-                total = 0,
-              } = {}
-            } = results;
-
-            resolve(total);
+        const cb = (resolve, reject) => (error, results) => {
+          if (error) {
+            reject(error);
           }
 
-          app.mysql.connection.query(qs, categoryId, cb(resolve, reject));
-        });
+          const {
+            0: {
+              total = 0,
+            } = {}
+          } = results;
 
-        const list = await new Promise((resolve, reject) => {
-          const qs = `
+          resolve(total);
+        }
+
+        app.mysql.connection.query(qs, categoryId, cb(resolve, reject));
+      });
+
+      const list = await new Promise((resolve, reject) => {
+        const qs = `
           SELECT
             b.id AS brand_id,
             bm.id AS brand_model_id,
@@ -341,19 +399,39 @@ function getProductList(app) {
           LIMIT ${offset}, ${DEFAULT_SEARCH_LIMIT}
           ;`
 
-          const cb = (resolve, reject) => (error, results) => {
-            if (error) {
-              reject(error);
-            }
-
-            resolve(results);
+        const cb = (resolve, reject) => (error, results) => {
+          if (error) {
+            reject(error);
           }
 
-          app.mysql.connection.query(qs, categoryId, cb(resolve, reject));
-        });
+          resolve(results);
+        }
 
-        resolve({total, list});
+        app.mysql.connection.query(qs, categoryId, cb(resolve, reject));
       });
+
+      const ids = list.map(({brand_model_id}) => brand_model_id)
+
+      if (ids.length > 0) {
+        const images = await getModelImages(ids, app);
+
+        if (Object.keys(images).length > 0) {
+          list.forEach((el) => {
+            const {brand_model_id} = el;
+
+            const {
+              [brand_model_id]: result
+            } = images;
+
+            if (result) {
+              el.images = result;
+            }
+          })
+        }
+      }
+
+      // @todo nginx cache
+      ctx.body = {total, list};
     } catch (e) {
       console.error(e);
 
