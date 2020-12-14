@@ -3,6 +3,7 @@ import {Helmet} from 'react-helmet';
 import {ContentWrap} from './style';
 import H1 from 'components/H1';
 import {isPlainObject} from 'helpers/_Object';
+import {getLoadingText} from 'helpers/language';
 
 export default (props) => {
   const [loading, setLoading] = useState(true);
@@ -76,9 +77,7 @@ function getTranslate(type, languageId) {
 
 function getTitle(loading, languageId, orderId) {
   if (loading) {
-    return languageId === 1
-      ? 'Завантаження...'
-      : 'Загрузка...';
+    return getLoadingText(languageId);
   } else {
     return languageId === 1
       ? `Замовлення #${orderId}`
