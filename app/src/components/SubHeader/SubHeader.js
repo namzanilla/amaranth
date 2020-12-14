@@ -5,6 +5,7 @@ import PhoneIcon from 'components/Icons/Phone';
 import CartIcon from 'components/Icons/Cart';
 import Categories from 'components/Categories';
 import H1 from 'components/H1';
+import {getLoadingText} from 'helpers/language';
 import {
   CartLinkWrap,
   PhoneWrap,
@@ -120,9 +121,7 @@ function fetchCategoryList(props, catalogIsVisible, setLoading) {
 
 function getH1(languageId, loading) {
   if (loading) {
-    return languageId === 1
-      ? 'Завантаження...'
-      : 'Загрузка...';
+    return getLoadingText(languageId);
   }
 
   return languageId === 1
