@@ -23,4 +23,4 @@
 !/static/public/js/build/.clear.sh
 
 # cron
-/cron/node_modules/
+/cli/node_modules/
