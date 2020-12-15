@@ -6,7 +6,6 @@ import products from 'store/reducers/products';
 import product from 'store/reducers/product';
 import cart from 'store/reducers/cart';
 import order from 'store/reducers/order';
-import breadcrumbs from 'store/reducers/breadcrumbs';
 import model from 'store/reducers/model';
 
 export default combineReducers({
@@ -16,6 +15,5 @@ export default combineReducers({
   product,
   cart,
   order,
-  breadcrumbs,
   model,
 });
