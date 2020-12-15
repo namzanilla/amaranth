@@ -22,10 +22,12 @@ export default (props) => {
     if (catalogIsVisible !== props.catalogIsVisible) {
       setCatalogIsVisible(props.catalogIsVisible);
 
-      setLoading(true);
+      if (!props.categoryList.length)
+        setLoading(true);
 
       if (props.catalogIsVisible) {
-        fetchCategoryList(props, props.catalogIsVisible, setLoading);
+        if (!props.categoryList.length)
+          fetchCategoryList(props, props.catalogIsVisible, setLoading);
       } else if (props.catalogScrollY) {
         window.scrollBy(0, props.catalogScrollY);
       }

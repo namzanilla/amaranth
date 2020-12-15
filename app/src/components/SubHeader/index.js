@@ -11,11 +11,18 @@ const mapDispatchToProps = (dispatch) => {
 };
 
 const mapStateToProps = (state) => {
+  const {
+    category: {
+      list = [],
+    } = {},
+  } = state;
+
   return {
     catalogIsVisible: state.app.catalog.isVisible,
     catalogScrollY: state.app.catalog.scrollY,
     hoc: state.app.hoc,
     languageId: state.app.languageId,
+    categoryList: list,
   };
 };
 
