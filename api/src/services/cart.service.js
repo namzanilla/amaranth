@@ -3,6 +3,7 @@ const objectHelper = require('./../helpers/_Object');
 const qsHelper = require('./../helpers/qs');
 
 module.exports = (app) => {
+  const imageService = require('./image')(app);
   const getCart = async (token) => {
     const cartKey = redisHelper.getRedisCartKey(token);
     const info = await redisHelper.getCartInfo(cartKey, app);
@@ -64,7 +65,23 @@ module.exports = (app) => {
 
       total += count * price;
     }
-    
+
+    const [error, images] = await imageService.getImagesByProductIds(productIds)
+
+    if (!error) {
+      try {
+        for (const el of list) {
+          const {
+            [el.id]: ar
+          } = images;
+
+          if (ar) el.images = ar;
+        }
+      } catch (e) {
+        console.error(e);
+      }
+    }
+
     return {
       total,
       list,
