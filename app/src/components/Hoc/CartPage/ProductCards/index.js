@@ -3,6 +3,9 @@ import {connect} from 'react-redux';
 
 const mapStateToProps = (state) => {
   const {
+    app: {
+      hostStatic
+    } = {},
     cart: {
       details: {
         list = [],
@@ -11,6 +14,7 @@ const mapStateToProps = (state) => {
   } = state;
 
   return {
+    hostStatic,
     list,
   };
 };

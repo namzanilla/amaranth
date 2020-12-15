@@ -22,6 +22,10 @@ export const ProductCardWrap = styled.div`
     background-color: #ddd;
     margin-right: 20px;
     border-radius: 4px 0 0 4px;
+    overflow: hidden;
+    img {
+      width: 100%;
+    }
   }
   .price {
     position: absolute;

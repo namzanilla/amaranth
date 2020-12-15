@@ -9,7 +9,9 @@ export default (props) => {
       <a className="image"
         href={getProductHref(props)}
         onClick={productOnClick(props)}
-      />
+      >
+        {props.thumbSrc ? <img src={props.thumbSrc} alt=""/> : null}
+      </a>
       <a
         className="name"
         href={getProductHref(props)}
