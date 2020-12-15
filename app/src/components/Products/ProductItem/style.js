@@ -1,13 +1,15 @@
 import styled from 'styled-components';
 
 export const ProductItemWrap = styled.div`
-  //background: #eee;
-  border-radius: 4px;
+  background: #ffe2e4;
+  border-radius: 4px 4px 0 0;
   overflow: hidden;
+  font-size: 14px;
+  position: relative;
+  padding-bottom: 33px;
   a.name {
     display: block;
-    font-size: 14px;
-    margin: 16px 0;
+    padding: 16px;
     color: #000;
   }
   a.image {
@@ -29,15 +31,28 @@ export const ProductItemWrap = styled.div`
       align-items: center;
     }
     &.modelFooter {
-      text-align: center;
+      position: absolute;
+      z-index: 1;
+      height: 32px;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: #fff;
+      border-bottom: 1px solid #ffe2e4;
+      display: flex;
+      align-items: center;
+      padding: 0 16px;
+      justify-content: flex-end;
+      > span {
+        white-space: nowrap;
+        text-overflow: ellipsis;
+        overflow: hidden; 
+      }
     }
   }
   .price {
-    font-size: 24px;
-    font-weight: bold;
-    span {
-      font-size: 12px;
-      font-weight: normal;
-    }
+    font-size: 14px;
+    font-style: italic;
+    color: #FF747E;
   }
 `;

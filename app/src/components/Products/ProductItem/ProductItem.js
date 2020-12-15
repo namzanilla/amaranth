@@ -1,5 +1,6 @@
 import React from 'react';
 import {ProductItemWrap} from './style';
+import {numberWithSpaces} from 'helpers/_Number';
 
 export default (props) => {
   const {
@@ -10,6 +11,7 @@ export default (props) => {
     name,
     price,
     priceMin,
+    images = [],
     priceMax,
     modelId,
     history,
@@ -19,17 +21,37 @@ export default (props) => {
   if (image) {
     imageJSX = (
       <a
-        href={getHref(productId, languageId)}
-        onClick={onClick(productId, languageId, history)}
+        href={getHref(productId, modelId, languageId)}
+        onClick={onClick(productId, modelId, languageId, history)}
         className="image"
       >
         <img src={`${hostStatic}${image}`} alt="" />
       </a>
     );
+  } else if (images.length) {
+    const {
+      0: {
+        path,
+        name,
+        ext,
+      } = {},
+    } = images;
+
+    const image = `${path}/${name}_480x480.${ext}`
+
+    imageJSX = (
+      <a
+        href={getHref(productId, modelId, languageId)}
+        onClick={onClick(productId, modelId, languageId, history)}
+        className="image"
+      >
+        <img src={`${hostStatic}/${image}`} alt="" />
+      </a>
+    );
   } else {
     imageJSX = (
       <a
-        href={getHref(productId, languageId)}
+        href={getHref(productId, modelId, languageId)}
         onClick={onClick(productId, modelId, languageId, history)}
         className="image"
       />
@@ -41,9 +63,8 @@ export default (props) => {
   if (modelId) {
     footerJSX = (
       <div className="modelFooter">
-        от <span className="price">{priceMin}</span>
-        &nbsp;до <span className="price">{priceMax}</span>
-        &nbsp;грн
+        <span>{languageId === 1 ? 'від' : 'от'}&nbsp;<span className="price">{numberWithSpaces(priceMin)}</span>
+        &nbsp;до&nbsp;<span className="price">{numberWithSpaces(priceMax)}</span>&nbsp;грн</span>
       </div>
     );
   } else {

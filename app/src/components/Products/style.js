@@ -8,7 +8,10 @@ export const ProductsWrap = styled.div`
   grid-column-gap: 20px;
   grid-row-gap: 20px;
   
-  @media (max-width: 639px) {
+  @media (max-width: 479px) {
+    grid-template-columns: repeat(1, 1fr);
+  }
+  @media (min-width: 480px) and (max-width: 639px) {
     grid-template-columns: repeat(2, 1fr);
   }
   @media (min-width: 640px) and (max-width: 959px) {
