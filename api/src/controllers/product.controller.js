@@ -141,7 +141,12 @@ function getProductModelById(app) {
       response.info = await getModelInfo(modelId, languageId, app);
       response.images = await getModelImages([modelId], app);
 
-      response.images = response.images[modelId] ? response.images[modelId] : response.images;
+      if (response.images[modelId]) {
+        response.images = response.images[modelId];
+      } else {
+        delete response.images;
+      }
+
 
       // @todo nginx cache
       ctx.body = response;
