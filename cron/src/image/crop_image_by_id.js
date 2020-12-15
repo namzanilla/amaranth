@@ -44,6 +44,19 @@ require('./../mysql')(async (connection) => {
 
     if (type === IMAGE_TYPE_PRODUCT) {
       outputDir = resolve(__dirname, '..', '..', '..', 'static', 'public', path);
+
+      fs.mkdirSync(outputDir, { recursive: true });
+
+      config = [
+        {
+          width: 320,
+          height: 320,
+        },
+        {
+          width: 480,
+          height: 480,
+        }
+      ];
     } else if (type === IMAGE_TYPE_MODEL) {
       outputDir = resolve(__dirname, '..', '..', '..', 'static', 'public', path);
       fs.mkdirSync(outputDir, { recursive: true });
@@ -67,8 +80,9 @@ require('./../mysql')(async (connection) => {
       const file = resolve(srcDir, fileName);
 
       const fileOut = resolve(outputDir, newFileName);
-      console.log('file', file);
-      console.log('fileOut', fileOut);
+
+      // console.log('file', file);
+      // console.log('fileOut', fileOut);
 
       await sharp(file)
         .resize(width, height, {
@@ -77,7 +91,7 @@ require('./../mysql')(async (connection) => {
         .toFile(fileOut);
     }
 
-    console.log(image);
+    // console.log(image);
   } catch (e) {
     console.error(e);
 
