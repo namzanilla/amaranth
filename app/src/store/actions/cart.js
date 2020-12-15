@@ -62,6 +62,7 @@ export const fetchCartDetails = () => async (dispatch, getState) => {
 export const getCartInfo = (token) => async (dispatch) => {
   try {
     dispatch({type: at.CART_FETCH_INFO_REQUEST});
+
     const {data: products = {}} = await cartApi.getCartInfo(token);
 
     dispatch({
@@ -70,7 +71,8 @@ export const getCartInfo = (token) => async (dispatch) => {
     });
   } catch (e) {
     dispatch({type: at.CART_FETCH_INFO_FAILURE});
-    console.log(e);
+
+    console.error(e);
   }
 };
 
