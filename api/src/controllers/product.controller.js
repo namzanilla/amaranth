@@ -3,9 +3,17 @@ const baseController = require('./base.controller');
 router.prefix('/api/v1');
 const modelHelper = require('../helpers/model');
 
+const {isDevelopment} = require('../helpers/environment');
+
 const SEARCH_TYPE_MODEL = 0;
 const SEARCH_TYPE_PRODUCT = 1;
 const DEFAULT_SEARCH_LIMIT = 12;
+
+const MK_PRODUCT_FLAVOR_ID = 3;
+const MK_PRODUCT_NET_WEIGHT_GRAMM_ID = 2;
+
+const AGG_TYPE_7 = 1; // package_quantity_(pieces)
+const AGG_TYPE_3_PIPE_7 = 2; // PRODUCT_FLAVOR > PRODUCT_NET_WEIGHT_GRAMM
 
 module.exports = (app) => {
   const productService = require('./../services/product.service')(app);
@@ -15,6 +23,7 @@ module.exports = (app) => {
   router.get('/product/:productId', baseController(getProductId));
   router.get('/product-list', baseController(getProductList(app)));
   router.get('/model/:modelId(\\d+)', baseController(getProductModelById(app)));
+  router.get(`/model/:modelId(\\d+)/agg/${AGG_TYPE_3_PIPE_7}/:paramFirst(\\d+)`, baseController(get_AGG_TYPE_3_PIPE_7_SECOND(app)));
 
   function getBrandByProductId(ctx) {
     const {
@@ -60,38 +69,147 @@ module.exports = (app) => {
   return router;
 };
 
-async function getBrandModelAggsConf(app, modelId) {
-  try {
-    const qs = `
-    SELECT
-      bmac.meta_key_id as typeId
-    FROM brand_model_aggs_conf bmac
-    WHERE bmac.brand_model_id=?
-    ORDER BY \`order\`;
-    `;
+function get_AGG_TYPE_3_PIPE_7_SECOND(app) {
+  return async function (ctx) {
+    try {
+      let {
+        request: {
+          query: {
+            lid: languageId = 1,
+          } = {},
+        } = {},
+        params: {
+          modelId,
+          paramFirst,
+        } = {}
+      } = ctx;
 
-    return new Promise((resolve, reject) => {
-      const cb = (resolve, reject) => (error, results) => {
-        if (error) {
-          reject(error);
+      const agg = await new Promise((resolve, reject) => {
+        const qs = `
+        SELECT
+          mv.id,
+          mv.name
+        FROM product p
+        
+        INNER JOIN product2brand_model p2bm
+        ON p2bm.product_id=p.id
+        
+        INNER JOIN product2meta_value p2mv
+        ON p2mv.product_id=p.id
+        
+        INNER JOIN meta_value mv
+        ON mv.id=p2mv.meta_value_id
+        
+        WHERE p2bm.brand_model_id=${modelId}
+        AND mv.meta_key_id=${MK_PRODUCT_NET_WEIGHT_GRAMM_ID}
+        
+        GROUP BY mv.id
+        ORDER BY CAST(mv.name AS UNSIGNED)
+        `;
+        const cb = (resolve, reject) => (error, results) => {
+          if (error) {
+            reject(error);
+          } else {
+            resolve(results);
+          }
         }
 
-        resolve(results);
+        app.mysql.connection.query(qs, modelId, cb(resolve, reject));
+      });
+
+      const metaValueIds = agg.map(({id}) => id);
+
+      const metaValueId2productId = await new Promise((resolve, reject) => {
+        const qs = `
+        SELECT
+          p2mv4.meta_value_id AS metaValueId,
+          p4.id AS productId
+        FROM product2meta_value p2mv4
+        INNER JOIN product p4
+        ON p4.id = p2mv4.product_id
+        INNER JOIN meta_value mv4
+        ON mv4.id = p2mv4.meta_value_id
+        INNER JOIN meta_key mk4
+        ON mk4.id = mv4.meta_key_id
+        WHERE mk4.id=${MK_PRODUCT_NET_WEIGHT_GRAMM_ID}
+        AND p4.id IN (
+          SELECT p3.id
+          FROM product p3
+          INNER JOIN product2meta_value p2mv3
+          ON p2mv3.product_id = p3.id
+          WHERE p2mv3.meta_value_id=${paramFirst}
+          AND p3.id IN (
+            SELECT p2.id
+            FROM product p2
+            INNER JOIN product2meta_value p2mv2
+            ON p2mv2.product_id = p2.id
+            WHERE p2mv2.meta_value_id IN (${metaValueIds.join(',')})
+            AND p2.id IN (
+              SELECT p1.id
+              FROM product p1
+              INNER JOIN product2meta_value p2mv1
+              ON p2mv1.product_id = p1.id
+              INNER JOIN product2brand_model p2bm1
+              ON p2bm1.product_id = p1.id
+              WHERE p2bm1.brand_model_id=${modelId}
+            )
+          )
+        )
+        `;
+        const cb = (resolve, reject) => (error, results) => {
+          if (error) {
+            reject(error);
+          } else {
+            const metaValueId2productId = {};
+
+            for (const result of results) {
+              metaValueId2productId[result.metaValueId] = result.productId;
+            }
+
+            resolve(metaValueId2productId);
+          }
+        }
+
+        app.mysql.connection.query(qs, modelId, cb(resolve, reject));
+      });
+
+
+      const prepareResponse = (agg) => {
+        agg.forEach((el) => {
+          const {id} = el;
+          const {
+            [id]: productId,
+          } = metaValueId2productId;
+
+          el.id = productId;
+
+          el.name = +el.name;
+          const kg = el.name / 1000;
+
+          if (kg > 1) {
+            el.name = `${kg} кг`;
+          } else {
+            el.name = `${el.name} г`;
+          }
+        })
+
+        return agg;
       }
 
-      app.mysql.connection.query(qs, modelId, cb(resolve, reject));
-    });
-  } catch (e) {
-    console.error(e);
+      ctx.body = prepareResponse(agg);
+
+    } catch (e) {
+      console.error(e);
+    }
   }
 }
 
-/*async function getModelConfPayload(modelId, metaKeyId) {
+async function get_AGG_TYPE_3_PIPE_7_FIRST(app, modelId) {
   try {
     const qs = `
     SELECT
-        mv.id,
-        mv.name AS mv_name
+      mv.id,
+      mv.name
     FROM product p
     
     INNER JOIN product2brand_model p2bm
@@ -103,16 +221,81 @@ async function getBrandModelAggsConf(app, modelId) {
     INNER JOIN meta_value mv
     ON mv.id=p2mv.meta_value_id
     
-    WHERE p2bm.brand_model_id=1
-    AND mv.meta_key_id=3
+    WHERE p2bm.brand_model_id=?
+    AND mv.meta_key_id=${MK_PRODUCT_FLAVOR_ID}
     
     GROUP BY mv.id
-    ORDER BY mv_name
+    ORDER BY mv.name
     `;
+
+    const agg = await new Promise((resolve, reject) => {
+      const cb = (resolve, reject) => (error, results) => {
+        if (error) {
+          reject(error);
+        } else {
+          resolve(results);
+        }
+      }
+
+      app.mysql.connection.query(qs, modelId, cb(resolve, reject));
+    });
+
+    return [null, agg];
   } catch (e) {
     console.error(e);
+
+    return [e];
   }
-}*/
+}
+
+async function getModelAggregations(app, aggType, modelId) {
+  try {
+    if (aggType === 2) {
+      const [e, agg] = await get_AGG_TYPE_3_PIPE_7_FIRST(app, modelId);
+
+      if (e) {
+        return [e];
+      }
+
+      return [null, agg];
+    }
+
+  } catch (e) {
+    console.log(e);
+
+    return [e];
+  }
+}
+
+async function getModelAggregationConf(app, modelId) {
+  try {
+    const qs = `
+    SELECT
+      bmac.meta_key_id as metaKeyId
+    FROM brand_model_aggs_conf bmac
+    WHERE bmac.brand_model_id=?
+    ORDER BY \`order\`;
+    `;
+
+    const conf = await new Promise((resolve, reject) => {
+      const cb = (resolve, reject) => (error, results) => {
+        if (error) {
+          reject(error);
+        } else {
+          resolve(results);
+        }
+      }
+
+      app.mysql.connection.query(qs, modelId, cb(resolve, reject));
+    });
+
+    return [null, conf];
+  } catch (e) {
+    console.error(e);
+
+    return [e];
+  }
+}
 
 function getProductModelById(app) {
   return async function (ctx) {
@@ -130,15 +313,46 @@ function getProductModelById(app) {
       } = ctx;
 
       modelId = parseInt(modelId);
-      languageId = parseInt(languageId);
+      languageId = parseInt(languageId); // @todo > language helper
 
-      const aggs = await getBrandModelAggsConf(app, modelId);
 
-      if (aggs.length) {
-        response.aggs = aggs;
+      const [modelInfoError, modelInfo] = await getModelInfo(modelId, languageId, app);
+
+      if (null === modelInfo) {
+        ctx.status = 400;
+        return;
+      } else if (modelInfoError) {
+        ctx.status = 500;
+
+        if (isDevelopment()) {
+          ctx.body = modelInfoError;
+        }
+
+        return;
       }
 
-      response.info = await getModelInfo(modelId, languageId, app);
+
+      response.info = {...modelInfo};
+
+      if (modelInfo.aggType) {
+        delete response.info.aggType;
+
+        const [e, agg] = await getModelAggregations(app, modelInfo.aggType, modelId);
+
+        if (e) {
+          ctx.status = 500;
+
+          if (isDevelopment()) {
+            ctx.body = e; return;
+          }
+
+          return;
+        } else if (null !== agg) {
+          response.agg = {type: modelInfo.aggType};
+          response.agg.first = agg;
+        }
+      }
+
       response.images = await getModelImages([modelId], app);
 
       if (response.images[modelId]) {
@@ -146,7 +360,6 @@ function getProductModelById(app) {
       } else {
         delete response.images;
       }
-
 
       // @todo nginx cache
       ctx.body = response;
@@ -214,6 +427,7 @@ async function getModelInfo(modelId, languageId, app) {
     SELECT
       b.name AS brandMame,
       bm.name AS modelName,
+      bm.aggregation_type AS aggType,
       MIN(p.price) AS priceMin,
       MAX(p.price) AS priceMax
     FROM product p
@@ -239,24 +453,30 @@ async function getModelInfo(modelId, languageId, app) {
       const cb = (resolve, reject) => (error, results) => {
         if (error) {
           reject(error);
+        } else {
+          const {0: result} = results;
+
+          resolve(result);
         }
-
-        const {0: result} = results;
-
-        resolve(result);
       }
 
       app.mysql.connection.query(qs, modelId, cb(resolve, reject));
     });
 
-    if (undefined === info) return {};
+    if (undefined === info) return [null, null];
 
-    return {
+    const response = {
       title: modelHelper.getTitle(modelId, languageId, info),
       h1: modelHelper.getH1(modelId, languageId, info)
     };
+
+    if (info.aggType) {
+      response.aggType = info.aggType
+    }
+
+    return [null, response];
   } catch (e) {
-    console.error(e);
+    return [e];
   }
 }
 
