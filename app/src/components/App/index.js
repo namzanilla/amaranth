@@ -5,7 +5,8 @@ import * as productsActionCreators from 'store/actions/products';
 import * as productActionCreators from 'store/actions/product';
 import * as cartActionCreators from 'store/actions/cart';
 import * as orderActionCreators from 'store/actions/order';
-import * as categoryActionCreators from '../../store/actions/category';
+import * as categoryActionCreators from 'store/actions/category';
+import * as modelActionCreators from 'store/actions/model';
 
 const mapStateToProps = (state) => {
   return {
@@ -31,6 +32,7 @@ const mapDispatchToProps = (dispatch) => {
     setCategoryIdByPathname: (pathname) =>  dispatch(categoryActionCreators.setCategoryIdByPathname(pathname)),
     orderSetContactInfoFromLocalStorage: () => dispatch(orderActionCreators.setContactInfoFromLocalStorage()),
     appSetCatalogState: (state) => (dispatch(appActionCreators.appSetCatalogState(state))),
+    modelSetAggParam: (paramName, paramValue) => (dispatch(modelActionCreators.setAggParam(paramName, paramValue))),
   };
 };
 

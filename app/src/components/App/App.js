@@ -2,11 +2,9 @@ import React, {useEffect} from 'react';
 import querystring from 'querystring';
 import Style from './style';
 import {Helmet} from 'react-helmet';
-import {getLangIdByUrlPath} from 'helpers/language';
-import {getHoc} from 'helpers/hoc';
-import HomePage from 'components/Hoc/HomePage';
 
 // HOCs
+import HomePage from 'components/Hoc/HomePage';
 import CategoriesPage from 'components/Hoc/CategoriesPage';
 import CategoryPage from 'components/Hoc/CategoryPage';
 import CartPage from 'components/Hoc/CartPage';
@@ -15,9 +13,16 @@ import ProductPage from 'components/Hoc/ProductPage';
 import NotFoundPage from 'components/Hoc/NotFoundPage';
 import ModelPage from 'components/Hoc/ModelPage';
 
-import Hoc from 'components/Hoc';
+// other components
+import HocWrap from 'components/Hoc'; // @todo rename file
 import Header from 'components/Header';
 import SubHeader from 'components/SubHeader';
+
+// helpers
+import {getLangIdByUrlPath} from 'helpers/language';
+import {getHoc} from 'helpers/hoc';
+import * as modelHelper from 'helpers/model';
+
 
 const components = {
   HomePage,
@@ -31,7 +36,7 @@ const components = {
 };
 
 export default (props) => {
-  const HocChild = components[props.hoc];
+  const Hoc = components[props.hoc];
 
   useEffect(() => {
     componentDidMount(props);
@@ -47,9 +52,9 @@ export default (props) => {
       <Style />
       <Header history={props.history} />
       <SubHeader history={props.history} />
-      <Hoc display={props.catalogIsVisible ? 'none' : 'block'}>
-        <HocChild history={props.history} />
-      </Hoc>
+      <HocWrap display={props.catalogIsVisible ? 'none' : 'block'}>
+        <Hoc history={props.history} />
+      </HocWrap>
     </>
   );
 };
@@ -78,6 +83,13 @@ function componentDidMount(props) {
       props.productsSetPage(page);
     } else if (hoc === 'ProductPage') {
       props.setProductIdByPathname(pathname);
+    } else if (hoc === 'ModelPage') {
+      const paramFirst = modelHelper.getFirstParamFromPathname(pathname);
+      if (paramFirst) {
+        props.modelSetAggParam('paramFirst', paramFirst).then(() => {
+
+        });
+      }
     }
   });
 

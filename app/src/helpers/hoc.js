@@ -21,7 +21,7 @@ export function getHoc(pathname)  {
       }
 
       return 'CategoriesPage';
-    } else if (/^m\d+$/.test(pathname[0])) {
+    } else if (/^m\d+(\/.+)?$/.test(pathname[0])) {
       return 'ModelPage';
     } else if (/^p\d+$/.test(pathname[0])) {
       return 'ProductPage';

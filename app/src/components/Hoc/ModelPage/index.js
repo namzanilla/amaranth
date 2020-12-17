@@ -7,6 +7,7 @@ const mapStateToProps = (state) => {
   const {
     app: {
       ssr,
+      hostStatic,
       languageId,
     } = {},
     model: {
@@ -15,6 +16,7 @@ const mapStateToProps = (state) => {
         title,
         h1,
       } = {},
+      images,
     } = {},
   } = state;
 
@@ -22,6 +24,8 @@ const mapStateToProps = (state) => {
     ssr,
     title,
     h1,
+    hostStatic,
+    images,
     modelId,
     languageId,
   };

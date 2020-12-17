@@ -1,7 +1,13 @@
 import React, {useEffect, useState} from 'react';
 import {Helmet} from 'react-helmet';
-import {ModelPageWrap} from './style';
+import {
+  ModelPageWrap,
+  ModelPageContent,
+} from './style';
 import H1 from 'components/H1';
+import {getLoadingText} from 'helpers/language';
+import ModelImages from './ModelImages';
+import Aggs from './Aggs';
 
 export default (props) => {
   const [loading, setLoading] = useState(!props.ssr);
@@ -38,6 +44,16 @@ export default (props) => {
     }
   }, [props.languageId]);
 
+  const contextJSX = !loading ? (
+    <ModelPageContent>
+      <ModelImages
+        images={props.images}
+        hostStatic={props.hostStatic}
+      />
+      <Aggs history={props.history} />
+    </ModelPageContent>
+  ) : null;
+
   return (
     <>
       <Helmet>
@@ -45,15 +61,10 @@ export default (props) => {
       </Helmet>
       <ModelPageWrap>
         <H1 child={h1} />
+        {contextJSX}
       </ModelPageWrap>
     </>
   );
-}
-
-function getLoadingText(languageId) {
-  return languageId === 1
-    ? 'Завантаження...'
-    : 'Загрузка...';
 }
 
 function fetchModelInfo(props, modelId, setLoading, setTitle, setH1) {
@@ -61,7 +72,7 @@ function fetchModelInfo(props, modelId, setLoading, setTitle, setH1) {
   setTitle(getLoadingText(props.languageId));
   setH1(getLoadingText(props.languageId));
 
-  props.fetchModelById(modelId).then((data) => {
+  props.fetchModelById(modelId, props.languageId).then((data) => {
     setLoading(false);
 
     const {
