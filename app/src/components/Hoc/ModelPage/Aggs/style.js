@@ -8,6 +8,10 @@ export const AggItemsWrap = styled.div`
   
 `;
 
+export const AggItemsHeader = styled.div`
+  padding: 8px 0 4px;
+`;
+
 export const AggItems = styled.div`
   
 `;

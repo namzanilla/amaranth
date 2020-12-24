@@ -4,6 +4,7 @@ import React, {useState, useEffect} from 'react';
 import {
   AggsWrap,
   AggItemsWrap,
+  AggItemsHeader,
   AggItems,
   AggItem,
 } from './style';
@@ -64,7 +65,9 @@ export default(props) => {
 
     contentJSX = (
       <AggItemsWrap>
-        Выберите вкус
+        <AggItemsHeader>
+          Выберите вкус
+        </AggItemsHeader>
         <AggItems>
           {props.first.map((el) => {
             return (
