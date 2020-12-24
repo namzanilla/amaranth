@@ -11,6 +11,7 @@ const DEFAULT_SEARCH_LIMIT = 12;
 
 const MK_PRODUCT_FLAVOR_ID = 3;
 const MK_PRODUCT_NET_WEIGHT_GRAMM_ID = 2;
+const MK_PACKAGE_QUANTITY_PIECES_ID = 7;
 
 const AGG_TYPE_7 = 1; // package_quantity_(pieces)
 const AGG_TYPE_3_PIPE_7 = 2; // PRODUCT_FLAVOR > PRODUCT_NET_WEIGHT_GRAMM
@@ -68,6 +69,45 @@ module.exports = (app) => {
 
   return router;
 };
+
+async function get_AGG_TYPE_7(app, modelId) {
+  try {
+    const agg = await new Promise((resolve, reject) => {
+      const qs = `
+      SELECT
+        p.id AS productId,
+        p.price AS productPrice,
+        mv.name
+      FROM product p
+      INNER JOIN product2meta_value p2mv
+      ON p2mv.product_id=p.id
+      INNER JOIN meta_value mv
+      ON mv.id=p2mv.meta_value_id
+      INNER JOIN product2brand_model p2bm
+      ON p.id = p2bm.product_id
+      WHERE mv.meta_key_id=${MK_PACKAGE_QUANTITY_PIECES_ID}
+      AND p2bm.brand_model_id=?
+      ORDER BY CAST(mv.name AS UNSIGNED)
+      `;
+
+      const cb = (resolve, reject) => (error, results) => {
+        if (error) {
+          reject(error);
+        } else {
+          resolve(results);
+        }
+      }
+
+      app.mysql.connection.query(qs, modelId, cb(resolve, reject));
+    });
+
+    return [null, agg];
+  } catch (e) {
+    console.error(e);
+
+    return [e];
+  }
+}
 
 function get_AGG_TYPE_3_PIPE_7_SECOND(app) {
   return async function (ctx) {
@@ -224,7 +264,7 @@ async function get_AGG_TYPE_3_PIPE_7_FIRST(app, modelId) {
     WHERE p2bm.brand_model_id=?
     AND mv.meta_key_id=${MK_PRODUCT_FLAVOR_ID}
     
-    GROUP BY mv.id
+    GROUP BY mv.name, mv.id
     ORDER BY mv.name
     `;
 
@@ -252,6 +292,14 @@ async function getModelAggregations(app, aggType, modelId) {
   try {
     if (aggType === 2) {
       const [e, agg] = await get_AGG_TYPE_3_PIPE_7_FIRST(app, modelId);
+
+      if (e) {
+        return [e];
+      }
+
+      return [null, agg];
+    } else if (aggType === 1) {
+      const [e, agg] = await get_AGG_TYPE_7(app, modelId);
 
       if (e) {
         return [e];
