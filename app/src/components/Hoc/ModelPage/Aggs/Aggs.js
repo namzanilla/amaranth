@@ -29,7 +29,22 @@ export default(props) => {
   let contentJSX;
 
   if (AGG_TYPE_7 === props.type) {
-
+    contentJSX = props.first.length ? (
+      <AggItems>
+        {props.first.map((el) => {
+          return (
+            <AggItem
+              key={el.productId}
+              href={getProductPageHref(el.productId, props.languageId)}
+              onClick={productPageLinkOnClick(props.history, el.productId, props.languageId)}
+            >
+              {el.name} шт.<br />
+              {el.productPrice} грн
+            </AggItem>
+          );
+        })}
+      </AggItems>
+    ) : null;
   } else if (AGG_TYPE_3_PIPE_7 === props.type) {
     const secondJSX = props.second.length ? (
       <AggItems>
@@ -69,11 +84,11 @@ export default(props) => {
     );
   }
 
-  return (
+  return contentJSX ? (
     <AggsWrap>
       {contentJSX}
     </AggsWrap>
-  );
+  ) : null;
 }
 
 function itemOnClick(history, modelId, languageId, id) {
