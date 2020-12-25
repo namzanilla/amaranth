@@ -10,7 +10,8 @@ module.exports = {
 function prepareLanguageIdFromQs(languageId) {
   languageId = parseInt(languageId) || 1;
 
-  if (languageId !== 1 && languageId !== 2) return 1;
+  if (languageId !== LANGUAGE_UK_ID
+    && languageId !== LANGUAGE_RU_ID) return LANGUAGE_UK_ID;
 
   return languageId;
 }

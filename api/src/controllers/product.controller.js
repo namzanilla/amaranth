@@ -2,7 +2,7 @@ const router = require('koa-router')();
 const baseController = require('./base.controller');
 router.prefix('/api/v1');
 const modelHelper = require('../helpers/model');
-
+const {prepareLanguageIdFromQs} = require('../helpers/language');
 const {isDevelopment} = require('../helpers/environment');
 
 const SEARCH_TYPE_MODEL = 0;
@@ -38,13 +38,18 @@ module.exports = (app) => {
   }
 
   function getMetaByProductId(ctx) {
-    const {
+    let {
+      query: {
+        lid: languageId,
+      } = {},
       params: {
         productId,
       } = {},
     } = ctx;
 
-    return productService.getMetaByProductId(productId)
+    languageId = prepareLanguageIdFromQs(languageId);
+
+    return productService.getMetaByProductId(productId, languageId)
       .then(h(app).onFulfilled(ctx), h(app).onRejected(ctx));
   }
 
@@ -67,7 +72,7 @@ function getProductById(app, productService) {
 
       // @todo 404
 
-      languageId = parseInt(languageId) || 1;
+      languageId = prepareLanguageIdFromQs(languageId);
       productId = parseInt(productId);
 
       const response = {};
@@ -127,11 +132,6 @@ function get_AGG_TYPE_3_PIPE_7_SECOND(app) {
   return async function (ctx) {
     try {
       let {
-        request: {
-          query: {
-            lid: languageId = 1,
-          } = {},
-        } = {},
         params: {
           modelId,
           paramFirst,
@@ -258,12 +258,13 @@ function get_AGG_TYPE_3_PIPE_7_SECOND(app) {
   }
 }
 
-async function get_AGG_TYPE_3_PIPE_7_FIRST(app, modelId) {
+async function get_AGG_TYPE_3_PIPE_7_FIRST(app, modelId, languageId) {
   try {
     const qs = `
     SELECT
       mv.id,
-      mv.name
+      mv.name,
+      mv.name_trans_${languageId}
     FROM product p
     
     INNER JOIN product2brand_model p2bm
@@ -287,6 +288,21 @@ async function get_AGG_TYPE_3_PIPE_7_FIRST(app, modelId) {
         if (error) {
           reject(error);
         } else {
+          results = results.map((el) => {
+            const {
+              [`name_trans_${languageId}`]: nameTrans,
+            } = el;
+
+            if (!nameTrans) {
+              delete el[`name_trans_${languageId}`];
+            } else {
+              el.name = nameTrans;
+              delete el[`name_trans_${languageId}`]
+            }
+
+            return el;
+          });
+
           resolve(results);
         }
       }
@@ -302,10 +318,10 @@ async function get_AGG_TYPE_3_PIPE_7_FIRST(app, modelId) {
   }
 }
 
-async function getModelAggregations(app, aggType, modelId) {
+async function getModelAggregations(app, aggType, modelId, languageId) {
   try {
     if (aggType === 2) {
-      const [e, agg] = await get_AGG_TYPE_3_PIPE_7_FIRST(app, modelId);
+      const [e, agg] = await get_AGG_TYPE_3_PIPE_7_FIRST(app, modelId, languageId);
 
       if (e) {
         return [e];
@@ -375,8 +391,7 @@ function getProductModelById(app) {
       } = ctx;
 
       modelId = parseInt(modelId);
-      languageId = parseInt(languageId); // @todo > language helper
-
+      languageId = prepareLanguageIdFromQs(languageId);
 
       const [modelInfoError, modelInfo] = await getModelInfo(modelId, languageId, app);
 
@@ -399,7 +414,7 @@ function getProductModelById(app) {
       if (modelInfo.aggType) {
         delete response.info.aggType;
 
-        const [e, agg] = await getModelAggregations(app, modelInfo.aggType, modelId);
+        const [e, agg] = await getModelAggregations(app, modelInfo.aggType, modelId, languageId);
 
         if (e) {
           ctx.status = 500;

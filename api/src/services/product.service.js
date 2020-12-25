@@ -99,7 +99,8 @@ module.exports = (app) => {
         p2mv.meta_value_id value_id,
         dt.name dataTypeName,
         mk.name \`key\`,
-        mv.name value
+        mv.name value,
+        mv.name_trans_${languageId} valueTrans
       FROM product2meta_value p2mv
       INNER JOIN meta_value mv
       ON mv.id=p2mv.meta_value_id
@@ -114,21 +115,27 @@ module.exports = (app) => {
       app.mysql.connection.query(qs, productId, (error, results) => {
         if (error) {
           reject(error);
+        } else {
+          results.map((el) => {
+            const {
+              dataTypeName,
+              valueTrans,
+            } = el;
+
+            if ('uint' === dataTypeName || 'int' === dataTypeName) {
+              el.value = parseInt(el.value);
+            }
+
+            if (valueTrans) {
+              el.value = valueTrans;
+              delete el.valueTrans;
+            }
+
+            delete el.dataTypeName;
+          });
+
+          resolve(results);
         }
-
-        results.map((el) => {
-          const {
-            dataTypeName,
-          } = el;
-
-          if ('uint' === dataTypeName || 'int' === dataTypeName) {
-            el.value = parseInt(el.value);
-          }
-
-          delete el.dataTypeName;
-        });
-
-        resolve(results);
       });
     });
   };
