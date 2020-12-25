@@ -2,23 +2,18 @@ import React, {useState, useEffect} from 'react';
 import {Helmet} from 'react-helmet';
 import {ProductWrap} from './style';
 import H1 from 'components/H1';
-import * as productHelper from 'helpers/product';
 import * as at from 'store/actionTypes';
 import {getLoadingText} from 'helpers/language';
 
 export default (props) => {
   const [loading, setLoading] = useState(!props.ssr);
-
   const [productId, setProductId] = useState(props.productId);
-
   const [languageId, setLanguageId] = useState(props.languageId);
-
   const [h1, setH1] = useState(props.ssr
-    ? productHelper.productMeta2H1(props.productMeta)
-    : getLoadingText(props.languageId));
+    ? props.productH1 : getLoadingText(props.languageId));
 
   const [title, setTitle] = useState(props.ssr
-    ? productHelper.productMeta2Title(props.productMeta)
+    ? props.productTitle ? props.productTitle : props.productH1
     : getLoadingText(props.languageId));
 
   useEffect(() => {
@@ -63,8 +58,8 @@ export default (props) => {
       setH1(getLoadingText(props.languageId));
       setTitle(getLoadingText(props.languageId));
     } else {
-      setH1(productHelper.productMeta2H1(props.productMeta));
-      setTitle(productHelper.productMeta2Title(props.productMeta));
+      setH1(props.productH1);
+      setTitle(props.productTitle ? props.productTitle : props.productH1);
     }
   }, [loading]);
 

@@ -1,23 +1,95 @@
 module.exports = (app) => {
-  const getProductId = async (productId, languageId) => {
-    const metaList = await getMetaByProductId(productId, languageId);
+  const getMetaObjByMetaAr = (meta) => {
+    const response = {};
 
-    const meta = {};
-
-    for (let el of metaList) {
-      const {
-        key_id,
-        value_id,
-        value,
-      } = el;
-
-      meta[key_id] = {
-        id: value_id,
-        value,
-      };
+    for (const el of meta) {
+      const {key_id} = el;
+      response[key_id] = el;
     }
-    
-    return {meta};
+
+    return response;
+  }
+
+  const getProductIdH1ByMeta = async (metaObj, languageId) => {
+    const {
+      1: {
+        value: brandName,
+      } = {},
+      4: {
+        value_id: modelId,
+        value: modelName,
+      } = {},
+    } = metaObj;
+
+    if (modelId === 1) { // Gold Standard 100% Whey
+      let {
+        3: {
+          value: PRODUCT_FLAVOR,
+        } = {},
+        2: {
+          value: PRODUCT_NET_WEIGHT_GRAMM,
+        } = {},
+      } = metaObj;
+
+      const kg = PRODUCT_NET_WEIGHT_GRAMM / 1000;
+
+      if (kg > 1) {
+        PRODUCT_NET_WEIGHT_GRAMM = `${kg} кг`;
+      } else {
+        PRODUCT_NET_WEIGHT_GRAMM = `${PRODUCT_NET_WEIGHT_GRAMM} г`;
+      }
+
+      if (languageId === 1) {
+        let h1 = 'Сироватковий протеїн ';
+        h1 += `${brandName}, ${modelName} зі смаком "${PRODUCT_FLAVOR}" (${PRODUCT_NET_WEIGHT_GRAMM})`
+
+        return h1;
+      } else if (languageId === 2) {
+        let h1 = 'Сывороточный протеин ';
+        h1 += `${brandName}, ${modelName} со вкусом "${PRODUCT_FLAVOR}" (${PRODUCT_NET_WEIGHT_GRAMM})`
+
+        return h1;
+      }
+
+    } else if (modelId === 100) { // Opti-Men
+      const {
+        7: {
+          value: PACKAGE_QUANTITY_PIECES,
+        } = {},
+      } = metaObj;
+
+      if (languageId === 1) {
+        let h1 = 'Вітаміни ';
+        h1 += `${brandName}, ${modelName} (${PACKAGE_QUANTITY_PIECES} шт.)`;
+
+        return h1;
+      } else if (languageId === 2) {
+        let h1 = 'Витамины ';
+        h1 += `${brandName}, ${modelName} (${PACKAGE_QUANTITY_PIECES} шт.)`;
+
+        return h1;
+      }
+    } else if (modelId === 101) { // Opti-Women
+      const {
+        7: {
+          value: PACKAGE_QUANTITY_PIECES,
+        } = {},
+      } = metaObj;
+
+      if (languageId === 1) {
+        let h1 = 'Вітаміни ';
+        h1 += `${brandName}, ${modelName} (${PACKAGE_QUANTITY_PIECES} шт.)`;
+
+        return h1;
+      } else if (languageId === 2) {
+        let h1 = 'Витамины ';
+        h1 += `${brandName}, ${modelName} (${PACKAGE_QUANTITY_PIECES} шт.)`;
+
+        return h1;
+      }
+    }
+
+    return '';
   }
 
   const getMetaByProductId = async (productId, languageId) => {
@@ -93,7 +165,8 @@ module.exports = (app) => {
   }
 
   return {
-    getProductId,
+    getMetaObjByMetaAr,
+    getProductIdH1ByMeta,
     getMetaByProductId,
     getBrandByProductId,
     getProductList: getProductList(app),

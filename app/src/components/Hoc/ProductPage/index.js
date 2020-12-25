@@ -11,7 +11,8 @@ const mapStateToProps = (state) => {
     } = {},
     product: {
       id: productId,
-      meta: productMeta = {},
+      h1: productH1,
+      title: productTitle,
     } = {},
   } = state;
 
@@ -19,7 +20,8 @@ const mapStateToProps = (state) => {
     ssr,
     productId,
     languageId,
-    productMeta,
+    productH1,
+    productTitle,
   };
 };
 

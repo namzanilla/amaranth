@@ -21,7 +21,7 @@ module.exports = (app) => {
 
   router.get('/product/:productId(\\d+)/brand', baseController(getBrandByProductId));
   router.get('/product/:productId(\\d+)/meta', baseController(getMetaByProductId));
-  router.get('/product/:productId', baseController(getProductId));
+  router.get('/product/:productId', baseController(getProductById(app, productService)));
   router.get('/product-list', baseController(getProductList(app)));
   router.get('/model/:modelId(\\d+)', baseController(getProductModelById(app)));
   router.get(`/model/:modelId(\\d+)/agg/${AGG_TYPE_3_PIPE_7}/:paramFirst(\\d+)`, baseController(get_AGG_TYPE_3_PIPE_7_SECOND(app)));
@@ -34,25 +34,6 @@ module.exports = (app) => {
     } = ctx;
 
     return productService.getBrandByProductId(productId)
-      .then(h(app).onFulfilled(ctx), h(app).onRejected(ctx));
-  }
-
-  function getProductId(ctx) {
-    let {
-      request: {
-        query: {
-          lid: languageId = 1,
-        } = {},
-      } = {},
-      params: {
-        productId,
-      } = {},
-    } = ctx;
-
-    languageId = parseInt(languageId);
-    productId = parseInt(productId);
-
-    return productService.getProductId(productId, languageId)
       .then(h(app).onFulfilled(ctx), h(app).onRejected(ctx));
   }
 
@@ -69,6 +50,39 @@ module.exports = (app) => {
 
   return router;
 };
+
+function getProductById(app, productService) {
+  return async function (ctx) {
+    try {
+      let {
+        request: {
+          query: {
+            lid: languageId = 1,
+          } = {},
+        } = {},
+        params: {
+          productId,
+        } = {},
+      } = ctx;
+
+      // @todo 404
+
+      languageId = parseInt(languageId) || 1;
+      productId = parseInt(productId);
+
+      const response = {};
+
+      const meta = await productService.getMetaByProductId(productId, languageId);
+      const metaObj = productService.getMetaObjByMetaAr(meta);
+      response.h1 = await productService.getProductIdH1ByMeta(metaObj, languageId);
+
+      // @todo response cache
+      ctx.body = response;
+    } catch (e) {
+      console.error(e);
+    }
+  }
+}
 
 async function get_AGG_TYPE_7(app, modelId) {
   try {
