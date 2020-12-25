@@ -23,7 +23,10 @@ export default(props) => {
   useEffect(() => {
     if (paramFirst !== props.paramFirst) {
       setParamFirst(props.paramFirst);
-      props.fetch_AGG_TYPE_3_PIPE_7_SECOND(props.modelId, props.paramFirst);
+      props.appLoadingInc();
+      props.fetch_AGG_TYPE_3_PIPE_7_SECOND(props.modelId, props.paramFirst).then(() => {
+        props.appLoadingDecr();
+      });
     }
   }, [props.paramFirst]);
   

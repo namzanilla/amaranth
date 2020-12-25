@@ -10,6 +10,7 @@ import * as modelActionCreators from 'store/actions/model';
 
 const mapStateToProps = (state) => {
   return {
+    loading: state.app.loading,
     catalogIsVisible: state.app.catalog.isVisible,
     htmlLangAttrValue: state.app.htmlLangAttrValue,
     languageId: state.app.languageId,

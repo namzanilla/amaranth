@@ -17,6 +17,7 @@ import ModelPage from 'components/Hoc/ModelPage';
 import HocWrap from 'components/Hoc'; // @todo rename file
 import Header from 'components/Header';
 import SubHeader from 'components/SubHeader';
+import Loading from './Loading';
 
 // helpers
 import {getLangIdByUrlPath} from 'helpers/language';
@@ -42,6 +43,10 @@ export default (props) => {
     componentDidMount(props);
   }, []);
 
+  const loadingJSX = props.loading > 0 ? (
+    <Loading />
+  ) : null;
+
   return (
     <>
       <Helmet>
@@ -55,6 +60,7 @@ export default (props) => {
       <HocWrap display={props.catalogIsVisible ? 'none' : 'block'}>
         <Hoc history={props.history} />
       </HocWrap>
+      {loadingJSX}
     </>
   );
 };

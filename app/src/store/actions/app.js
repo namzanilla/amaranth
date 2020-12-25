@@ -12,7 +12,38 @@ export const setLanguageId = (languageId) => (dispatch, getState) => {
   }
 };
 
-export const setSSR = (bool) => (dispatch) => {
+export const appLoadingInc = () => (dispatch) => {
+  try {
+    dispatch({
+      type: at.APP_LOADING_INC,
+    }); 
+  } catch (e) {
+    console.error(e);
+  }
+}
+
+export const appLoadingDecr = () => (dispatch, getState) => {
+  try {
+    const state = getState();
+    const loading = state.app.loading;
+    
+    if (loading > 0) {
+      dispatch({
+        type: at.APP_LOADING_DECR,
+      }); 
+    } else {
+      console.log('WARNING');
+      console.log({
+        action: at.APP_LOADING_DECR,
+        loading,
+      });
+    }
+  } catch (e) {
+    console.error(e);
+  }
+}
+
+export const setSSR = (bool) => (dispatch) =>  {
   dispatch({
     type: at.APP_SET_SSR,
     bool,
