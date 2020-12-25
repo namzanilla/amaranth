@@ -31,36 +31,46 @@ export default(props) => {
 
   if (AGG_TYPE_7 === props.type) {
     contentJSX = props.first.length ? (
-      <AggItems>
-        {props.first.map((el) => {
-          return (
-            <AggItem
-              key={el.productId}
-              href={getProductPageHref(el.productId, props.languageId)}
-              onClick={productPageLinkOnClick(props.history, el.productId, props.languageId)}
-            >
-              {el.name} шт.<br />
-              {el.productPrice} грн
-            </AggItem>
-          );
-        })}
-      </AggItems>
+      <>
+        <AggItemsHeader>
+          Количество в упаковке
+        </AggItemsHeader>
+        <AggItems>
+          {props.first.map((el) => {
+            return (
+              <AggItem
+                key={el.productId}
+                href={getProductPageHref(el.productId, props.languageId)}
+                onClick={productPageLinkOnClick(props.history, el.productId, props.languageId)}
+              >
+                {el.name} шт.<br />
+                {el.productPrice} грн
+              </AggItem>
+            );
+          })}
+        </AggItems>
+      </>
     ) : null;
   } else if (AGG_TYPE_3_PIPE_7 === props.type) {
     const secondJSX = props.second.length ? (
-      <AggItems>
-        {props.second.map((el) => {
-          return (
-            <AggItem
-              key={el.id}
-              href={getProductPageHref(el.id, props.languageId)}
-              onClick={productPageLinkOnClick(props.history, el.id, props.languageId)}
-            >
-              {el.name}
-            </AggItem>
-          );
-        })}
-      </AggItems>
+      <>
+        <AggItemsHeader>
+          Выберите вес
+        </AggItemsHeader>
+        <AggItems>
+          {props.second.map((el) => {
+            return (
+              <AggItem
+                key={el.id}
+                href={getProductPageHref(el.id, props.languageId)}
+                onClick={productPageLinkOnClick(props.history, el.id, props.languageId)}
+              >
+                {el.name}
+              </AggItem>
+            );
+          })}
+        </AggItems>
+      </>
     ) : null;
 
     contentJSX = (
