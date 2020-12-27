@@ -43,10 +43,6 @@ export default (props) => {
     componentDidMount(props);
   }, []);
 
-  const loadingJSX = props.loading > 0 ? (
-    <Loading />
-  ) : null;
-
   return (
     <>
       <Helmet>
@@ -60,7 +56,7 @@ export default (props) => {
       <HocWrap display={props.catalogIsVisible ? 'none' : 'block'}>
         <Hoc history={props.history} />
       </HocWrap>
-      {loadingJSX}
+      <Loading isVisible={props.loading > 0} />
     </>
   );
 };
