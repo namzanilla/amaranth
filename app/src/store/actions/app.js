@@ -80,6 +80,19 @@ export const appSetSessionKey = (sessionKey) => (dispatch) => {
   });
 };
 
+// @todo
+/*export const appSetProp = (propName, propValue) => (dispatch) => {
+  try {
+    dispatch({
+      type: at.APP_SET_PROP,
+      propName,
+      propValue,
+    })
+  } catch (e) {
+    console.error(e)
+  }
+}*/
+
 export const appSetSessionValue = (sessionValue) => (dispatch) => {
   dispatch({
     type: at.APP_SET_SESSION_VALUE,
