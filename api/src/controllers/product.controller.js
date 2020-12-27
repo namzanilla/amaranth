@@ -80,6 +80,7 @@ function getProductById(app, productService) {
       const meta = await productService.getMetaByProductId(productId, languageId);
       const metaObj = productService.getMetaObjByMetaAr(meta);
       response.h1 = await productService.getProductIdH1ByMeta(metaObj, languageId);
+      response.images = await productService.getImagesByProductId(app, productId);
 
       // @todo response cache
       ctx.body = response;

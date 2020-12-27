@@ -176,10 +176,44 @@ module.exports = (app) => {
     getProductIdH1ByMeta,
     getMetaByProductId,
     getBrandByProductId,
+    getImagesByProductId,
     getProductList: getProductList(app),
     getMainImagesByProductIds: getMainImagesByProductIds(app),
   };
 };
+
+function getImagesByProductId(app, productId) {
+  try {
+    const qs = `
+    select
+      i.id,
+      i.path,
+      i.name,
+      p2i.is_main,
+      fe.name as ext
+    from image i
+    inner join product2image
+    p2i on i.id = p2i.image_id
+    inner join filename_extension fe
+    on i.filename_extension_id = fe.id
+    where p2i.product_id=?
+    order by p2i.is_main desc
+    `
+    return new Promise((resolve, reject) => {
+      const cb = (resolve, reject) => (error, results) => {
+        if (error) {
+          reject(error);
+        } else {
+          resolve(results);
+        }
+      }
+
+      app.mysql.connection.query(qs, productId, cb(resolve, reject))
+    })
+  } catch (e) {
+    console.error(e)
+  }
+}
 
 function getProductList(app) {
   return async function(query) {
