@@ -7,6 +7,8 @@ const mapDispatchToProps = (dispatch) => {
   return {
     appSetCatalogState: (state) => (dispatch(appActionCreators.appSetCatalogState(state))),
     fetchCategoryList: (languageId) => dispatch(categoryActionCreators.fetchCategoryList(languageId)),
+    appLoadingInc: () => dispatch(appActionCreators.appLoadingInc()),
+    appLoadingDecr: () => dispatch(appActionCreators.appLoadingDecr()),
   };
 };
 

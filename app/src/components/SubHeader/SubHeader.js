@@ -14,31 +14,27 @@ import {
 } from './style';
 
 export default (props) => {
-  const [loading, setLoading] = useState(true);
-  const [h1, setH1] = useState(getH1(props.languageId, true));
+  // const [loading, setLoading] = useState(true);
+  const [h1, setH1] = useState(getH1(props.languageId));
+  const [languageId, setLanguageId] = useState(props.languageId);
   const [catalogIsVisible, setCatalogIsVisible] = useState(props.catalogIsVisible);
 
   useEffect(() => {
     if (catalogIsVisible !== props.catalogIsVisible) {
       setCatalogIsVisible(props.catalogIsVisible);
 
-      if (!props.categoryList.length)
-        setLoading(true);
-
-      if (props.catalogIsVisible) {
-        if (!props.categoryList.length)
-          fetchCategoryList(props, props.catalogIsVisible, setLoading);
-      } else if (props.catalogScrollY) {
+      if (!props.catalogIsVisible && props.catalogScrollY) {
         window.scrollBy(0, props.catalogScrollY);
       }
     }
   }, [props.catalogIsVisible]);
 
   useEffect(() => {
-    const h1 = getH1(props.languageId, loading);
-
-    setH1(h1);
-  }, [loading]);
+    if (languageId !== props.languageId) {
+      setLanguageId(props.languageId);
+      setH1(getH1(props.languageId));
+    }
+  }, [props.languageId]);
 
   return (
     <>
@@ -68,7 +64,7 @@ export default (props) => {
       {props.catalogIsVisible ? (
         <>
           <H1 child={h1} />
-          {loading ? null : <Categories history={props.history} />}
+          <Categories history={props.history} />
         </>
       ) : null}
     </>
@@ -96,10 +92,12 @@ function hamburgerOnClick(props) {
         isVisible: !props.catalogIsVisible,
       });
     } else {
-      props.appSetCatalogState({
-        isVisible: !props.catalogIsVisible,
-        scrollY: window.scrollY,
-      });
+      fetchCategoryList(props).then(() => {
+        props.appSetCatalogState({
+          isVisible: !props.catalogIsVisible,
+          scrollY: window.scrollY,
+        });
+      })
     }
   }
 }
@@ -115,17 +113,15 @@ const linkOnClick = (props, pathname) => {
   };
 }
 
-function fetchCategoryList(props, catalogIsVisible, setLoading) {
-  props.fetchCategoryList().then(() => {
-    if (catalogIsVisible) setLoading(false);
+function fetchCategoryList(props) {
+  props.appLoadingInc();
+
+  return props.fetchCategoryList().then(() => {
+    props.appLoadingDecr();
   });
 }
 
-function getH1(languageId, loading) {
-  if (loading) {
-    return getLoadingText(languageId);
-  }
-
+function getH1(languageId) {
   return languageId === 1
     ? 'Каталог товарів'
     : 'Каталог товаров';

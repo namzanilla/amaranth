@@ -6,7 +6,7 @@ import {
 } from './style';
 import H1 from 'components/H1';
 import {getLoadingText} from 'helpers/language';
-import ModelImages from './ModelImages';
+import Images from 'components/Images';
 import Aggs from './Aggs';
 
 export default (props) => {
@@ -46,7 +46,7 @@ export default (props) => {
 
   const contextJSX = !loading ? (
     <ModelPageContent>
-      <ModelImages
+      <Images
         images={props.images}
         hostStatic={props.hostStatic}
       />

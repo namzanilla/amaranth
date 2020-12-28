@@ -1,9 +1,10 @@
 import React, {useState, useEffect} from 'react';
 import {Helmet} from 'react-helmet';
-import {ProductWrap} from './style';
+import {ProductPageWrap} from './style';
 import H1 from 'components/H1';
 import * as at from 'store/actionTypes';
 import {getLoadingText} from 'helpers/language';
+import Images from 'components/Images';
 
 export default (props) => {
   const [loading, setLoading] = useState(!props.ssr);
@@ -86,9 +87,12 @@ export default (props) => {
         <title>{title}</title>
       </Helmet>
       <H1 child={h1} />
-      <ProductWrap>
-
-      </ProductWrap>
+      <ProductPageWrap>
+        <Images
+          images={props.images}
+          hostStatic={props.hostStatic}
+        />
+      </ProductPageWrap>
     </>
   );
 }
