@@ -8,13 +8,13 @@
 require('./../dotenv')
 require('./../mysql')(async (mysqlConn) => {
   try {
-    const productImages = await getImages(mysqlConn, 1)
+    const productImages = await getImages(mysqlConn, 1) // @todo image const type
 
-    if (productImages.length) await insertImages(mysqlConn, productImages, 1)
+    if (productImages.length) await insertImages(mysqlConn, productImages, 1) // @todo image const type
 
-    const modelImages = await getImages(mysqlConn, 2)
+    const modelImages = await getImages(mysqlConn, 2) // @todo image const type
 
-    if (modelImages.length) await insertImages(mysqlConn, modelImages, 2)
+    if (modelImages.length) await insertImages(mysqlConn, modelImages, 2) // @todo image const type
 
     process.exit(0)
   } catch (e) {
