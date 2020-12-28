@@ -15,7 +15,8 @@ require('./../mysql')(async (mysqlConn) => {
     const modelImages = await getImages(mysqlConn, 2)
 
     if (modelImages.length) await insertImages(mysqlConn, modelImages, 2)
-    
+
+    process.exit(0)
   } catch (e) {
     console.error(e)
   }
