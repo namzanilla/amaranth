@@ -69,6 +69,7 @@ async function insertIfNotExists(mysqlConn, absolutePath, ext, type) {
 
 function insertImage(mysqlConn, path, name, filename_extension_id, type) {
   return new Promise((resolve, reject) => {
+    console.log({path, name, filename_extension_id, type})
     const qs = 'INSERT INTO image (path, name, filename_extension_id, type) VALUES (?, ?, ?, ?)'
     const cb = (resolve, reject) => (error, results) => {
       if (error) {
@@ -131,8 +132,6 @@ function getInfoFromPath(absolutePath, ext, type) {
     const id = absolutePath[absolutePath.length - 2]
     path += `/${id.slice(-1)}/${id}`
 
-    console.log('path', path);
-    
     return {
       name,
       fileName,
